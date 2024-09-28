@@ -37,7 +37,7 @@
                 <div class="forgot-password">
                     <a href="#">forgot your password?</a>
                 </div>
-                <button type="submit" class="login-btn" name="submit" value="submit">LOG IN</button>
+                <button type="submit" class="login-btn" name="submit" value="submit">LOGIN</button>
             </form>
         </div>
     </div>
