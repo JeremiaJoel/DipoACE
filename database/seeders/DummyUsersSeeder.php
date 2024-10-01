@@ -14,32 +14,14 @@ class DummyUsersSeeder extends Seeder
     public function run(): void
     {
         $userData = [
-            // [
-            //     'email' => 'kyy@dekan.dipoace.ac.id',
-            //     'password' => bcrypt('123456'),
-            //     'dekan' => '1',
-            //     'mahasiswa' => '0',
-            //     'pembimbing_akademik' => '1',
-            //     'kaprodi' => '0',
-            //     'bagian_akademik' => '0'
-            // ],
-            // [
-            //     'email' => 'kyy1@students.dipoace.ac.id',
-            //     'password' => bcrypt('123456'),
-            //     'dekan' => '0',
-            //     'mahasiswa' => '1',
-            //     'pembimbing_akademik' => '0',
-            //     'kaprodi' => '0',
-            //     'bagian_akademik' => '0'
-            // ],
             [
-                'email' => 'kyy2@kaprodi.dipoace.ac.id',
+                'email' => 'cokisitohang@akademik.dipoace.ac.id',
                 'password' => bcrypt('123456'),
                 'dekan' => '0',
                 'mahasiswa' => '0',
-                'pembimbing_akademik' => '1',
-                'kaprodi' => '1',
-                'bagian_akademik' => '0'
+                'pembimbing_akademik' => '0',
+                'kaprodi' => '0',
+                'bagian_akademik' => '1'
             ],
         ];
 
