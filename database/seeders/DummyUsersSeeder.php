@@ -23,6 +23,15 @@ class DummyUsersSeeder extends Seeder
                 'kaprodi' => '0',
                 'bagian_akademik' => '1'
             ],
+            [
+                'email' => 'pinsensitompul@mahasiswa.dipoace.ac.id',
+                'password' => bcrypt('123456'),
+                'dekan' => '0',
+                'mahasiswa' => '1',
+                'pembimbing_akademik' => '0',
+                'kaprodi' => '0',
+                'bagian_akademik' => '0'
+            ],
         ];
 
         foreach($userData as $key => $val){
