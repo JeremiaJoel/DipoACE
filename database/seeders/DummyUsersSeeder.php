@@ -14,36 +14,36 @@ class DummyUsersSeeder extends Seeder
     public function run(): void
     {
         $userData = [
+            // [
+            //     'email' => 'cokisitohang@akademik.dipoace.ac.id',
+            //     'password' => bcrypt('123456'),
+            //     'dekan' => '0',
+            //     'mahasiswa' => '0',
+            //     'pembimbing_akademik' => '0',
+            //     'kaprodi' => '0',
+            //     'bagian_akademik' => '1'
+            // ],
+            // [
+            //     'email' => 'pinsensitompul@mahasiswa.dipoace.ac.id',
+            //     'password' => bcrypt('123456'),
+            //     'dekan' => '0',
+            //     'mahasiswa' => '1',
+            //     'pembimbing_akademik' => '0',
+            //     'kaprodi' => '0',
+            //     'bagian_akademik' => '0'
+            // ],
             [
-                'email' => 'cokisitohang@akademik.dipoace.ac.id',
+                'email' => 'budibalsem@dekan.dipoace.ac.id',
                 'password' => bcrypt('123456'),
-                'dekan' => '0',
+                'dekan' => '1',
                 'mahasiswa' => '0',
-                'pembimbing_akademik' => '0',
-                'kaprodi' => '0',
-                'bagian_akademik' => '1'
-            ],
-            [
-                'email' => 'pinsensitompul@mahasiswa.dipoace.ac.id',
-                'password' => bcrypt('123456'),
-                'dekan' => '0',
-                'mahasiswa' => '1',
                 'pembimbing_akademik' => '0',
                 'kaprodi' => '0',
                 'bagian_akademik' => '0'
             ],
-            [
-                'email' => 'jeremiajoel@lecturer.dipoace.ac.id',
-                'password' => bcrypt('joel131204'),
-                'dekan' => '0',
-                'mahasiswa' => '0',
-                'pembimbing_akademik' => '1',
-                'kaprodi' => '0',
-                'bagian_akademik' => '0'
-            ]
         ];
 
-        foreach ($userData as $key => $val) {
+        foreach($userData as $key => $val){
             User::create($val);
         }
     }

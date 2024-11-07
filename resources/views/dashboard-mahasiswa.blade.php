@@ -40,9 +40,7 @@
                                         id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                         <span class="absolute -inset-1.5"></span>
                                         <span class="sr-only">Open user menu</span>
-                                        <img class="h-8 w-8 rounded-full"
-                                            src="../img/saiful.png"
-                                            alt="">
+                                        <img class="h-8 w-8 rounded-full" src="../img/saiful.png" alt="Foto Profile">
                                     </button>
                                 </div>
 
@@ -63,7 +61,6 @@
                             </div>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </nav>

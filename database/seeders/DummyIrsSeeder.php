@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\irs;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+use App\Models\irs;
 
 class DummyIrsSeeder extends Seeder
 {
@@ -97,7 +96,7 @@ class DummyIrsSeeder extends Seeder
                 'dosen_pengampu' => 'Dr. Sri Rahmi, M.Si.'
             ]
         ];
-        foreach ($irs as $key => $val) {
+        foreach($irs as $key => $val){
             irs::create($val);
         }
     }

@@ -10,9 +10,8 @@ class matakuliah extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nama',
+        'nama', 
         'kodemk',
-        'jurusan',
         'sks',
         'semester',
         'jenis_matkul'

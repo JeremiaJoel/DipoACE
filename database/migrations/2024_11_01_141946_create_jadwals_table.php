@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('irs', function (Blueprint $table) {
+        Schema::create('jadwals', function (Blueprint $table) {
             $table->id();
-            $table->string('kodemk');
+            $table->string('dosen'); 
+            $table->string('ruang'); 
             $table->string('matakuliah');
+            $table->string('waktu'); 
             $table->string('kelas');
-            $table->integer('sks');
-            $table->string('ruang');
-            $table->string('status');
-            $table->string('dosen_pengampu');
+            $table->string('jurusan');
+            $table->string('semester_aktif');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('irs');
+        Schema::dropIfExists('jadwals');
     }
 };
