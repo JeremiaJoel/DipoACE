@@ -8,6 +8,7 @@
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Document</title>
 </head>
 
@@ -128,12 +129,12 @@
                                 <div class="card-body p-4">
                                     <h4 class="card-title mb-3 text-lg font-bold">Persetujuan Jadwal</h4>
                                     {{-- Form filter --}}
-                                    <form action="{{ route('kelas.filter') }}" method="get"
+                                    <form action="{{ route('jadwal.filter')}}" method="get"
                                         class="flex flex-wrap justify-center">
                                         @csrf
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-2 ml-0">
-                                            <label for="semester" class="form-label text-sm">Semester</label>
-                                            <select name="semester"
+                                            <label for="semester_aktif" class="form-label text-sm">Semester</label>
+                                            <select name="semester_aktif"
                                                 class="form-select block w-full p-2 pl-10 text-sm text-gray-700 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent">
                                                 <option value="">-</option>
                                                 <option value="1">Semester 1</option>
@@ -177,7 +178,49 @@
                                                 class="btn btn-primary w-60 p-2 text-sm text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">Search</button>
                                         </div>
                                     </form>
-
+                                    @foreach ($jadwal as $item)
+                                    <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <h2 class="text-lg font-semibold">{{ $item->matakuliah}}</h2>
+                                                <p class="text-gray-600">
+                                                    Ruang: {{ $item->ruang }} |
+                                                    Kelas:  {{ $item->kelas }} |
+                                                    Semester: {{ $item->semester_aktif }} |
+                                                    Waktu:  {{ $item->waktu }}  
+                                                </p>
+                                            </div>
+                                            <div>
+                                        
+                                                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2" onclick="confirmApprove('{{ route('jadwal.approve', $item->id) }}')">
+                                                        Setuju
+                                                    </button>
+                                                    <script>
+                                                        function confirmApprove(url) {
+                                                            Swal.fire({
+                                                                title: "Are you sure?",
+                                                                text: "You won't be able to revert this!",
+                                                                icon: "warning",
+                                                                showCancelButton: true,
+                                                                confirmButtonColor: "#3085d6",
+                                                                cancelButtonColor: "#d33",
+                                                                confirmButtonText: "Yes, Approve it!"
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    window.location.href = url; // Redirect to the URL (delete action)
+                                                                }
+                                                            });
+                                                        }
+                                                    </script>
+                                                    <button
+                                                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                                    Tidak
+                                                    </button>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

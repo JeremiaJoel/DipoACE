@@ -8,6 +8,7 @@
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Document</title>
 </head>
 
@@ -183,6 +184,7 @@
                                                         class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2">
                                                         Setuju
                                                     </button>
+                                                    
                                                     <button
                                                         class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                                                         Tidak

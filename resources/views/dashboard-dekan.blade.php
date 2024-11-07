@@ -28,7 +28,7 @@
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
                             <span
-                                class="rounded-md px-1 py-2 text-xl font-medium text-white">{{ Auth::user()->email }}</span>
+                                class="rounded-md px-1 py-2 text-xl font-medium text-white">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</span>
 
                             <!-- Profile dropdown -->
                             <div class="relative ml-3">
@@ -135,7 +135,7 @@
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
                 <div class="flex justify-center mt-4">
-                    <div class="bg-slate-400 p-4 rounded-lg shadow-md flex items-center space-x-4">
+                    <div class="bg-slate-white p-4 rounded-lg shadow-md flex items-center space-x-4">
                         <img alt="Profile Picture" class="h-32 w-24 rounded-lg" height="100"
                             src="../img/icong.jpg" width="100" />
                         <div>

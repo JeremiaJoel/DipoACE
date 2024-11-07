@@ -15,13 +15,13 @@ class DummyUsersSeeder extends Seeder
     {
         $userData = [
             [
-                'email' => 'cokisitohang@akademik.dipoace.ac.id',
+                'email' => 'adiwibowo@lecturer.dipoace.ac.id',
                 'password' => bcrypt('123456'),
-                'dekan' => '0',
+                'dekan' => '1',
                 'mahasiswa' => '0',
-                'pembimbing_akademik' => '0',
+                'pembimbing_akademik' => '1',
                 'kaprodi' => '0',
-                'bagian_akademik' => '1'
+                'bagian_akademik' => '0'
             ],
         ];
 

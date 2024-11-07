@@ -25,7 +25,7 @@ class RoleController extends Controller
             $roles[] = 'mahasiswa';
         }
 
-        if ($user->akadmeik == '1') {
+        if ($user->akademik == '1') {
             $roles[] = 'bagian_akademik';
         }
 
