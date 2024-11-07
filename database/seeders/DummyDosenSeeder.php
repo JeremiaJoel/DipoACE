@@ -20,7 +20,7 @@ class DummyDosenSeeder extends Seeder
                 'email' => 'adiwibowo@lecturer.dipoace.ac.id',
                 'jurusan' => 'Informatika',
                 'tempat_lahir' => 'Semarang',
-                'tanggal_lahir' => '1980-12-10',
+                'tanggal_lahir' => '10-12-1980',
                 'jenis_kelamin' => 'L',
                 'alamat' => 'Wonodri, Semarang Selatan, Kota Semarang, Jawa Tengah 50242',
                 'no_handphone' => '081267491202'
@@ -31,7 +31,7 @@ class DummyDosenSeeder extends Seeder
                 'email' => 'arispujiwidodo@lecturer.dipoace.ac.id',
                 'jurusan' => 'Informatika',
                 'tempat_lahir' => 'Semarang',
-                'tanggal_lahir' => '1979-03-09',
+                'tanggal_lahir' => '9-3-1979',
                 'jenis_kelamin' => 'L',
                 'alamat' => 'Jl. Kh Ahmad Dahlan, Pekunden, Kec. Semarang Tengah, Kota Semarang, Jawa Tengah 50134',
                 'no_handphone' => '081271920472'
@@ -42,7 +42,7 @@ class DummyDosenSeeder extends Seeder
                 'email' => 'arissugiharto@lecturer.dipoace.ac.id',
                 'jurusan' => 'Informatika',
                 'tempat_lahir' => 'Semarang',
-                'tanggal_lahir' => '1984-10-21',
+                'tanggal_lahir' => '21-10-1984',
                 'jenis_kelamin' => 'L',
                 'alamat' => 'Jl. Atmodirono Raya No.5, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242',
                 'no_handphone' => '081263956302'
@@ -53,7 +53,7 @@ class DummyDosenSeeder extends Seeder
                 'email' => 'sandykurniawan@lecturer.dipoace.ac.id',
                 'jurusan' => 'Informatika',
                 'tempat_lahir' => 'Semarang',
-                'tanggal_lahir' => '1988-05-07',
+                'tanggal_lahir' => '7-5-1988',
                 'jenis_kelamin' => 'L',
                 'alamat' => 'Jl. Telaga Bodas Raya No.6A, Karangrejo, Kec. Gajahmungkur, Kota Semarang, Jawa Tengah 50231',
                 'no_handphone' => '081255892537'
@@ -64,7 +64,7 @@ class DummyDosenSeeder extends Seeder
                 'email' => 'betanoranita@lecturer.dipoace.ac.id',
                 'jurusan' => 'Informatika',
                 'tempat_lahir' => 'Semarang',
-                'tanggal_lahir' => '1983-08-17',
+                'tanggal_lahir' => '17-8-1983',
                 'jenis_kelamin' => 'P',
                 'alamat' => 'Diamond Hill RD Jalan Bukit Sari Raya, Gombel, Ngesrep, Kec. Banyumanik, Kota Semarang, Jawa Tengah 50269',
                 'no_handphone' => '081265489329'
@@ -75,7 +75,7 @@ class DummyDosenSeeder extends Seeder
                 'email' => 'antobudiharjo@lecturer.dipoace.ac.id',
                 'jurusan' => 'Bioteknologi',
                 'tempat_lahir' => 'Demak',
-                'tanggal_lahir' => '1977-02-19',
+                'tanggal_lahir' => '19-2-1977',
                 'jenis_kelamin' => 'L',
                 'alamat' => 'Jl. Setia Budi No.36C, Tinjomoyo, Kec. Banyumanik, Kota Semarang, Jawa Tengah 50263',
                 'no_handphone' => '081285308582'
@@ -86,7 +86,7 @@ class DummyDosenSeeder extends Seeder
                 'email' => 'lilihkhotimperwati@lecturer.dipoace.ac.id',
                 'jurusan' => 'Biologi',
                 'tempat_lahir' => 'Kudus',
-                'tanggal_lahir' => '1988-06-14',
+                'tanggal_lahir' => '14-6-1988',
                 'jenis_kelamin' => 'P',
                 'alamat' => 'Jl. Rajabasa No.C1, Karangrejo, Kec. Gajahmungkur, Kota Semarang, Jawa Tengah 50234',
                 'no_handphone' => '081285308582'
@@ -97,7 +97,7 @@ class DummyDosenSeeder extends Seeder
                 'email' => 'tatikwidiharih@lecturer.dipoace.ac.id',
                 'jurusan' => 'Matematika',
                 'tempat_lahir' => 'Demak',
-                'tanggal_lahir' => '1974-11-26',
+                'tanggal_lahir' => '26-11-1974',
                 'jenis_kelamin' => 'P',
                 'alamat' => 'Jl. Menoreh Timur IV No.9, Sampangan, Kec. Gajahmungkur, Kota Semarang, Jawa Tengah 50232',
                 'no_handphone' => '081272007329'
@@ -108,7 +108,7 @@ class DummyDosenSeeder extends Seeder
                 'email' => 'isnaingunadi@lecturer.dipoace.ac.id',
                 'jurusan' => 'Fisika',
                 'tempat_lahir' => 'Probolinggo',
-                'tanggal_lahir' => '1974-04-11',
+                'tanggal_lahir' => '11-4-1974',
                 'jenis_kelamin' => 'L',
                 'alamat' => 'Jl. Puspanjolo Selatan 4 No.8, Bojongsalaman, Kec. Semarang Barat, Kota Semarang, Jawa Tengah 50141',
                 'no_handphone' => '081263074922'
@@ -119,14 +119,15 @@ class DummyDosenSeeder extends Seeder
                 'email' => 'isnaingunadi@lecturer.dipoace.ac.id',
                 'jurusan' => 'Fisika',
                 'tempat_lahir' => 'Batang',
-                'tanggal_lahir' => '1976-07-13',
+                'tanggal_lahir' => '13-7-1976',
                 'jenis_kelamin' => 'L',
                 'alamat' => 'Jl. Pandanaran No.57, Randusari, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50244',
                 'no_handphone' => '081233710462'
             ],
+            
         ];
 
-        foreach ($dosen as $key => $val) {
+        foreach($dosen as $key => $val){
             dosen::create($val);
         }
     }

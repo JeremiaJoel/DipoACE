@@ -8,15 +8,16 @@ use App\Http\Middleware\UserAkses;
 use App\Http\Controllers\ClassController;
 
 // Route::get('/', function () {
-//     return view('dashboard-pembimbing');
+//     return view('dashboard-mahasiswa');
 // });
 
-Route::middleware(['guest'])->group(function () {
+Route::middleware(['guest'])->group(function(){
     Route::get('/', [LoginController::class, 'index'])->name('login');
-    Route::post('/', [LoginController::class, 'login']);
+    Route::post('/', [LoginController::class, 'login']); 
+      
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(function(){
     Route::get('/logout', [LoginController::class, 'logout']);
     Route::get('/confirmrole', [RoleController::class, 'showRoleSelection']);
     Route::post('/confirmrole', [RoleController::class, 'selectRole']);

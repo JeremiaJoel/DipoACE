@@ -10,7 +10,7 @@ class irs extends Model
     use HasFactory;
 
     protected $fillable = [
-        'kodemk',
+        'kodemk', 
         'matakuliah',
         'kelas',
         'sks',
