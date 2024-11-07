@@ -10,12 +10,11 @@ class jadwal extends Model
     use HasFactory;
 
     protected $fillable = [
-        'dosen',
+        'dosen', 
         'ruang',
         'matakuliah',
         'waktu',
         'kelas',
-        'jurusan',
         'semester_aktif'
     ];
 }

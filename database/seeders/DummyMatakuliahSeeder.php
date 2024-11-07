@@ -1,7 +1,6 @@
 <?php
 
 namespace Database\Seeders;
-
 use App\Models\matakuliah;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,103 +14,104 @@ class DummyMatakuliahSeeder extends Seeder
     {
         $matakuliah = [
             [
-                'nama' => 'Struktur Diskrit',
-                'kodemk' => 'PAIK6105',
+                'nama'=> 'Struktur Diskrit', 
+                'kodemk'=> 'PAIK6105',
                 'jurusan' => 'Informatika',
-                'sks' =>  '4',
-                'semester' =>  '1',
+                'sks'=>  '4',
+                'semester'=>  '1',
                 'jenis_matkul' => 'Wajib'
             ],
             [
-                'nama' => 'Dasar Sistem',
-                'kodemk' => 'PAIK6103',
+                'nama'=> 'Dasar Sistem', 
+                'kodemk'=> 'PAIK6103',
                 'jurusan' => 'Informatika',
-                'sks' =>  '3',
-                'semester' =>  '1',
+                'sks'=>  '3',
+                'semester'=>  '1',
                 'jenis_matkul' => 'Wajib'
             ],
             [
-                'nama' => 'Statistika',
-                'kodemk' => 'PAIK6306',
+                'nama'=> 'Statistika', 
+                'kodemk'=> 'PAIK6306',
                 'jurusan' => 'Informatika',
-                'sks' =>  '2',
-                'semester' =>  '3',
+                'sks'=>  '2',
+                'semester'=>  '3',
                 'jenis_matkul' => 'Wajib'
             ],
             [
-                'nama' => 'Machine Learning',
-                'kodemk' => 'PAIK6505',
+                'nama'=> 'Machine Learning', 
+                'kodemk'=> 'PAIK6505',
                 'jurusan' => 'Informatika',
-                'sks' =>  '3',
-                'semester' =>  '5',
+                'sks'=>  '3',
+                'semester'=>  '5',
                 'jenis_matkul' => 'Wajib'
             ],
             [
-                'nama' => 'Sistem Informasi',
-                'kodemk' => 'PAIK6503',
+                'nama'=> 'Sistem Informasi', 
+                'kodemk'=> 'PAIK6503',
                 'jurusan' => 'Informatika',
-                'sks' =>  '3',
-                'semester' =>  '5',
+                'sks'=>  '3',
+                'semester'=>  '5',
                 'jenis_matkul' => 'Wajib'
             ],
             [
-                'nama' => 'Pengembangan Berbasis Platform',
-                'kodemk' => 'PAIK6105',
+                'nama'=> 'Pengembangan Berbasis Platform', 
+                'kodemk'=> 'PAIK6105',
                 'jurusan' => 'Informatika',
-                'sks' =>  '4',
-                'semester' =>  '5',
+                'sks'=>  '4',
+                'semester'=>  '5',
                 'jenis_matkul' => 'Wajib'
             ],
             [
-                'nama' => 'Komputasi Tersebar dan Paralel',
-                'kodemk' => 'PAIK6502',
+                'nama'=> 'Komputasi Tersebar dan Paralel', 
+                'kodemk'=> 'PAIK6502',
                 'jurusan' => 'Informatika',
-                'sks' =>  '3',
-                'semester' =>  '5',
+                'sks'=>  '3',
+                'semester'=>  '5',
                 'jenis_matkul' => 'Wajib'
             ],
             [
-                'nama' => 'Proyek Perangkat Lunak',
-                'kodemk' => 'PAIK6504',
+                'nama'=> 'Proyek Perangkat Lunak', 
+                'kodemk'=> 'PAIK6504',
                 'jurusan' => 'Informatika',
-                'sks' =>  '3',
-                'semester' =>  '5',
+                'sks'=>  '3',
+                'semester'=>  '5',
                 'jenis_matkul' => 'Wajib'
             ],
             [
-                'nama' => 'Sistem Cerdas',
-                'kodemk' => 'PAIK6406',
+                'nama'=> 'Sistem Cerdas', 
+                'kodemk'=> 'PAIK6406',
                 'jurusan' => 'Informatika',
-                'sks' =>  '3',
-                'semester' =>  '4',
+                'sks'=>  '3',
+                'semester'=>  '4',
                 'jenis_matkul' => 'Wajib'
             ],
             [
-                'nama' => 'Grafika dan Komputasi Visual',
-                'kodemk' => 'PAIK6404',
+                'nama'=> 'Grafika dan Komputasi Visual', 
+                'kodemk'=> 'PAIK6404',
                 'jurusan' => 'Informatika',
-                'sks' =>  '3',
-                'semester' =>  '4',
+                'sks'=>  '3',
+                'semester'=>  '4',
                 'jenis_matkul' => 'Wajib'
             ],
             [
-                'nama' => 'Pemrograman Berorientasi Objek',
-                'kodemk' => 'PAIK6401',
+                'nama'=> 'Pemrograman Berorientasi Objek', 
+                'kodemk'=> 'PAIK6401',
                 'jurusan' => 'Informatika',
-                'sks' =>  '3',
-                'semester' =>  '4',
+                'sks'=>  '3',
+                'semester'=>  '4',
                 'jenis_matkul' => 'Wajib'
             ],
             [
-                'nama' => 'Data Mining',
-                'kodemk' => 'PAIK6402',
+                'nama'=> 'Data Mining', 
+                'kodemk'=> 'PAIK6402',
                 'jurusan' => 'Informatika',
-                'sks' =>  '3',
-                'semester' =>  '7',
+                'sks'=>  '3',
+                'semester'=>  '7',
                 'jenis_matkul' => 'Pilihan'
             ]
         ];
-        foreach ($matakuliah as $key => $val) {
+
+        foreach($matakuliah as $key => $val){
             matakuliah::create($val);
         }
     }
