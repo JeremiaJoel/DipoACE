@@ -13,6 +13,7 @@ class dosen extends Model
         'nama', 
         'nip',
         'email',
+        'jurusan'.
         'tempat_lahir',
         'tanggal_lahir',
         'jenis_kelamin',
