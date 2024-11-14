@@ -11,7 +11,7 @@ use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\MahasiswaController;
 
 // Route::get('/', function () {
-//     return view('welcome');
+//     return view('dashboard-mahasiswa');
 // });
 
 Route::middleware(['guest'])->group(function(){

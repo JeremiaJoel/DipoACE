@@ -28,7 +28,11 @@
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
                             <span
+<<<<<<< HEAD
                                 class="rounded-md px-1 py-2 text-xl font-medium text-white">{{\App\Models\mahasiswa::where('email', Auth::user()->email)->first()->nama }}</span>
+=======
+                                class="rounded-md px-1 py-2 text-xl font-medium text-white">{{ Auth::user()->email }}</span>
+>>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
 
                             <!-- Profile dropdown -->
                             <div class="relative ml-3">
@@ -75,13 +79,22 @@
             <div class="max-w-full mx-24 mt-10 p-4">
 
                 <div class="bg-white shadow rounded-lg overflow-hidden">
+<<<<<<< HEAD
                     <div class="bg-gray-800 p-4 flex items-center">
+=======
+                    <div class="bg-blue-700 p-4 flex items-center">
+>>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
                         <img
                             src="../img/saiful.png" alt="Profile picture of a student"
                             class="w-24 h-24 rounded-full border-4 border-white w-100 h-100"/>
                         <div class="ml-4 text-white">
+<<<<<<< HEAD
                             <h1 class="text-2xl font-bold">{{ \App\Models\mahasiswa::where('email', Auth::user()->email)->first()->nama }}</h1>
                             <p class="mt-1">NIM: {{ \App\Models\mahasiswa::where('email', Auth::user()->email)->first()->nim}} | {{ \App\Models\mahasiswa::where('email', Auth::user()->email)->first()->jurusan}} S1</p>
+=======
+                            <h1 class="text-2xl font-bold">pinsen</h1>
+                            <p class="mt-1">NIM: 24060122120001 | Informatika S1</p>
+>>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
                         </div>
                     </div>
                 </div>
@@ -89,8 +102,13 @@
                 <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-white shadow rounded-lg p-4">
                         <div class="mt-4 text-center">
+<<<<<<< HEAD
                             <p class="text-gray-600 font-semibold">Dosen Wali : {{ \App\Models\mahasiswa::where('email', Auth::user()->email)->first()->pembimbing_akademik }}</p>
                             <p class="text-gray-600 font-semibold">(NIP: {{ 199603032024061003 }})</p>
+=======
+                            <p class="text-gray-600 font-semibold">Dosen Wali : Sandy Kurniawan, S.Kom., M.Kom.</p>
+                            <p class="text-gray-600 font-semibold">(NIP: 199603032024061003)</p>
+>>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
                         </div>
                         <div class="mt-4 grid grid-cols-3 gap-4 text-center">
                             <div>
@@ -134,7 +152,11 @@
                         <h2 class="text-xl font-semibold">KHS</h2>
                     </div>
                     <div class="bg-white shadow rounded-lg p-4">
+<<<<<<< HEAD
                         <a class="text-xl font-semibold" href="{{ url('/status-mahasiswa') }}">Status</a>
+=======
+                        <h2 class="text-xl font-semibold">Status</h2>
+>>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
                     </div>
                 </div>
             </div>
