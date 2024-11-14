@@ -25,7 +25,7 @@ class RoleController extends Controller
             $roles[] = 'mahasiswa';
         }
 
-        if ($user->akadmeik == '1') {
+        if ($user->akademik == '1') {
             $roles[] = 'bagian_akademik';
         }
 
@@ -82,7 +82,7 @@ class RoleController extends Controller
         return redirect('/login');  
         }
 
-    public function akadmeik(){
+    public function bagian_akademik(){
         if (Auth::check()) {
             return view('dashboard-akademik');
         }

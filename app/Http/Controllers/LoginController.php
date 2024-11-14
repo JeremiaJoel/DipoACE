@@ -36,7 +36,7 @@ class LoginController extends Controller
                 return redirect('/confirmrole');
             } else if (Auth::user()->mahasiswa == '1') {
                 return redirect('/dashboard-mahasiswa');
-            } else if (Auth::user()->akademik == '1') {
+            } else if (Auth::user()->bagian_akademik == '1') {
                 return redirect('/dashboard-akademik');
             }
         } else {

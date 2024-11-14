@@ -8,6 +8,7 @@
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Document</title>
 </head>
 
@@ -21,7 +22,7 @@
                             <img class="h-8 w-8" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
                                 alt="Your Company">
                         </div>
-                        <span class="ml-2 text-2xl font-bold text-white">DipoACE</span>
+                        <a class="ml-2 text-2xl font-bold text-white" href="{{ url('/dashboard-dekan') }}">DipoACE</a>
                         <div class="hidden md:block">
                             {{-- <div class="ml-10 flex items-baseline space-x-4">
                   </div> --}}
@@ -30,7 +31,7 @@
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
                             <!-- Profile dropdown -->
-                            <span class="mr-2 text-white">{{ Auth::user()->email }}</span>
+                            <span class="mr-2 text-white">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</span>
                             <div class="relative ml-3">
                                 <div>
                                     <button type="button" @click="isOpen = !isOpen"
@@ -94,7 +95,7 @@
                                 alt="">
                         </div>
                         <div class="ml-3">
-                            <div class="text-sm font-medium leading-none text-gray-400">{{ Auth::user()->email }}</div>
+                            <div class="text-sm font-medium leading-none text-gray-400">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</div>
                         </div>
                     </div>
                     <div class="mt-3 space-y-1 px-2">
@@ -120,20 +121,22 @@
                             <div class="card bg-white rounded-lg shadow-md">
                                 <div class="flex border-b">
                                     <button
-                                        class="flex-1 py-4 px-6 text-center text-gray-500 border-b-2 border-gray-500">Approve Schedule</button>
+                                        class="flex-1 py-4 px-6 text-center text-gray-500 border-b-2 border-gray-500">Approve
+                                        Schedule</button>
                                     <button class="flex-1 py-4 px-6 text-center text-gray-500 hover"
-                                        onclick="window.location.href='academic-classpage-dekan'">Approve Classroom</button>
-                                    
+                                        onclick="window.location.href='academic-classpage-dekan'">Approve
+                                        Classroom</button>
+
                                 </div>
                                 <div class="card-body p-4">
                                     <h4 class="card-title mb-3 text-lg font-bold">Persetujuan Jadwal</h4>
                                     {{-- Form filter --}}
-                                    <form action="{{ route('kelas.filter') }}" method="get"
+                                    <form action="{{ route('jadwal.filter') }}" method="get"
                                         class="flex flex-wrap justify-center">
                                         @csrf
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-2 ml-0">
-                                            <label for="semester" class="form-label text-sm">Semester</label>
-                                            <select name="semester"
+                                            <label for="semester_aktif" class="form-label text-sm">Semester</label>
+                                            <select name="semester_aktif"
                                                 class="form-select block w-full p-2 pl-10 text-sm text-gray-700 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent">
                                                 <option value="">-</option>
                                                 <option value="1">Semester 1</option>
@@ -177,7 +180,74 @@
                                                 class="btn btn-primary w-60 p-2 text-sm text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">Search</button>
                                         </div>
                                     </form>
-
+                                    @foreach ($jadwal as $item)
+                                        <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <h2 class="text-lg font-semibold">{{ $item->matakuliah }}</h2>
+                                                    <p class="text-gray-600">
+                                                        Ruang: {{ $item->ruang }} |
+                                                        Kelas: {{ $item->kelas }} |
+                                                        Semester: {{ $item->semester_aktif }} |
+                                                        Waktu: {{ $item->waktu }}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <button type="button"
+                                                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
+                                                        onclick="confirmApprove('{{ route('jadwal.approve', $item->id) }}')">
+                                                        Setuju
+                                                    </button>
+                                                    <script>
+                                                        function confirmApprove(url) {
+                                                            Swal.fire({
+                                                                title: "Are you sure?",
+                                                                text: "You won't be able to revert this!",
+                                                                icon: "warning",
+                                                                showCancelButton: true,
+                                                                confirmButtonColor: "#3085d6",
+                                                                cancelButtonColor: "#d33",
+                                                                confirmButtonText: "Yes, Approve it!"
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    // Send a POST request using Fetch API
+                                                                    fetch(url, {
+                                                                            method: 'POST',
+                                                                            headers: {
+                                                                                'Content-Type': 'application/json',
+                                                                                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token for security
+                                                                            },
+                                                                            body: JSON.stringify({}) // You can send additional data if needed
+                                                                        })
+                                                                        .then(response => {
+                                                                            if (response.ok) {
+                                                                                Swal.fire({
+                                                                                    title: 'Approved!',
+                                                                                    text: 'Your approval has been recorded.',
+                                                                                    icon: 'success',
+                                                                                    timer: 3000, // Alert will stay for 3 seconds
+                                                                                    timerProgressBar: true, // Optional: shows a progress bar
+                                                                                    willClose: () => {
+                                                                                        location.reload();
+                                                                                    }
+                                                                                });
+                                                                            } else {
+                                                                                // Handle errors
+                                                                                Swal.fire('Error!', 'There was a problem approving the schedule.', 'error');
+                                                                            }
+                                                                        })
+                                                                        .catch(error => {
+                                                                            console.error('Error:', error);
+                                                                            Swal.fire('Error!', 'There was a problem with your request.', 'error');
+                                                                        });
+                                                                }
+                                                            });
+                                                        }
+                                                    </script>                                   
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
