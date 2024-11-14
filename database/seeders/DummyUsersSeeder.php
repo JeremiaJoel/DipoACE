@@ -15,20 +15,7 @@ class DummyUsersSeeder extends Seeder
     {
         $userData = [
             // [
-<<<<<<< HEAD
             //     'email' => 'ahmad.maulana@students.dipoace.ac.id',
-=======
-            //     'email' => 'cokisitohang@akademik.dipoace.ac.id',
-            //     'password' => bcrypt('123456'),
-            //     'dekan' => '0',
-            //     'mahasiswa' => '0',
-            //     'pembimbing_akademik' => '0',
-            //     'kaprodi' => '0',
-            //     'bagian_akademik' => '1'
-            // ],
-            // [
-            //     'email' => 'pinsensitompul@mahasiswa.dipoace.ac.id',
->>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
             //     'password' => bcrypt('123456'),
             //     'dekan' => '0',
             //     'mahasiswa' => '1',
@@ -36,7 +23,6 @@ class DummyUsersSeeder extends Seeder
             //     'kaprodi' => '0',
             //     'bagian_akademik' => '0'
             // ],
-<<<<<<< HEAD
             // [
             //     'email' => 'adiwibowo@lecturer.dipoace.ac.id',
             //     'password' => bcrypt('123456'),
@@ -48,10 +34,6 @@ class DummyUsersSeeder extends Seeder
             // ],
             [
                 'email' => 'budibalsem@akademik.dipoace.ac.id',
-=======
-            [
-                'email' => 'budibalsem@dekan.dipoace.ac.id',
->>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
                 'password' => bcrypt('123456'),
                 'dekan' => '1',
                 'mahasiswa' => '0',

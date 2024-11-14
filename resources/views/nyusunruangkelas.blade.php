@@ -15,7 +15,6 @@
 
     <nav class="bg-gray-800" x-data="{ isOpen: false }">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-<<<<<<< HEAD
             <div class="flex h-16 items-center justify-between">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -27,17 +26,7 @@
                             <span class="rounded-md px-3 py-2 text-2xl font-medium text-white">DipoACE</span>
                         </div>
                     </div>
-=======
-          <div class="flex h-16 items-center justify-between">
-            <div class="flex items-center">
-              <div class="flex-shrink-0">
-                <img class="h-8 w-8" src="../img/logoundip.png" alt="Your Company">
-                
-              </div>
-              <div class="hidden md:block">
-                <div class="flex items-baseline space-x-4">
-                  <span class="rounded-md px-3 py-2 text-2xl font-medium text-white">DipoACE</span>  
->>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
+
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-4 flex items-center md:ml-6">
@@ -78,26 +67,17 @@
                     </div>
                 </div>
             </div>
-<<<<<<< HEAD
+
         </div>
     </nav>
 
     <header class="bg-white shadow">
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             <a href="dashboard-akademik" class="text-3xl font-bold tracking-tight text-gray-900">Dashboard</a>
-=======
-          </div>
-        </div>
-      </nav>
-    
-      <header class="bg-white shadow">
-        <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <a href="dashboard-akademik" class="text-3xl font-bold tracking-tight text-gray-900">Dashboard</a>
->>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
         </div>
     </header>
 
-<<<<<<< HEAD
+
     <div class="mt-10" x-data="{ open: false }">
         <!-- Button untuk membuka modal -->
         <button @click="open = true" class="ml-72 bg-blue-500 text-white font-bold rounded py-2 px-4 w-20 text-center">
@@ -171,39 +151,7 @@
                     </div>
                 </form>
             </div>
-=======
-    <div x-data="{ open: false, selected: 'Pilih Program Studi' }" class="relative">
-        {{-- <label id="listbox-label" class="flex text-sm font-medium leading-6 text-gray-900 pl-48">Memilih Program Studi</label> --}}
-        <div class="relative mt-8 w-96 pl-48 ">
-          <button @click="open = !open" type="button" class="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
-            <span class="flex items-center">
-              <span class="ml-3 block truncate" x-text="selected">Pilih Program Studi</span>
-            </span>
-            <span class="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
-              <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clip-rule="evenodd" />
-              </svg>
-            </span>
-          </button>
-      
-          <ul x-show="open" @click.away="open = false" class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm" role="listbox" aria-labelledby="listbox-label">
-            <li @click="selected = 'Informatika'; open = false" class="relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900" role="option">
-              <div class="flex items-center">
-                <span class="ml-3 block truncate">Informatika</span>
-              </div>
-            </li>
-            <li @click="selected = 'Biologi'; open = false" class="relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900" role="option">
-              <div class="flex items-center">
-                <span class="ml-3 block truncate">Biologi</span>
-              </div>
-            </li>
-            <li @click="selected = 'Fisika'; open = false" class="relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900" role="option">
-              <div class="flex items-center">
-                <span class="ml-3 block truncate">Fisika</span>
-              </div>
-            </li>
-          </ul>
->>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
+
         </div>
     </div>
 

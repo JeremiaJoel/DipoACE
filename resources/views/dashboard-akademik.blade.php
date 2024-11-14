@@ -16,11 +16,7 @@
                 <div class="flex h-16 items-center justify-between">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-<<<<<<< HEAD
                             <img class="h-8 w-8" src="../img/logoundip.png" alt="Logo Undip">
-=======
-                            <img class="h-8 w-8" src="../img/undipdashboard.png" alt="Your Company">
->>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
 
                         </div>
                         <div class="hidden md:block">
@@ -44,13 +40,7 @@
                                         id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                         <span class="absolute -inset-1.5"></span>
                                         <span class="sr-only">Open user menu</span>
-<<<<<<< HEAD
                                         <img class="h-8 w-8 rounded-full" src="../img/saiful.png" alt="Foto Profile">
-=======
-                                        <img class="h-8 w-8 rounded-full"
-                                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                            alt="">
->>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
                                     </button>
                                 </div>
 
@@ -64,21 +54,13 @@
                                     class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                                     role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
                                     tabindex="-1">
-<<<<<<< HEAD
                                     
-=======
-                                    <!-- Active: "bg-gray-100", Not Active: "" -->
->>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
                                     <a href="logout" class="block px-4 py-2 text-sm text-gray-700" role="menuitem"
                                         tabindex="-1" id="user-menu-item-2">Sign out</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-<<<<<<< HEAD
-=======
-                    
->>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
                 </div>
             </div>
         </nav>
@@ -88,7 +70,6 @@
                 <h1 class="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>
             </div>
         </header>
-<<<<<<< HEAD
         
         <main>
             <div class="max-w-full mx-24 mt-10 p-4">
@@ -137,41 +118,10 @@
                             <div>
                                 <p class="text-gray-600 mt-8">SKSk</p>
                                 <p class="text-2xl">84</p>
-=======
-        <main>
-            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-
-                <div class="flex justify-center mt-4">
-                    <div class="bg-slate-400 p-4 rounded-lg shadow-md flex items-center space-x-4">
-                        <img alt="Profile Picture" class="h-32 w-24 rounded-lg" height="100"
-                            src="../img/icong.jpg" width="100" />
-                        <div>
-                            <h2 class="text-xl font-bold">Asep Komarudin</h2>
-                            <p>24060122140160 | Informatika S1</p>
-                            <p>Faculty Of Science and Mathematics</p>
-                            <p>Dosen Wali : Bambang Pacul | NIP : 24636475474767311</p>
-                            <div class="flex items-center space-x-4 mt-2">
-                                <div class="flex items-center space-x-2">
-                                    <span class="font-bold">Status Akademik</span>
-                                    <span class="bg-green-500 text-white px-2 py-1 rounded-full">Aktif</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <span class="font-bold">Semester Akademik :</span>
-                                    <span>2024/2025</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <span class="font-bold">Semester Studi :</span>
-                                    <span>5</span>
-                                </div>
-                                <div class="flex items-center space-x-2"></div>
-                                <span class="font-bold">IPK :</span>
-                                <span>3.67</span>
->>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
                             </div>
                         </div>
                     </div>
                 </div>
-<<<<<<< HEAD
                 
                 <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="bg-white shadow rounded-lg p-4 h-20">
@@ -193,30 +143,3 @@
                 </div>
             </div>
         </main>
-=======
-                <div class="flex justify-center mt-8 space-x-8">
-                    <div
-                        class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center space-y-2 hover:cursor-pointer hover:text-slate-400">
-                        <i class="fas fa-clipboard-list text-4xl"></i>
-                        <a href="nyusunkuotakelas">Academic</a>
-                    </div>
-                    <div
-                        class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center space-y-2 hover:cursor-pointer hover:text-slate-400">
-                        <i class="fas fa-calendar-alt text-4xl"></i>
-                        <a href="#">Academic Calander</a>
-                    </div>
-                    <div
-                        class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center space-y-2 hover:cursor-pointer hover:text-slate-400">
-                        <i class="fas fa-globe text-4xl"></i>
-                        <a href="#">Online Courses</a>
-                    </div>
-                    <div
-                        class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center space-y-2 hover:cursor-pointer hover:text-slate-400">
-                        <i class="fas fa-bell text-4xl"></i>
-                        <a href="#">Notification</a>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
->>>>>>> 97c510d96f8fcb640e3751d594e2403ecf24cfeb
