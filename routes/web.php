@@ -63,3 +63,10 @@ Route::get('/status-mahasiswa', function () {
 Route::get('/classrooms', [ClassroomController::class, 'index'])->name('classrooms.index');
 Route::get('/nyusunruangkelas', [ClassroomController::class, 'index'])->name('nyusunruangkelas'); // Route tambahan
 Route::get('/classrooms/{id}/edit', [ClassroomController::class, 'edit'])->name('classrooms.edit');
+
+// Route punya pembimbing akademik
+Route::get('/tabelMahasiswa', [menuPembimbingController::class, 'menuIrs'])->name('tabelMahasiswa');
+
+Route::get('/pembimbing-irs-mahasiswa', [menuPembimbingController::class, 'irsMahasiswa'])->name('pembimbing-irs-mahasiswa');;
+
+//menampilkan data irs mahasiswa tertentu
