@@ -9,6 +9,9 @@ use App\Http\Middleware\UserAkses;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\menuPembimbingControllerController;
+use App\Http\Controllers\ApproveClassroomController;
+
 
 // Route::get('/', function () {
 //     return view('dashboard-mahasiswa');
@@ -26,13 +29,25 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/confirmrole', [RoleController::class, 'selectRole']);
     // Route::get('/academic-page', [PageController::class, 'academic']);
     Route::get('academic-classpage-dekan/logout', [LoginController::class, 'logout']);
-    Route::get('/academic-classpage-dekan', [ClassController::class, 'index'])->name('kelas.index');
-    Route::get('/academic-classpage-dekan/filter', [ClassController::class, 'filter'])->name('kelas.filter');
-    Route::post('/academic-classpage-dekan/{id}/approve', [ClassController::class, 'approve'])->name('kelas.approve');
+    
+    
+    // Halaman Dekan: Approve Classrooms
+    Route::get('/academic-classpage-dekan', [ApproveClassroomController::class, 'index'])->name('academic-classpage-dekan');
+    Route::get('/academic-classpage-dekan/filter', [ApproveClassroomController::class, 'filter'])->name('kelas.filter');
+
+    // Role Akademik: Mengirim pengajuan
+    Route::post('/classrooms/{id}/submit-approval', [ApproveClassroomController::class, 'submit'])->name('approveclassrooms.submit');
+    
+    // Approve dan Reject Pengajuan
+    Route::post('/approveclassrooms/{id}/approve', [ApproveClassroomController::class, 'approve'])->name('kelas.approve');
+    Route::post('/approveclassrooms/{id}/reject', [ApproveClassroomController::class, 'reject'])->name('kelas.reject');
+
+
     Route::get('/academic-schedulepage-dekan', [ScheduleController::class, 'index'])->name('jadwal.index');
     Route::get('/academic-schedulepage-dekan/filter', [ScheduleController::class, 'filter'])->name('jadwal.filter');
     Route::post('/academic-schedulepage-dekan/{id}/approve', [ScheduleController::class, 'approve'])->name('jadwal.approve');
     Route::post('/status-mahasiswa/{id}/aktif', [MahasiswaController::class, 'status'])->name('mahasiswa.status');
+
     Route::delete('/classrooms/{id}', [ClassroomController::class, 'destroy'])->name('classrooms.destroy');
     Route::patch('/classrooms/{id}', [ClassroomController::class, 'update'])->name('classrooms.update');
     Route::post('/submit-form', [ClassroomController::class, 'store'])->name('submit.form');
@@ -65,8 +80,8 @@ Route::get('/nyusunruangkelas', [ClassroomController::class, 'index'])->name('ny
 Route::get('/classrooms/{id}/edit', [ClassroomController::class, 'edit'])->name('classrooms.edit');
 
 // Route punya pembimbing akademik
-Route::get('/tabelMahasiswa', [menuPembimbingController::class, 'menuIrs'])->name('tabelMahasiswa');
+// Route::get('/tabelMahasiswa', [menuPembimbingController::class, 'menuIrs'])->name('tabelMahasiswa');
 
-Route::get('/pembimbing-irs-mahasiswa', [menuPembimbingController::class, 'irsMahasiswa'])->name('pembimbing-irs-mahasiswa');;
+// Route::get('/pembimbing-irs-mahasiswa', [menuPembimbingController::class, 'irsMahasiswa'])->name('pembimbing-irs-mahasiswa');;
 
 //menampilkan data irs mahasiswa tertentu

@@ -75,7 +75,7 @@
             <div class="max-w-full mx-24 mt-10 p-4">
 
                 <div class="bg-white shadow rounded-lg overflow-hidden">
-                    <div class="bg-blue-700 p-4 flex items-center">
+                    <div class="bg-gray-800 p-4 flex items-center">
                         <img
                             src="../img/saiful.png" alt="Profile picture of a student"
                             class="w-24 h-24 rounded-full border-4 border-white w-100 h-100"/>
@@ -86,57 +86,42 @@
                     </div>
                 </div>
                 
-                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-1 gap-6">
                     <div class="bg-white shadow rounded-lg p-4">
                         <div class="mt-4 text-center">
-                            <p class="text-gray-600 font-semibold">Dosen Wali : Sandy Kurniawan, S.Kom., M.Kom.</p>
-                            <p class="text-gray-600 font-semibold">(NIP: 199603032024061003)</p>
+                            <p class="text-gray-600 font-semibold">Status Penyusunan Jadwal</p>
                         </div>
-                        <div class="mt-4 grid grid-cols-3 gap-4 text-center">
-                            <div>
-                                <p class="text-gray-600">Semester Akademik</p>
-                                <p class="text-2xl">2024/2025 Ganjil</p>
+                        <div class="mt-4 grid grid-cols-3 gap-4 text-center cursor-pointer">
+                            <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-blue-700 hover:text-white"
+                                onclick="window.location.href='{{ route('dashboard-akademik') }}'">
+                                <p class="">Belum Disetujui</p>
+                                <p class="text-2xl">20</p>
                             </div>
-                            <div>
-                                <p class="text-gray-600">Semester Studi</p>
+                            <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-blue-700 hover:text-white">
+                                <p>Sudah disetujui</p>
                                 <p class="text-2xl">5</p>
                             </div>
-                            <div>
-                                <p class="text-gray-600">Status Akademik</p>
-                                <p class="mt-2 ml-24 bg-green-500 text-white font-bold rounded py-2 px-6 w-20 text-center">Aktif</p>
+                            <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-blue-700 hover:text-white">
+                                <p>Belum Mengambil</p>
+                                <p class="text-2xl">15</p>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="bg-white shadow rounded-lg p-4">
-                        <h2 class="text-xl font-semibold flex items-center">Prestasi Akademik</h2>
-                        <div class="mt-4 grid grid-cols-2 gap-4 text-center">
-                            <div>
-                                <p class="text-gray-600 mt-8">IPK</p>
-                                <p class="text-2xl">3.73</p>
-                            </div>
-                            <div>
-                                <p class="text-gray-600 mt-8">SKSk</p>
-                                <p class="text-2xl">84</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 
-                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="bg-white shadow rounded-lg p-4 h-20">
-                        <i class="text-xl font-semibold"></i>
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 h-20">
+                    <div class="bg-white shadow rounded-lg p-4 hover:bg-gray-600 text-center">
+                        <i class="text-xl font-semibold text"></i>
                         <a href="nyusunruangkelas">Akademik</a>
                     </div>
-                    <div class="bg-white shadow rounded-lg p-4">
+                    <div class="bg-white shadow rounded-lg p-4 hover:bg-gray-600">
                         <i class="text-xl font-semibold"></i>
                         <a href="form-ruangan">Kalender</a>
                     </div>
-                    <div class="bg-white shadow rounded-lg p-4">
+                    <div class="bg-white shadow rounded-lg p-4 hover:bg-gray-600">
                         <i class="text-xl font-semibold"></i>
                         <a href="">Online Courses</a>
                     </div>
-                    <div class="bg-white shadow rounded-lg p-4">
+                    <div class="bg-white shadow rounded-lg p-4 hover:bg-gray-600">
                         <i class="text-xl font-semibold"></i>
                         <a href="">Notification</a>
                     </div>

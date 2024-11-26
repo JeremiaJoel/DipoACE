@@ -86,73 +86,134 @@
 
         <!-- Modal -->
         <div x-show="open" x-transition
-            class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
-                <h2 class="text-xl font-semibold mb-4">Form Menyusun Jadwal</h2>
+    class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
+        <h2 class="text-xl font-semibold mb-4">Form Menyusun Ruangan</h2>
 
-                <!-- Form dalam Modal -->
-                <form action="{{ route('submit.form') }}" method="POST">
-                    @csrf
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700" for="name">Nama</label>
-                        <input type="text" id="nama" name="nama"
-                            class="mt-1 block w-full border-gray-300 shadow-sm" required>
-                    </div>
+        <!-- Form dalam Modal -->
+        <form action="{{ route('submit.form') }}" method="POST">
+            @csrf
 
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700" for="name">Ruang</label>
-                        <input type="text" id="ruang" name="ruang"
-                            class="mt-1 block w-full border-gray-300 shadow-sm" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700" for="name">Hari</label>
-                        <input type="text" id="hari" name="hari"
-                            class="mt-1 block w-full border-gray-300 shadow-sm" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700" for="name">Jam Mulai</label>
-                        <input type="text" id="jam_mulai" name="jam_mulai"
-                            class="mt-1 block w-full border-gray-300 shadow-sm" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700" for="name">Jam Selesai</label>
-                        <input type="text" id="jam_selesai" name="jam_selesai"
-                            class="mt-1 block w-full border-gray-300 shadow-sm" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700" for="name">Semester</label>
-                        <input type="text" id="semester" name="semester"
-                            class="mt-1 block w-full border-gray-300 shadow-sm" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700" for="name">Jurusan</label>
-                        <select name="jurusan" id="jurusan" class="mt-1 block w-full border-gray-300 shadow-sm"
-                            required>
-                            <option value="">-</option>
-                            <option value="Informatika">Informatika</option>
-                            <option value="Statistika">Statistika</option>
-                            <option value="Fisika">Fisika</option>
-                            <option value="Biologi">Biologi</option>
-                            <option value="Bioteknologi">Bioteknologi</option>
-                            <option value="Kimia">Kimia</option>
-                            <option value="Matematika">Matematika</option>
-                        </select>
-                    </div>
-
-                    <div class="flex justify-end">
-                        <button type="button" @click="open = false"
-                            class="mr-2 px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
-                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Submit</button>
-                    </div>
-                </form>
+            <!-- Kode Ruang -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700" for="gedung">Gedung</label>
+                <input type="text" id="gedung" name="gedung"
+                    class="mt-1 block w-full border-gray-300 shadow-sm" required>
+            </div>
+            
+            <!-- Kode Ruang -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700" for="kode_ruang">Kode Ruang</label>
+                <div class="grid grid-cols-3 gap-4 mt-1">
+                    <!-- Kode Ruang E -->
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_e101" name="kode_ruang[]" value="E101" class="mr-2">
+                        E101
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_e102" name="kode_ruang[]" value="E102" class="mr-2">
+                        E102
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_e103" name="kode_ruang[]" value="E103" class="mr-2">
+                        E103
+                    </label>
+                    
+                    <!-- Kode Ruang A -->
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_a101" name="kode_ruang[]" value="A101" class="mr-2">
+                        A101
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_a102" name="kode_ruang[]" value="A102" class="mr-2">
+                        A102
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_a103" name="kode_ruang[]" value="A103" class="mr-2">
+                        A103
+                    </label>
+                    
+                    <!-- Kode Ruang B -->
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_b101" name="kode_ruang[]" value="B101" class="mr-2">
+                        B101
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_b102" name="kode_ruang[]" value="B102" class="mr-2">
+                        B102
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_b103" name="kode_ruang[]" value="B103" class="mr-2">
+                        B103
+                    </label>
+                    
+                    <!-- Kode Ruang C -->
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_c101" name="kode_ruang[]" value="C101" class="mr-2">
+                        C101
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_c102" name="kode_ruang[]" value="C102" class="mr-2">
+                        C102
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_c103" name="kode_ruang[]" value="C103" class="mr-2">
+                        C103
+                    </label>
+                    
+                    <!-- Kode Ruang D -->
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_d101" name="kode_ruang[]" value="D101" class="mr-2">
+                        D101
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_d102" name="kode_ruang[]" value="D102" class="mr-2">
+                        D102
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_d103" name="kode_ruang[]" value="D103" class="mr-2">
+                        D103
+                    </label>
+                </div>
             </div>
 
-        </div>
+            <!-- Kapasitas -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700" for="kapasitas">Kapasitas</label>
+                <input type="number" id="kapasitas" name="kapasitas"
+                    class="mt-1 block w-full border-gray-300 shadow-sm" required>
+            </div>
+
+            <!-- Status -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700" for="status">Status</label>
+                <input type="text" id="status" name="status"
+                    class="mt-1 block w-full border-gray-300 shadow-sm" value="Belum Disetujui" readonly>
+            </div>
+
+            <!-- Jurusan -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700" for="jurusan">Jurusan</label>
+                <select name="jurusan" id="jurusan" class="mt-1 block w-full border-gray-300 shadow-sm" required>
+                    <option value="">-</option>
+                    <option value="Informatika">Informatika</option>
+                    <option value="Statistika">Statistika</option>
+                    <option value="Fisika">Fisika</option>
+                    <option value="Biologi">Biologi</option>
+                    <option value="Bioteknologi">Bioteknologi</option>
+                    <option value="Kimia">Kimia</option>
+                    <option value="Matematika">Matematika</option>
+                </select>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="button" @click="open = false"
+                    class="mr-2 px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
     </div>
 
     <div class="container mx-auto mt-10">
@@ -168,42 +229,55 @@
                 <table class="min-w-full bg-white">
                     <thead>
                         <tr>
-                            <th class="py-2 px-4 border-b text-left text-gray-600">Nama</th>
-                            <th class="py-2 px-4 border-b text-left text-gray-600">Ruang</th>
-                            <th class="py-2 px-4 border-b text-left text-gray-600">Hari</th>
-                            <th class="py-2 px-4 border-b text-left text-gray-600">Jam Mulai</th>
-                            <th class="py-2 px-4 border-b text-left text-gray-600">Jam Selesai</th>
-                            <th class="py-2 px-4 border-b text-left text-gray-600">Semester</th>
+                            <th class="py-2 px-4 border-b text-left text-gray-600">Kode Ruang</th>
+                            <th class="py-2 px-4 border-b text-left text-gray-600">Gedung</th>
+                            <th class="py-2 px-4 border-b text-left text-gray-600">Kapasitas</th>
                             <th class="py-2 px-4 border-b text-left text-gray-600">Jurusan</th>
+                            <th class="py-2 px-4 border-b text-left text-gray-600">Status</th>
+                            <th class="py-2 px-4 border-b text-left text-gray-600">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($submissions as $submission)
+                        @foreach ($classrooms as $classroom)
                             <tr>
-                                <td class="py-2 px-4 border-b">{{ $submission->nama }}</td>
-                                <td class="py-2 px-4 border-b">{{ $submission->ruang }}</td>
-                                <td class="py-2 px-4 border-b">{{ $submission->hari }}</td>
-                                <td class="py-2 px-4 border-b">{{ $submission->jam_mulai }}</td>
-                                <td class="py-2 px-4 border-b">{{ $submission->jam_selesai }}</td>
-                                <td class="py-2 px-4 border-b">{{ $submission->semester }}</td>
-                                <td class="py-2 px-4 border-b">{{ $submission->jurusan }}</td>
+                                <td class="py-2 px-4 border-b">{{ $classroom->kode_ruang }}</td>
+                                <td class="py-2 px-4 border-b">{{ $classroom->gedung }}</td>
+                                <td class="py-2 px-4 border-b">{{ $classroom->kapasitas }}</td>
+                                <td class="py-2 px-4 border-b">{{ $classroom->jurusan }}</td>
+                                <td class="py-2 px-4 border-b">
+                                    @if ($classroom->status === 'Sudah Disetujui')
+                                        <span class="text-green-500 font-bold">Sudah Disetujui</span>
+                                    @else
+                                        <span class="text-red-500 font-bold">Belum Disetujui</span>
+                                    @endif
+                                </td>
                                 <td>
                                     <!-- Tombol Edit -->
-                                    <button action="{{ route('classrooms.update', $submission->id) }}" method="POST"
-                                        onclick="openEditModal({{ json_encode($submission) }})"
+                                    <button onclick="openEditModal({{ json_encode($classroom) }})"
                                         class="font-bold rounded bg-blue-500 text-white hover:text-white w-20 py-2 px-4">Edit</button>
 
-                                    <form action="{{ route('classrooms.destroy', $submission->id) }}" method="POST"
-                                        onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+                                    <!-- Form Hapus -->
+                                    <form action="{{ route('classrooms.destroy', $classroom->id) }}" method="POST"
+                                        onsubmit="return confirm('Yakin ingin menghapus data ini?');" class="inline-block">
                                         @csrf
-
                                         @method('DELETE')
                                         <button type="submit"
                                             class="font-bold rounded bg-red-500 text-white hover:text-white w-20 py-2 px-4">Hapus</button>
                                     </form>
+
+                                    <!-- Form Ajukan -->
+                                    @if ($classroom->status === 'Belum Disetujui') <!-- Ajukan hanya jika belum disetujui -->
+                                    <form action="{{ route('approveclassrooms.submit', $classroom->id) }}" method="POST"
+                                        onsubmit="return confirm('Yakin ingin mengajukan jadwal ini ke dekan?');" class="inline-block">
+                                        @csrf
+                                        <button type="submit"
+                                            class="font-bold rounded bg-yellow-500 text-white hover:text-white w-20 py-2 px-4">Ajukan</button>
+                                    </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
+
                     </tbody>
                 </table>
             </div>
@@ -211,37 +285,52 @@
     </div>
 
     <!-- Modal untuk Edit -->
-    <div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden">
-        <div class="flex items-center justify-center min-h-screen">
-            <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-                <h2 class="text-lg font-medium text-gray-800 mb-4">Edit Ruang Kelas</h2>
+<div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden">
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 class="text-lg font-medium text-gray-800 mb-4">Edit Ruang Kelas</h2>
 
-                <form id="editForm" method="POST">
-                    @csrf
-                    @method('PATCH')
+            <form id="editForm" method="POST">
+                @csrf
+                @method('PATCH')
 
-                    <label>Nama</label>
-                    <input type="text" id="editNama" name="nama" class="w-full p-2 border rounded mb-2">
+                <!-- Gedung -->
+                <div class="mb-4">
+                    <label for="editGedung" class="block text-sm font-medium text-gray-700">Gedung</label>
+                    <input type="text" id="editGedung" name="gedung" class="w-full p-2 border rounded" required>
+                </div>
 
-                    <label>Ruang</label>
-                    <input type="text" id="editRuang" name="ruang" class="w-full p-2 border rounded mb-2">
+                <!-- Kode Ruang -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Kode Ruang</label>
+                    <div class="grid grid-cols-3 gap-4">
+                        @foreach (['E101', 'E102', 'E103', 'A101', 'A102', 'A103', 'B101', 'B102', 'B103', 'C101', 'C102', 'C103', 'D101', 'D102', 'D103'] as $kodeRuang)
+                            <label class="flex items-center">
+                                <input type="checkbox" name="kode_ruang[]" value="{{ $kodeRuang }}" class="mr-2"
+                                    id="kode_ruang_{{ $kodeRuang }}">
+                                {{ $kodeRuang }}
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
 
-                    <label>Hari</label>
-                    <input type="text" id="editHari" name="hari" class="w-full p-2 border rounded mb-2">
+                <!-- Kapasitas -->
+                <div class="mb-4">
+                    <label for="editKapasitas" class="block text-sm font-medium text-gray-700">Kapasitas</label>
+                    <input type="number" id="editKapasitas" name="kapasitas" class="w-full p-2 border rounded" required>
+                </div>
 
-                    <label>Jam Mulai</label>
-                    <input type="text" id="editJamMulai" name="jam_mulai" class="w-full p-2 border rounded mb-2">
+                <!-- Status -->
+                <div class="mb-4">
+                    <label for="editStatus" class="block text-sm font-medium text-gray-700">Status</label>
+                    <input type="text" id="editStatus" name="status" class="w-full p-2 border rounded" readonly>
+                </div>
 
-                    <label>Jam Selesai</label>
-                    <input type="text" id="editJamSelesai" name="jam_selesai"
-                        class="w-full p-2 border rounded mb-2">
-
-                    <label>Semester</label>
-                    <input type="text" id="editSemester" name="semester" class="w-full p-2 border rounded mb-2">
-
-                    <label>Jurusan</label>
-                    <select name="jurusan" id="jurusan" class="w-full p-2 border rounded mb-2">
-                        <option value="">-</option>
+                <!-- Jurusan -->
+                <div class="mb-4">
+                    <label for="editJurusan" class="block text-sm font-medium text-gray-700">Jurusan</label>
+                    <select name="jurusan" id="editJurusan" class="w-full p-2 border rounded" required>
+                        <option value="">Pilih Jurusan</option>
                         <option value="Informatika">Informatika</option>
                         <option value="Statistika">Statistika</option>
                         <option value="Fisika">Fisika</option>
@@ -250,39 +339,49 @@
                         <option value="Kimia">Kimia</option>
                         <option value="Matematika">Matematika</option>
                     </select>
+                </div>
 
-                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded mt-2">Submit</button>
-                    <button type="button" onclick="closeEditModal()"
-                        class="bg-gray-500 text-white py-2 px-4 rounded mt-2">Cancel</button>
-                </form>
-            </div>
+                <!-- Tombol -->
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">Submit</button>
+                    <button type="button" onclick="closeEditModal()" class="bg-gray-500 text-white py-2 px-4 rounded ml-2">
+                        Cancel
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
+
+
+
 
     <script>
-        function openEditModal(submission) {
-            // Tampilkan modal edit
+            function openEditModal(classroom) {
+            // Tampilkan modal
             document.getElementById('editModal').classList.remove('hidden');
-            document.getElementById('editModal').classList.add('block');
 
-            // Setel action URL pada form dengan ID yang benar
-            document.getElementById('editForm').action = `/classrooms/${submission.id}`;
+            // Atur action form dengan URL ID
+            document.getElementById('editForm').action = `/classrooms/${classroom.id}`;
 
-            // Setel nilai pada setiap field input berdasarkan data submission
-            document.getElementById('editNama').value = submission.nama;
-            document.getElementById('editRuang').value = submission.ruang;
-            document.getElementById('editHari').value = submission.hari;
-            document.getElementById('editJamMulai').value = submission.jam_mulai;
-            document.getElementById('editJamSelesai').value = submission.jam_selesai;
-            document.getElementById('editSemester').value = submission.semester;
-            document.getElementById('jurusan').value = submission.jurusan;
-        }
+            // Isi input dengan data yang diterima
+            document.getElementById('editGedung').value = classroom.gedung;
+            document.getElementById('editKapasitas').value = classroom.kapasitas;
+            document.getElementById('editStatus').value = classroom.status;
+            document.getElementById('editJurusan').value = classroom.jurusan;
+
+            // Checkbox Kode Ruang
+            const kodeRuangCheckboxes = document.querySelectorAll('input[name="kode_ruang[]"]');
+            kodeRuangCheckboxes.forEach(checkbox => {
+                checkbox.checked = classroom.kode_ruang.includes(checkbox.value);
+                });
+            }
 
         function closeEditModal() {
-            // Sembunyikan modal edit
             document.getElementById('editModal').classList.add('hidden');
-            document.getElementById('editModal').classList.remove('block');
         }
+
     </script>
 
 </body>

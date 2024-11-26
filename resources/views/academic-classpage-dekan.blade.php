@@ -31,7 +31,7 @@
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
                             <!-- Profile dropdown -->
-                            <span class="mr-2 text-white">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</span>
+                            <span class="mr-2 text-white">nama dekan</span>
                             <div class="relative ml-3">
                                 <div>
                                     <button type="button" @click="isOpen = !isOpen"
@@ -95,7 +95,7 @@
                                 alt="">
                         </div>
                         <div class="ml-3">
-                            <div class="text-sm font-medium leading-none text-gray-400">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</div>
+                            <div class="text-sm font-medium leading-none text-gray-400">nama dekan</div>
                         </div>
                     </div>
                     <div class="mt-3 space-y-1 px-2">
@@ -109,7 +109,7 @@
 
         <header class="bg-white shadow">
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <h1 class="text-3xl font-bold tracking-tight text-gray-900">Academic</h1>
+                <a href="{{ url('/dashboard-dekan') }}" class="text-3xl font-bold tracking-tight text-gray-900">Academic</a>
             </div>
         </header>
         <main>
@@ -134,21 +134,6 @@
                                         class="flex flex-wrap justify-center">
                                         @csrf
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-2 ml-0">
-                                            <label for="semester" class="form-label text-sm">Semester</label>
-                                            <select name="semester"
-                                                class="form-select block w-full p-2 pl-10 text-sm text-gray-700 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent">
-                                                <option value="">-</option>
-                                                <option value="1">Semester 1</option>
-                                                <option value="2">Semester 2</option>
-                                                <option value="3">Semester 3</option>
-                                                <option value="4">Semester 4</option>
-                                                <option value="5">Semester 5</option>
-                                                <option value="6">Semester 6</option>
-                                                <option value="7">Semester 7</option>
-                                                <option value="8">Semester 8</option>
-                                            </select>
-                                        </div>
-                                        <div class="w-full md:w-1/2 xl:w-1/3 p-2 ml-0">
                                             <label for="jurusan" class="form-label text-sm">Jurusan</label>
                                             <select name="jurusan"
                                                 class="form-select block w-full p-2 pl-10 text-sm text-gray-700 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent">
@@ -169,81 +154,131 @@
                                     </form>
 
                                     {{-- Tampilan Kelas --}}
-                                    @foreach ($kelas as $item)
-                                        <div class="bg-white rounded-lg shadow-md p-4 mb-4">    
-                                            <div class="flex items-center justify-between">
-                                                <div>
-                                                    <h2 class="text-lg font-semibold">{{ $item->nama }}</h2>
-                                                    <p class="text-gray-600">
-                                                        Ruang: {{ $item->ruang }} |
-                                                        Hari: {{ $item->hari }} |
-                                                        Pukul: {{ date('H:i', strtotime($item->jam_mulai)) }} -
-                                                        {{ date('H:i', strtotime($item->jam_selesai)) }}
-                                                    </p>
-                                                </div>
-                                                <div>
-                                                    <button type="button"
-                                                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
-                                                        onclick="confirmApprove('{{ route('kelas.approve', $item->id) }}')">
-                                                        Setuju
-                                                    </button>
-                                                    <script>
-                                                        function confirmApprove(url) {
-                                                            Swal.fire({
-                                                                title: "Are you sure?",
-                                                                text: "You won't be able to revert this!",
-                                                                icon: "warning",
-                                                                showCancelButton: true,
-                                                                confirmButtonColor: "#3085d6",
-                                                                cancelButtonColor: "#d33",
-                                                                confirmButtonText: "Yes, Approve it!"
-                                                            }).then((result) => {
-                                                                if (result.isConfirmed) {
-                                                                    // Send a POST request using Fetch API
-                                                                    fetch(url, {
-                                                                            method: 'POST',
-                                                                            headers: {
-                                                                                'Content-Type': 'application/json',
-                                                                                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token for security
-                                                                            },
-                                                                            body: JSON.stringify({}) // You can send additional data if needed
-                                                                        })
-                                                                        .then(response => {
-                                                                            if (response.ok) {
-                                                                                Swal.fire({
-                                                                                    title: 'Approved!',
-                                                                                    text: 'Your approval has been recorded.',
-                                                                                    icon: 'success',
-                                                                                    timer: 3000, // Alert will stay for 3 seconds
-                                                                                    timerProgressBar: true, // Optional: shows a progress bar
-                                                                                    willClose: () => {
-                                                                                        location.reload();
-                                                                                    }
-                                                                                });
-                                                                            } else {
-                                                                                // Handle errors
-                                                                                Swal.fire('Error!', 'There was a problem approving the clasroom.', 'error');
-                                                                            }
-                                                                        })
-                                                                        .catch(error => {
-                                                                            console.error('Error:', error);
-                                                                            Swal.fire('Error!', 'There was a problem with your request.', 'error');
-                                                                        });
-                                                                }
-                                                            });
-                                                        }
-                                                    </script>
+                                    @if ($approvals->isEmpty())
+                                        <p class="text-center text-gray-500">Tidak ada pengajuan untuk disetujui.</p>
+                                    @else
+                                        @foreach ($approvals as $approval)
+                                            <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+                                                <div class="flex items-center justify-between">
+                                                    <div>
+                                                        <h2 class="text-lg font-semibold">{{ $approval->classroom->nama ?? 'Tidak ada nama' }}</h2>
+                                                        <p class="text-gray-600">
+                                                            Gedung: {{ $approval->classroom->gedung ?? '-' }} |
+                                                            Kapasitas: {{ $approval->classroom->kapasitas ?? '-' }} |
+                                                            Jurusan: {{ $approval->classroom->jurusan ?? '-' }}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <!-- Tombol Setuju -->
+                                                        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
+                                                            onclick="confirmApprove('{{ route('kelas.approve', $approval->id) }}')">
+                                                            Setuju
+                                                        </button>
+
+                                                        <!-- Tombol Tolak -->
+                                                        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                                            onclick="confirmReject('{{ route('kelas.reject', $approval->id) }}')">
+                                                            Tolak
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
+                                    @endif
 
+                                    <script>
+                                        function confirmApprove(url) {
+                                            Swal.fire({
+                                                title: "Apakah Anda yakin?",
+                                                text: "Persetujuan ini tidak dapat dibatalkan!",
+                                                icon: "warning",
+                                                showCancelButton: true,
+                                                confirmButtonColor: "#3085d6",
+                                                cancelButtonColor: "#d33",
+                                                confirmButtonText: "Ya, Setujui!"
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    fetch(url, {
+                                                        method: 'POST',
+                                                        headers: {
+                                                            'Content-Type': 'application/json',
+                                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                        }
+                                                    })
+                                                    .then(response => {
+                                                        console.log(response); // Debugging: Cek respons dari server
+                                                        if (response.ok) {
+                                                            return response.json(); // Parsing respons ke JSON
+                                                        } else {
+                                                            throw new Error('Terjadi masalah saat menyetujui.');
+                                                        }
+                                                    })
+                                                    .then(data => {
+                                                        console.log(data); // Debugging: Cek data JSON yang diterima
+                                                        Swal.fire({
+                                                            title: 'Disetujui!',
+                                                            text: data.message || 'Pengajuan berhasil disetujui.',
+                                                            icon: 'success',
+                                                            timer: 3000,
+                                                            willClose: () => {
+                                                                location.reload();
+                                                            }
+                                                        });
+                                                    })
+                                                    .catch(error => {
+                                                        console.error('Error:', error); // Debugging: Log error ke console
+                                                        Swal.fire('Error!', error.message || 'Terjadi masalah pada permintaan Anda.', 'error');
+                                                    });
+                                                }
+                                            });
+                                        }
+                                
+                                        function confirmReject(url) {
+                                            Swal.fire({
+                                                title: "Apakah Anda yakin?",
+                                                text: "Penolakan ini tidak dapat dibatalkan!",
+                                                icon: "warning",
+                                                showCancelButton: true,
+                                                confirmButtonColor: "#d33",
+                                                cancelButtonColor: "#3085d6",
+                                                confirmButtonText: "Ya, Tolak!"
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    fetch(url, {
+                                                        method: 'POST',
+                                                        headers: {
+                                                            'Content-Type': 'application/json',
+                                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                        }
+                                                    }).then(response => {
+                                                        if (response.ok) {
+                                                            Swal.fire({
+                                                                title: 'Ditolak!',
+                                                                text: 'Pengajuan berhasil ditolak.',
+                                                                icon: 'success',
+                                                                timer: 3000,
+                                                                willClose: () => {
+                                                                    location.reload();
+                                                                }
+                                                            });
+                                                        } else {
+                                                            Swal.fire('Error!', 'Terjadi masalah saat menolak.', 'error');
+                                                        }
+                                                    }).catch(error => {
+                                                        Swal.fire('Error!', 'Terjadi masalah pada permintaan Anda.', 'error');
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                            </div>
+                                        </div>
+                                    </div>                                   
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </main>
     </div>
