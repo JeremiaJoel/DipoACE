@@ -11,17 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dosen', function (Blueprint $table) {
+        Schema::create('classroomss', function (Blueprint $table) {
             $table->id();
-            $table->string('nama'); 
-            $table->string('nip'); 
-            $table->string('email');
+            $table->string('kode_ruang');
+            $table->string('gedung');
+            $table->string('kapasitas');
             $table->string('jurusan');
-            $table->string('tempat_lahir'); 
-            $table->string('tanggal_lahir');
-            $table->string('jenis_kelamin');
-            $table->string('alamat');
-            $table->string('no_handphone');
+            $table->enum('status', ['Belum Disetujui', 'Sudah Disetujui'])->default('Belum Disetujui');
             $table->timestamps();
         });
     }
@@ -31,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dosen');
+        Schema::dropIfExists('classroomss');
     }
 };

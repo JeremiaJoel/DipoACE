@@ -27,7 +27,7 @@
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
-                            <span class="mr-2 text-white">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</span>
+                            <span class="mr-2 text-white">nama dekan</span>
 
                             <!-- Profile dropdown -->
                             <div class="relative ml-3">
@@ -79,8 +79,8 @@
                             src="../img/saiful.png" alt="Profile picture of a student"
                             class="w-24 h-24 rounded-full border-4 border-white w-100 h-100"/>
                         <div class="ml-4 text-white">
-                            <h1 class="text-2xl font-bold">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</h1>
-                            <p class="mt-1">NIP: {{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nip }} | {{ \App\Models\dosen::where('email', Auth::user()->email)->first()->jurusan }}</p>
+                            <h1 class="text-2xl font-bold">nama dekan</h1>
+                            <p class="mt-1">NIP: nomor nip</p>
                         </div>
                     </div>
                 </div>

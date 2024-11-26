@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             DummyClassSeeder::class,
-            DummyDosensSeeder::class,
+            DummyDosenSeeder::class,
             DummySchedulesSeeder::class,
             DummyMahasiswasSeeder::class,
             DummyUsersSeeder::class

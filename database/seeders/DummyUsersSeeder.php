@@ -32,12 +32,21 @@ class DummyUsersSeeder extends Seeder
             //     'kaprodi' => '0',
             //     'bagian_akademik' => '0'
             // ],
+            // [
+            //     'email' => 'budibalsem@akademik.dipoace.ac.id',
+            //     'password' => bcrypt('123456'),
+            //     'dekan' => '1',
+            //     'mahasiswa' => '0',
+            //     'pembimbing_akademik' => '0',
+            //     'kaprodi' => '0',
+            //     'bagian_akademik' => '0'
+            // ],
             [
-                'email' => 'budibalsem@akademik.dipoace.ac.id',
+                'email' => 'sandykurniawan@lecturer.dipoace.ac.id',
                 'password' => bcrypt('123456'),
                 'dekan' => '1',
                 'mahasiswa' => '0',
-                'pembimbing_akademik' => '0',
+                'pembimbing_akademik' => '1',
                 'kaprodi' => '0',
                 'bagian_akademik' => '0'
             ],
