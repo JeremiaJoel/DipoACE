@@ -75,7 +75,7 @@
             <div class="max-w-full mx-24 mt-10 p-4">
 
                 <div class="bg-white shadow rounded-lg overflow-hidden">
-                    <div class="bg-blue-700 p-4 flex items-center">
+                    <div class="bg-gray-800 p-4 flex items-center">
                         <img src="../img/dosen.jpg" alt="Profile picture of a student"
                             class="w-24 h-24 rounded-full border-4 border-white w-100 h-100" />
                         <div class="ml-4 text-white">
