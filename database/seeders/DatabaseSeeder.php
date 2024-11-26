@@ -16,8 +16,8 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         $this->call([
-            DummyClassSeeder::class,
-            DummyDosenSeeder::class,
+            // DummyClassSeeder::class,
+            DummyDosensSeeder::class,
             DummySchedulesSeeder::class,
             DummyMahasiswasSeeder::class,
             DummyUsersSeeder::class

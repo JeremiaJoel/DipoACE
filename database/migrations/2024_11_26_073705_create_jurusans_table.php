@@ -11,15 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('approveschedules', function (Blueprint $table) {
+        Schema::create('jurusans', function (Blueprint $table) {
             $table->id();
-            $table->string('dosen'); 
-            $table->string('ruang'); 
-            $table->string('matakuliah');
-            $table->string('waktu'); 
-            $table->string('kelas');
-            $table->string('semester_aktif');
-            $table->string('jurusan');
             $table->timestamps();
         });
     }
@@ -29,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('approveschedules');
+        Schema::dropIfExists('jurusans');
     }
 };

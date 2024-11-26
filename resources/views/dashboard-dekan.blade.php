@@ -21,13 +21,15 @@
                         </div>
                         <div class="hidden md:block">
                             <div class="flex items-baseline space-x-4">
-                                <a class="ml-2 text-2xl font-bold text-white" href="{{ url('/dashboard-dekan') }}">DipoACE</a>
+                                <a class="ml-2 text-2xl font-bold text-white"
+                                    href="{{ url('/dashboard-dekan') }}">DipoACE</a>
                             </div>
                         </div>
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
-                            <span class="mr-2 text-white">nama dekan</span>
+                            <span
+                                class="mr-2 text-white">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</span>
 
                             <!-- Profile dropdown -->
                             <div class="relative ml-3">
@@ -53,7 +55,7 @@
                                     class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                                     role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
                                     tabindex="-1">
-                                    
+
                                     <a href="logout" class="block px-4 py-2 text-sm text-gray-700" role="menuitem"
                                         tabindex="-1" id="user-menu-item-2">Sign out</a>
                                 </div>
@@ -69,63 +71,65 @@
                 <h1 class="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>
             </div>
         </header>
-        
+
         <main>
             <div class="max-w-full mx-24 mt-10 p-4">
 
                 <div class="bg-white shadow rounded-lg overflow-hidden">
                     <div class="bg-gray-800 p-4 flex items-center">
-                        <img
-                            src="../img/saiful.png" alt="Profile picture of a student"
-                            class="w-24 h-24 rounded-full border-4 border-white w-100 h-100"/>
+                        <img src="../img/saiful.png" alt="Profile picture of a student"
+                            class="w-24 h-24 rounded-full border-4 border-white w-100 h-100" />
                         <div class="ml-4 text-white">
-                            <h1 class="text-2xl font-bold">nama dekan</h1>
-                            <p class="mt-1">NIP: nomor nip</p>
+                            <h1 class="text-2xl font-bold">
+                                {{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</h1>
+                            <p class="mt-1">NIP:
+                                {{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nip }} |
+                                {{ \App\Models\dosen::where('email', Auth::user()->email)->first()->jurusan }}</p>
                         </div>
                     </div>
                 </div>
-                
-                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-1 gap-6">
                     <div class="bg-white shadow rounded-lg p-4">
                         <div class="mt-4 text-center">
-                            <p class="text-gray-600 font-semibold">Dosen Wali : Sandy Kurniawan, S.Kom., M.Kom.</p>
-                            <p class="text-gray-600 font-semibold">(NIP: 199603032024061003)</p>
+                            <p class="text-gray-600 font-semibold">Status Persetujuan Jadwal</p>
                         </div>
-                        <div class="mt-4 grid grid-cols-3 gap-4 text-center">
-                            <div>
-                                <p class="text-gray-600">Semester Akademik</p>
-                                <p class="text-2xl">2024/2025 Ganjil</p>
+                        <div class="mt-4 grid grid-cols-2 gap-4 text-center cursor-pointer">
+                            <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-gray-800 hover:text-white"
+                                onclick="window.location.href='{{ url('academic-schedulepage-dekan') }}'">
+                                <p class="">Belum Disetujui</p>
+                                {{ \App\Models\Schedule::where('status', 'Belum Disetujui')->count() }}
+                                </p>
                             </div>
-                            <div>
-                                <p class="text-gray-600">Semester Studi</p>
-                                <p class="text-2xl">5</p>
+                            <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-gray-800 hover:text-white">
+                                <p>Sudah disetujui</p>
+                                <p>{{ \App\Models\Schedule::where('status', 'Sudah Disetujui')->count() }}</p>
                             </div>
-                            <div>
-                                <p class="text-gray-600">Status Akademik</p>
-                                <p class="mt-2 ml-14 bg-green-500 text-white font-bold rounded py-2 px-4 w-20 text-center">Aktif</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white shadow rounded-lg p-4">
+                        <div class="mt-4 text-center">
+                            <p class="text-gray-600 font-semibold">Status Persetujuan Kelas</p>
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 gap-4 text-center cursor-pointer">
+                            <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-gray-800 hover:text-white"
+                                onclick="window.location.href='{{ url('academic-classpage-dekan') }}'">
+                                <p class="">Belum Disetujui</p>
+                                <p >{{ \App\Models\classroom::where('status', 'Belum Disetujui')->count() }}</p>
                             </div>
+                            <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-gray-800 hover:text-white">
+                                <p>Sudah disetujui</p>
+                                <p>{{ \App\Models\classroom::where('status', 'Sudah Disetujui')->count() }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-white shadow rounded-lg p-4 h-20">
+                            <a class="text-xl font-semibold" href="{{ url('/academic-classpage-dekan') }}">Academic</a>
                         </div>
                     </div>
                     
-                    <div class="bg-white shadow rounded-lg p-4">
-                        <h2 class="text-xl font-semibold flex items-center">Prestasi Akademik</h2>
-                        <div class="mt-4 grid grid-cols-2 gap-4 text-center">
-                            <div>
-                                <p class="text-gray-600 mt-8">IPK</p>
-                                <p class="text-2xl">3.73</p>
-                            </div>
-                            <div>
-                                <p class="text-gray-600 mt-8">SKSk</p>
-                                <p class="text-2xl">84</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-                
-                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="bg-white shadow rounded-lg p-4 h-20">
-                        <a class="text-xl font-semibold" href="{{ url('/academic-classpage-dekan') }}">Academic</a>
-                    </div>
-                </div>
-            </div>
         </main>

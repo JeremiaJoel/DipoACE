@@ -10,7 +10,7 @@ class ScheduleController extends Controller
 {
     public function index()
     {
-        $jadwal = Schedule::all();
+        $jadwal = schedule::where('status', 'Belum Disetujui')->get();
         // dd($jadwal);
         return view('academic-schedulepage-dekan', compact('jadwal'));
     }
@@ -43,25 +43,19 @@ class ScheduleController extends Controller
 
     public function approve($id)
     {
-        // Cari jadwal berdasarkan ID
+
         $jadwal = schedule::find($id);
 
-        // Pindahkan data ke tabel jadwal_disetujui
-        $jadwalDisetujui = new approveschedule();
-        $jadwalDisetujui->dosen = $jadwal->dosen;
-        $jadwalDisetujui->ruang = $jadwal->ruang;
-        $jadwalDisetujui->matakuliah = $jadwal->matakuliah;
-        $jadwalDisetujui->waktu = $jadwal->waktu;
-        $jadwalDisetujui->kelas = $jadwal->kelas;
-        $jadwalDisetujui->semester_aktif = $jadwal->semester_aktif;
-        $jadwalDisetujui->jurusan = $jadwal->jurusan;
-        $jadwalDisetujui->save();
+        if ($jadwal) {
+            $jadwal->status = 'Sudah Disetujui';  // Atau status lain yang relevan
+            $jadwal->save();  // Simpan perubahan
+            return response()->json(['message' => 'Jadwal approved successfully']);
+        } else {
+            return response()->json(['message' => 'Jadwal not found'], 404);
+        }
 
-        // Hapus data dari tabel jadwal
-        $jadwal->delete();
 
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil disetujui.');
-    }
-        
+        // return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil disetujui.');
     }
 
+}

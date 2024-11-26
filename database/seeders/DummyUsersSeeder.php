@@ -41,6 +41,15 @@ class DummyUsersSeeder extends Seeder
                 'kaprodi' => '0',
                 'bagian_akademik' => '0'
             ],
+            [
+                'email' => 'beninugraha@akademik.dipoace.ac.id',
+                'password' => bcrypt('123456'),
+                'dekan' => '0',
+                'mahasiswa' => '0',
+                'pembimbing_akademik' => '0',
+                'kaprodi' => '0',
+                'bagian_akademik' => '1'
+            ],
 
         ];
 

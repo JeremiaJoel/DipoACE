@@ -13,13 +13,16 @@ return new class extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->string('dosen'); 
             $table->string('ruang'); 
             $table->string('matakuliah');
             $table->string('waktu'); 
             $table->string('kelas');
             $table->string('semester_aktif');
             $table->string('jurusan');
+            $table->string('pengampu_1'); 
+            $table->string('pengampu_2'); 
+            $table->string('pengampu_3')-> nullable(); 
+            $table->enum('status', ['Belum Disetujui', 'Sudah Disetujui'])->default('Belum Disetujui');
             $table->timestamps();
 
         });

@@ -44,6 +44,7 @@ Route::middleware(['auth'])->group(function(){
 
 
     Route::get('/academic-schedulepage-dekan', [ScheduleController::class, 'index'])->name('jadwal.index');
+    
     Route::get('/academic-schedulepage-dekan/filter', [ScheduleController::class, 'filter'])->name('jadwal.filter');
     Route::post('/academic-schedulepage-dekan/{id}/approve', [ScheduleController::class, 'approve'])->name('jadwal.approve');
     Route::post('/status-mahasiswa/{id}/aktif', [MahasiswaController::class, 'status'])->name('mahasiswa.status');

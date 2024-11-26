@@ -72,91 +72,54 @@
                 <a class="text-3xl font-bold tracking-tight text-gray-900">STATUS MAHASISWA</a>
             </div>
         </header>
-
+        {{-- Anda bisa menambahkan kondisi ini di bagian yang relevan dalam template Anda --}}
         <main>
             <div class="max-w-full mx-24 mt-10 p-4">
                 <h2 class="text-xl font-semibold mb-4">Pilih Status Akademik</h2>
                 <div class="bg-gray-100 p-4 rounded-lg mb-6">
-                    <div class="mb-4">
-                        <p class="text-sm">Anda akan mengikuti kegiatan perkuliahan pada semester ini serta mengisi
-                            Isian Rencana Studi (IRS).</p>
-                        <div class="flex items-center justify-between">
-                            <a class="text-green-600 font-bold">Aktif</a>
-                            <div class="flex space-x-2">
-                                <button type="button"
-                                    onclick="confirmApprove('{{ route('mahasiswa.status', ['id' => Auth::id()]) }}', 'Aktif')"
-                                    class="bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded mr-2">
-                                    Ya
-                                </button>
+                    @php
+                        $mahasiswaStatus = \App\Models\mahasiswa::where('email', Auth::user()->email)->first()->status;
+                    @endphp
+
+                    {{-- Periksa apakah status sudah di-set, dan tampilkan pilihan hanya jika belum di-set --}}
+                    @if (empty($mahasiswaStatus))
+                        {{-- Tampilkan opsi status Aktif dan Cuti --}}
+                        <div class="mb-4">
+                            <p class="text-sm">Anda akan mengikuti kegiatan perkuliahan pada semester ini serta mengisi
+                                Isian Rencana Studi (IRS).</p>
+                            <div class="flex items-center justify-between">
+                                <a class="text-green-600 font-bold">Aktif</a>
+                                <div class="flex space-x-2">
+                                    <button type="button"
+                                        onclick="confirmApprove('{{ route('mahasiswa.status', ['id' => Auth::id()]) }}', 'Aktif')"
+                                        class="bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded mr-2">
+                                        Ya
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div>
-                        <p class="text-sm">Menghentikan kuliah sementara untuk semester ini tanpa kehilangan status
-                            sebagai mahasiswa Undip.</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-red-600 font-bold">Cuti</span>
-                            <div class="flex space-x-2">
-                                <button type="button"
-                                    onclick="confirmApprove('{{ route('mahasiswa.status', ['id' => Auth::id()]) }}', 'Cuti')"
-                                    class="bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded mr-2">
-                                    Ya
-                                </button>
+                        <div>
+                            <p class="text-sm">Menghentikan kuliah sementara untuk semester ini tanpa kehilangan status
+                                sebagai mahasiswa Undip.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-red-600 font-bold">Cuti</span>
+                                <div class="flex space-x-2">
+                                    <button type="button"
+                                        onclick="confirmApprove('{{ route('mahasiswa.status', ['id' => Auth::id()]) }}', 'Cuti')"
+                                        class="bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded mr-2">
+                                        Ya
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <script>
-                        function confirmApprove(url, status) {
-                            Swal.fire({
-                                title: "Are you sure?",
-                                text: `You will be registered as a ${status} student this semester.`,
-                                icon: "warning",
-                                showCancelButton: true,
-                                confirmButtonColor: "#3085d6",
-                                cancelButtonColor: "#d33",
-                                confirmButtonText: "Yes, Approve it!"
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // Send a POST request using Fetch API
-                                    fetch(url, {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token for security
-                                            },
-                                            body: JSON.stringify({
-                                                status: status
-                                            }) // Send the selected status
-                                        })
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            if (data.status) {
-                                                Swal.fire({
-                                                    title: 'Congratulations!',
-                                                    text: `You have been set as a ${status} student.`,
-                                                    icon: 'success',
-                                                    timer: 3000,
-                                                    timerProgressBar: true,
-                                                    willClose: () => {
-                                                        location.reload();
-                                                    }
-                                                });
-                                            } else {
-                                                Swal.fire('Error!', data.message || 'There was a problem setting the status.',
-                                                    'error');
-                                            }
-                                        })
-                                        .catch(error => {
-                                            console.error('Error:', error);
-                                            Swal.fire('Error!', 'There was a problem with your request.', 'error');
-                                        });
-                                }
-                            });
-                        }
-                    </script>
+                    @else
+                        <p class="text-lg">Status Anda saat ini: <strong
+                                class="text-blue-600">{{ $mahasiswaStatus }}</strong></p>
+                        <p class="text-sm">Anda telah memilih status akademik dan tidak dapat diubah lagi untuk semester
+                            ini.</p>
+                    @endif
                 </div>
-                <p class="text-sm mb-6">Status akademik Anda: <span
-                        class="font-semibold">{{ \App\Models\mahasiswa::where('email', Auth::user()->email)->first()->status }}</span>
+                <p class="text-sm mb-6">Status akademik Anda: <span class="font-semibold">{{ $mahasiswaStatus }}</span>
                 </p>
                 <p class="text-xs text-gray-600">
                     Informasi lebih lanjut mengenai her-registrasi, atau mekanisme serta pengajuan perpanjangan
@@ -167,3 +130,51 @@
 
 
         </main>
+        <script>
+            function confirmApprove(url, status) {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: `You will be registered as a ${status} student this semester.`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, Approve it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(url, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Ensure the CSRF token is included for Laravel
+                                },
+                                body: JSON.stringify({
+                                    status: status
+                                }) // Send the selected status
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status) {
+                                    Swal.fire({
+                                        title: 'Congratulations!',
+                                        text: `You have been set as a ${status} student.`,
+                                        icon: 'success',
+                                        timer: 3000,
+                                        timerProgressBar: true,
+                                        didClose: () => {
+                                            location.reload(); // Reload the page when the alert closes
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire('Error!', data.message || 'There was a problem setting the status.',
+                                        'error');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire('Error!', 'There was a problem with your request.', 'error');
+                            });
+                    }
+                });
+            }
+        </script>

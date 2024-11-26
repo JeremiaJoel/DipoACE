@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <title>Document</title>
 </head>
 
@@ -31,7 +32,8 @@
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
                             <!-- Profile dropdown -->
-                            <span class="mr-2 text-white">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</span>
+                            <span
+                                class="mr-2 text-white">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</span>
                             <div class="relative ml-3">
                                 <div>
                                     <button type="button" @click="isOpen = !isOpen"
@@ -95,7 +97,8 @@
                                 alt="">
                         </div>
                         <div class="ml-3">
-                            <div class="text-sm font-medium leading-none text-gray-400">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</div>
+                            <div class="text-sm font-medium leading-none text-gray-400">
+                                {{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</div>
                         </div>
                     </div>
                     <div class="mt-3 space-y-1 px-2">
@@ -135,21 +138,6 @@
                                         class="flex flex-wrap justify-center">
                                         @csrf
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-2 ml-0">
-                                            <label for="semester_aktif" class="form-label text-sm">Semester</label>
-                                            <select name="semester_aktif"
-                                                class="form-select block w-full p-2 pl-10 text-sm text-gray-700 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent">
-                                                <option value="">-</option>
-                                                <option value="1">Semester 1</option>
-                                                <option value="2">Semester 2</option>
-                                                <option value="3">Semester 3</option>
-                                                <option value="4">Semester 4</option>
-                                                <option value="5">Semester 5</option>
-                                                <option value="6">Semester 6</option>
-                                                <option value="7">Semester 7</option>
-                                                <option value="8">Semester 8</option>
-                                            </select>
-                                        </div>
-                                        <div class="w-full md:w-1/2 xl:w-1/3 p-2 ml-0">
                                             <label for="jurusan" class="form-label text-sm">Jurusan</label>
                                             <select name="jurusan"
                                                 class="form-select block w-full p-2 pl-10 text-sm text-gray-700 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent">
@@ -175,16 +163,52 @@
                                                 <option value="E">Kelas E</option>
                                             </select>
                                         </div>
-                                        <div class="w-full p-2 mt-4">
+                                        <div class="flex flex-wrap justify-between w-full p-2 mt-4">
+                                            <!-- Tombol Search -->
                                             <button type="submit"
-                                                class="btn btn-primary w-60 p-2 text-sm text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">Search</button>
+                                                class="btn btn-primary w-60 p-2 text-sm text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                                                Search
+                                            </button>
                                         </div>
                                     </form>
+                                    <div class="w-full p-2 flex justify-end">
+                                        <!-- Tombol Setujui Semua -->
+                                        <button type="submit"
+                                            class="btn btn-primary w-60 p-2 text-sm text-white rounded-lg bg-green-500 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent">
+                                            Setujui Semua
+                                        </button>
+                                    </div>
                                     @foreach ($jadwal as $item)
                                         <div class="bg-white rounded-lg shadow-md p-4 mb-4">
                                             <div class="flex items-center justify-between">
                                                 <div>
                                                     <h2 class="text-lg font-semibold">{{ $item->matakuliah }}</h2>
+                                                    <button onclick="openModal('{{ json_encode($item) }}')"
+                                                        class="text-blue-500 hover:text-blue-700">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <div id="modalDetail"
+                                                        class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden">
+                                                        <div class="flex items-center justify-center min-h-screen">
+                                                            <div
+                                                                class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                                                                <button onclick="closeModal()"
+                                                                    class="text-red-500 float-right">&times;</button>
+                                                                <h2 class="text-xl font-bold mb-4">Detail Matakuliah
+                                                                </h2>
+                                                                <p><strong>Matakuliah:</strong> <span
+                                                                        id="modalMatakuliah"></span></p>
+                                                                <p><strong>Kelas:</strong> <span
+                                                                        id="modalKelas"></span></p>
+                                                                <p><strong>Ruang:</strong> <span
+                                                                        id="modalRuang"></span></p>
+                                                                <p><strong>Waktu:</strong> <span
+                                                                        id="modalWaktu"></span></p>
+                                                                <p><strong>Pengampu:</strong></p>
+                                                                <ul id="modalPengampu" class="list-disc pl-6"></ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <p class="text-gray-600">
                                                         Ruang: {{ $item->ruang }} |
                                                         Kelas: {{ $item->kelas }} |
@@ -192,6 +216,7 @@
                                                         Waktu: {{ $item->waktu }}
                                                     </p>
                                                 </div>
+
                                                 <div>
                                                     <button type="button"
                                                         class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
@@ -243,7 +268,7 @@
                                                                 }
                                                             });
                                                         }
-                                                    </script>                                   
+                                                    </script>
                                                 </div>
                                             </div>
                                         </div>
@@ -256,6 +281,29 @@
 
             </div>
         </main>
+        <script>
+            function openModal(data) {
+                console.log('Data received:', data); // Debugging
+                const mk = JSON.parse(data);
+
+                document.getElementById('modalMatakuliah').textContent = mk.matakuliah;
+                document.getElementById('modalKelas').textContent = mk.kelas;
+                document.getElementById('modalRuang').textContent = mk.ruang;
+                document.getElementById('modalWaktu').textContent = mk.waktu;
+
+                const pengampuList = document.getElementById('modalPengampu');
+                pengampuList.innerHTML = '';
+                if (mk.pengampu_1) pengampuList.innerHTML += `<li>${mk.pengampu_1}</li>`;
+                if (mk.pengampu_2) pengampuList.innerHTML += `<li>${mk.pengampu_2}</li>`;
+                if (mk.pengampu_3) pengampuList.innerHTML += `<li>${mk.pengampu_3}</li>`;
+
+                document.getElementById('modalDetail').classList.remove('hidden');
+            }
+
+            function closeModal() {
+                document.getElementById('modalDetail').classList.add('hidden');
+            }
+        </script>
     </div>
 </body>
 

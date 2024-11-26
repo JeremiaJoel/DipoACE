@@ -9,6 +9,7 @@ class schedule extends Model
 {
     use HasFactory;
 
+    protected $table = 'schedules';
     protected $fillable = [
         'dosen', 
         'ruang',
@@ -16,6 +17,10 @@ class schedule extends Model
         'waktu',
         'kelas',
         'semester_aktif',
-        'jurusan'
+        'jurusan',
+        'pengampu_1',
+        'pengampu_2',
+        'pengampu_3'
+
 ];
 }
