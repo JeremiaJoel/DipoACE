@@ -24,4 +24,9 @@ class Matakuliah extends Model
     {
         return $this->hasMany(Jadwal::class);
     }
+
+    public function khs()
+    {
+        return $this->hasMany(Khs::class, 'kodemk', 'kodemk');
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 
 namespace Database\Seeders;
-use App\Models\schedule;
+use App\Models\jadwal;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -229,7 +229,7 @@ class DummySchedulesSeeder extends Seeder
             ],
         ];
         foreach($jadwal as $key => $val){
-            schedule::create($val);
+            jadwal::create($val);
         }
     }
 }
