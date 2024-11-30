@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\approveschedule;
-use App\Models\schedule;
+use App\Models\jadwal;
 use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
     public function index()
     {
-        $jadwal = schedule::where('status', 'Belum Disetujui')->get();
+        $jadwal = jadwal::where('status', 'Belum Disetujui')->get();
         // dd($jadwal);
         return view('academic-schedulepage-dekan', compact('jadwal'));
     }
@@ -22,7 +22,7 @@ class ScheduleController extends Controller
         $jurusan = $request->input('jurusan');
         $kelas = $request->input('kelas');
 
-        $jadwal = schedule::query();
+        $jadwal = jadwal::query();
 
         if ($semester) {
             $jadwal->where('semester_aktif', $semester);
@@ -44,7 +44,7 @@ class ScheduleController extends Controller
     public function approve($id)
     {
 
-        $jadwal = schedule::find($id);
+        $jadwal = jadwal::find($id);
 
         if ($jadwal) {
             $jadwal->status = 'Sudah Disetujui';  // Atau status lain yang relevan

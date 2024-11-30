@@ -10,6 +10,9 @@ class mahasiswa extends Model
 {
     use HasFactory;
     protected $table = 'mahasiswa';
+    protected $primaryKey = 'nim'; // Primary key
+    public $incrementing = false; // Jika primary key bukan integer auto increment
+    protected $keyType = 'string';
     protected $fillable = [
         'nama',
         'nim',
@@ -24,5 +27,10 @@ class mahasiswa extends Model
     public function dosen(): BelongsTo
     {
         return $this->belongsTo(Dosen::class);
+    }
+
+    public function khs()
+    {
+        return $this->hasMany(Khs::class, 'nim', 'nim');
     }
 }

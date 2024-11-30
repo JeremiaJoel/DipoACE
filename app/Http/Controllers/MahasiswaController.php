@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 class MahasiswaController extends Controller
 {
-    public function showStatus($id)
+    public function showStatus($nim)
     {
-        $mahasiswa = Mahasiswa::find($id);
+        $mahasiswa = Mahasiswa::find($nim);
 
         // Jika mahasiswa tidak ditemukan, kembalikan pesan error atau redirect
         if (!$mahasiswa) {
@@ -19,21 +19,31 @@ class MahasiswaController extends Controller
         return view('status', ['status' => $mahasiswa->status]);
     }
 
-    public function status(Request $request, $id)
+    public function setStatus(Request $request, $nim, $status)
     {
-        // Get the selected status from the request
-        $status = $request->input('status');
+        try {
+            // Cari mahasiswa berdasarkan NIM
+            $mahasiswa = Mahasiswa::where('nim', $nim)->first();
+            if (!$mahasiswa) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Mahasiswa tidak ditemukan.'
+                ]);
+            }
 
-        // Find the Mahasiswa model by ID and update the status
-        $mhs = Mahasiswa::find($id);
+            // Perbarui status
+            $mahasiswa->status = $status;
+            $mahasiswa->save();
 
-        if ($mhs) {
-            $mhs->status = $status;
-            $mhs->save();
-
-            return response()->json(['status' => $status, 'message' => 'Status updated successfully']);
+            return response()->json([
+                'status' => true,
+                'message' => 'Status berhasil diperbarui.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
         }
-
-        return response()->json(['message' => 'Student not found'], 404);
     }
 }

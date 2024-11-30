@@ -103,7 +103,7 @@
                             </div>
                             <div>
                                 <p class="text-gray-600">Status Akademik</p>
-                                <p class="mt-2 ml-14 bg-green-500 text-white font-bold rounded py-2 px-4 w-20 text-center">Aktif</p>
+                                <p class="mt-2 ml-14 bg-green-500 text-white font-bold rounded py-2 px-4 w-20 text-center">{{ \App\Models\mahasiswa::where('email', Auth::user()->email)->first()->status }}</p>
                             </div>
                         </div>
                     </div>
@@ -131,7 +131,7 @@
                         <a href= "{{ url('/mahasiswa-irs') }}" class="text-xl font-semibold">IRS</a>
                     </div>
                     <div class="bg-white shadow rounded-lg p-4">
-                        <h2 class="text-xl font-semibold">KHS</h2>
+                        <a class="text-xl font-semibold" href="{{ url('/khs') }}">KHS</a>
                     </div>
                     <div class="bg-white shadow rounded-lg p-4">
                         <a class="text-xl font-semibold" href="{{ url('/status-mahasiswa') }}">Status</a>

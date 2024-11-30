@@ -11,8 +11,7 @@ use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\menuPembimbingController;
 use App\Http\Controllers\ApproveClassroomController;
-use App\Http\Controllers\IRSController;
-
+use App\Http\Controllers\KHSController;
 
 // Route::get('/', function () {
 //     return view('dashboard-mahasiswa');
@@ -56,11 +55,15 @@ Route::middleware(['auth'])->group(function(){
     
     Route::get('/academic-schedulepage-dekan/filter', [ScheduleController::class, 'filter'])->name('jadwal.filter');
     Route::post('/academic-schedulepage-dekan/{id}/approve', [ScheduleController::class, 'approve'])->name('jadwal.approve');
-    Route::post('/status-mahasiswa/{id}/aktif', [MahasiswaController::class, 'status'])->name('mahasiswa.status');
+    // Route::post('/status-mahasiswa/{nim}/{status}', [MahasiswaController::class, 'ubahStatus'])->name('mahasiswa.status');
+    Route::post('/status-mahasiswa/{nim}/{status}', [MahasiswaController::class, 'setStatus'])->name('mahasiswa.status');
+
 
     Route::delete('/classrooms/{id}', [ClassroomController::class, 'destroy'])->name('classrooms.destroy');
     Route::patch('/classrooms/{id}', [ClassroomController::class, 'update'])->name('classrooms.update');
     Route::post('/submit-form', [ClassroomController::class, 'store'])->name('submit.form');
+
+    Route::get('/khs', [KHSController::class, 'showKhs'])->name('khsData.showKhs');
     
 });
 
@@ -84,6 +87,9 @@ Route::get('/nyusunkuotakelas', function () {
 Route::get('/status-mahasiswa', function () {
     return view('status-mahasiswa');
 });
+// Route::get('/khs', function () {
+//     return view('khs');
+// });
 
 Route::get('/mahasiswa-buatirs', function () {
     return view('mahasiswa-buatirs');

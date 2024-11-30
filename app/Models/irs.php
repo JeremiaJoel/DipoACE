@@ -9,13 +9,19 @@ class irs extends Model
 {
     use HasFactory;
 
+    protected $table = 'irs';
     protected $fillable = [
-        'kodemk', 
-        'matakuliah',
-        'kelas',
-        'sks',
-        'ruang',
-        'status',
-        'dosen_pengampu'
+        'nim',
+        'semester',
+        'tahun_ajaran',
+        'kodemk',
+        // 'ruang',
+        // 'status',
+        // 'dosen_pengampu'
     ];
+
+    public function khs()
+    {
+        return $this->hasMany(Khs::class, 'nim', 'nim');
+    }
 }

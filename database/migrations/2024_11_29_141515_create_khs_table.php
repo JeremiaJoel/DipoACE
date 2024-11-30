@@ -11,18 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('irs', function (Blueprint $table) {
+        Schema::create('khs', function (Blueprint $table) {
             $table->id();
-            $table->string('nim');
+            $table->string('nim'); // Ganti foreignId menjadi string
+            $table->foreign('nim')->references('nim')->on('mahasiswa')->onDelete('cascade');
             $table->string('semester');
             $table->string('tahun_ajaran');
             $table->string('kodemk');
-            // $table->string('matakuliah');
-            // $table->string('kelas');
-            // $table->integer('sks');
-            // $table->string('ruang');
-            // $table->string('status');
-            // $table->string('dosen_pengampu');
+            $table->string('matakuliah');
+            $table->string('jenis');
+            $table->string('status_mk');
+            $table->integer('sks');
+            $table->string('nilai_huruf');
+            $table->integer('bobot');
+            $table->integer('sks_x_bobot');
             $table->timestamps();
         });
     }
@@ -32,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('irs');
+        Schema::dropIfExists('khs');
     }
 };
