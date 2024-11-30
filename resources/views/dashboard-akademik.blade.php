@@ -73,14 +73,13 @@
         
         <main>
             <div class="max-w-full mx-24 mt-10 p-4">
-
                 <div class="bg-white shadow rounded-lg overflow-hidden">
                     <div class="bg-gray-800 p-4 flex items-center">
                         <img
                             src="../img/saiful.png" alt="Profile picture of a student"
                             class="w-24 h-24 rounded-full border-4 border-white w-100 h-100"/>
                         <div class="ml-4 text-white">
-                            <h1 class="text-2xl font-bold">Budi Balsem</h1>
+                            <h1 class="text-2xl font-bold">Coki Sitohang</h1>
                             <p class="mt-1">NIP: 199603032024061003 | Akademik</p>
                         </div>
                     </div>
@@ -93,37 +92,38 @@
                         </div>
                         <div class="mt-4 grid grid-cols-3 gap-4 text-center cursor-pointer">
                             <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-blue-700 hover:text-white"
-                                onclick="window.location.href='{{ route('dashboard-akademik') }}'">
+                                onclick="window.location.href='{{ route('nyusunruangkelas') }}'">
                                 <p class="">Belum Disetujui</p>
-                                <p class="text-2xl">20</p>
+                                <p class="text-2xl">{{ \App\Models\ApproveClassroom::where('status', 'Menunggu')->count() }}</p>
                             </div>
                             <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-blue-700 hover:text-white">
-                                <p>Sudah disetujui</p>
-                                <p class="text-2xl">5</p>
+                                <p>Mahasiswa Aktif</p>
+                                <p class="text-2xl">169332</p>
                             </div>
-                            <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-blue-700 hover:text-white">
-                                <p>Belum Mengambil</p>
-                                <p class="text-2xl">15</p>
+                            <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-blue-700 hover:text-white"
+                                onclick="window.location.href='{{ route('nyusunruangkelas') }}'">
+                                <p>Sudah Disetujui</p>
+                                <p class="text-2xl">{{ \App\Models\ApproveClassroom::where('status', 'Disetujui')->count() }}</p>
                             </div>
                         </div>
                     </div>
                 
                 <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 h-20">
-                    <div class="bg-white shadow rounded-lg p-4 hover:bg-gray-600 text-center">
+                    <div class="bg-white shadow rounded-lg p-4 hover:bg-gray-600">
                         <i class="text-xl font-semibold text"></i>
-                        <a href="nyusunruangkelas">Akademik</a>
+                        <a href="nyusunruangkelas" class="text-xl font-semibold">Akademik</a>
                     </div>
                     <div class="bg-white shadow rounded-lg p-4 hover:bg-gray-600">
                         <i class="text-xl font-semibold"></i>
-                        <a href="form-ruangan">Kalender</a>
+                        <a href="form-ruangan" class="text-xl font-semibold">Kalender</a>
                     </div>
                     <div class="bg-white shadow rounded-lg p-4 hover:bg-gray-600">
                         <i class="text-xl font-semibold"></i>
-                        <a href="">Online Courses</a>
+                        <a href="" class="text-xl font-semibold">Online Courses</a>
                     </div>
                     <div class="bg-white shadow rounded-lg p-4 hover:bg-gray-600">
                         <i class="text-xl font-semibold"></i>
-                        <a href="">Notification</a>
+                        <a href="" class="text-xl font-semibold">Notification</a>
                     </div>
                 </div>
             </div>

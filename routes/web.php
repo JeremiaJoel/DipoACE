@@ -9,8 +9,9 @@ use App\Http\Middleware\UserAkses;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\MahasiswaController;
-use App\Http\Controllers\menuPembimbingControllerController;
+use App\Http\Controllers\menuPembimbingController;
 use App\Http\Controllers\ApproveClassroomController;
+use App\Http\Controllers\IRSController;
 
 
 // Route::get('/', function () {
@@ -41,6 +42,14 @@ Route::middleware(['auth'])->group(function(){
     // Approve dan Reject Pengajuan
     Route::post('/approveclassrooms/{id}/approve', [ApproveClassroomController::class, 'approve'])->name('kelas.approve');
     Route::post('/approveclassrooms/{id}/reject', [ApproveClassroomController::class, 'reject'])->name('kelas.reject');
+    Route::get('/dashboard-akademik', [ApproveClassroomController::class, 'dashboard'])->name('dashboard-akademik');
+
+    //mahasiswa
+    // Route::get('/irs', [IRSController::class, 'showIRSForm'])->name('irs.form');
+    // Route::post('/irs', [IRSController::class, 'storeIRS'])->middleware('auth')->name('irs.store');
+    Route::get('/download-pdf', 'PDFController@downloadPDF');
+    // Route::get('/search-mata-kuliah', [MataKuliahController::class, 'search'])->name('search.mata-kuliah');
+
 
 
     Route::get('/academic-schedulepage-dekan', [ScheduleController::class, 'index'])->name('jadwal.index');
@@ -76,13 +85,21 @@ Route::get('/status-mahasiswa', function () {
     return view('status-mahasiswa');
 });
 
+Route::get('/mahasiswa-buatirs', function () {
+    return view('mahasiswa-buatirs');
+});
+
+Route::get('/mahasiswa-irs', function () {
+    return view('mahasiswa-irs');
+});
+
 Route::get('/classrooms', [ClassroomController::class, 'index'])->name('classrooms.index');
 Route::get('/nyusunruangkelas', [ClassroomController::class, 'index'])->name('nyusunruangkelas'); // Route tambahan
 Route::get('/classrooms/{id}/edit', [ClassroomController::class, 'edit'])->name('classrooms.edit');
 
 // Route punya pembimbing akademik
-// Route::get('/tabelMahasiswa', [menuPembimbingController::class, 'menuIrs'])->name('tabelMahasiswa');
+Route::get('/tabelMahasiswa', [menuPembimbingController::class, 'menuIrs'])->name('tabelMahasiswa');
 
-// Route::get('/pembimbing-irs-mahasiswa', [menuPembimbingController::class, 'irsMahasiswa'])->name('pembimbing-irs-mahasiswa');;
+Route::get('/pembimbing-irs-mahasiswa', [menuPembimbingController::class, 'irsMahasiswa'])->name('pembimbing-irs-mahasiswa');;
 
 //menampilkan data irs mahasiswa tertentu

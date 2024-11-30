@@ -125,10 +125,10 @@
                 
                 <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="bg-white shadow rounded-lg p-4 h-20">
-                        <h2 class="text-xl font-semibold">Buat IRS</h2>
+                        <a href= "{{ url('/mahasiswa-buatirs') }}" class="text-xl font-semibold">Buat IRS</a>
                     </div>
                     <div class="bg-white shadow rounded-lg p-4">
-                        <h2 class="text-xl font-semibold">IRS</h2>
+                        <a href= "{{ url('/mahasiswa-irs') }}" class="text-xl font-semibold">IRS</a>
                     </div>
                     <div class="bg-white shadow rounded-lg p-4">
                         <h2 class="text-xl font-semibold">KHS</h2>

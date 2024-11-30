@@ -98,12 +98,12 @@
                             <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-gray-800 hover:text-white"
                                 onclick="window.location.href='{{ url('academic-schedulepage-dekan') }}'">
                                 <p class="">Belum Disetujui</p>
-                                {{ \App\Models\Schedule::where('status', 'Belum Disetujui')->count() }}
+                                {{ \App\Models\jadwal::where('status', 'Belum Disetujui')->count() }}
                                 </p>
                             </div>
                             <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-gray-800 hover:text-white">
                                 <p>Sudah disetujui</p>
-                                <p>{{ \App\Models\Schedule::where('status', 'Sudah Disetujui')->count() }}</p>
+                                <p>{{ \App\Models\jadwal::where('status', 'Sudah Disetujui')->count() }}</p>
                             </div>
                         </div>
                     </div>
