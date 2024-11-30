@@ -214,27 +214,22 @@
         </form>
     </div>
 </div>
-    </div>
-
-    <div class="container mx-auto mt-10">
+    </<div class="container mx-auto mt-10">
         <div class="bg-white shadow-md rounded-lg">
             <div class="flex border-b">
-                <button class="flex-1 py-4 px-6 text-center text-blue-500 border-b-2 border-blue-500">ARRANGE
-                    CLASSROOM</button>
-                <button class="flex-1 py-4 px-6 text-center text-gray-500 hover"
-                    onclick="window.location.href='nyusunkuotakelas'">ARRANGE QUOTA CLASS</button>
+                <button class="flex-1 py-4 px-6 text-center text-blue-500 border-b-2 border-blue-500 text-2xl">Menyusun Ruang</button>
             </div>
             <div class="p-6">
-                <h2 class="text-center text-gray-700 font-medium mb-6">Menyusun Ruangan</h2>
-                <table class="min-w-full bg-white">
+                <h2 class="text-center text-gray-700 font-medium mb-6">Daftar Ruangan</h2>
+                <table class="w-full bg-white text-center">
                     <thead>
                         <tr>
-                            <th class="py-2 px-4 border-b text-left text-gray-600">Kode Ruang</th>
-                            <th class="py-2 px-4 border-b text-left text-gray-600">Gedung</th>
-                            <th class="py-2 px-4 border-b text-left text-gray-600">Kapasitas</th>
-                            <th class="py-2 px-4 border-b text-left text-gray-600">Jurusan</th>
-                            <th class="py-2 px-4 border-b text-left text-gray-600">Status</th>
-                            <th class="py-2 px-4 border-b text-left text-gray-600">Aksi</th>
+                            <th class="py-2 px-4 border-b text-gray-600 text-center">Kode Ruang</th>
+                            <th class="py-2 px-4 border-b text-gray-600 text-center">Gedung</th>
+                            <th class="py-2 px-4 border-b text-gray-600 text-center">Kapasitas</th>
+                            <th class="py-2 px-4 border-b text-gray-600 text-center">Jurusan</th>
+                            <th class="py-2 px-4 border-b text-gray-600 text-center">Status</th>
+                            <th class="py-2 px-4 border-b text-gray-600 text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -266,7 +261,7 @@
                                     </form>
 
                                     <!-- Form Ajukan -->
-                                    @if ($classroom->status === 'Belum Disetujui') <!-- Ajukan hanya jika belum disetujui -->
+                                    @if ($classroom->status === 'Belum Disetujui')
                                     <form action="{{ route('approveclassrooms.submit', $classroom->id) }}" method="POST"
                                         onsubmit="return confirm('Yakin ingin mengajukan jadwal ini ke dekan?');" class="inline-block">
                                         @csrf
@@ -277,85 +272,81 @@
                                 </td>
                             </tr>
                         @endforeach
-
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    
 
     <!-- Modal untuk Edit -->
-<div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden">
-    <div class="flex items-center justify-center min-h-screen">
-        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-            <h2 class="text-lg font-medium text-gray-800 mb-4">Edit Ruang Kelas</h2>
+    <div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                <h2 class="text-lg font-medium text-gray-800 mb-4">Edit Ruang Kelas</h2>
 
-            <form id="editForm" method="POST">
-                @csrf
-                @method('PATCH')
+                <form id="editForm" method="POST">
+                    @csrf
+                    @method('PATCH')
 
-                <!-- Gedung -->
-                <div class="mb-4">
-                    <label for="editGedung" class="block text-sm font-medium text-gray-700">Gedung</label>
-                    <input type="text" id="editGedung" name="gedung" class="w-full p-2 border rounded" required>
-                </div>
-
-                <!-- Kode Ruang -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700">Kode Ruang</label>
-                    <div class="grid grid-cols-3 gap-4">
-                        @foreach (['E101', 'E102', 'E103', 'A101', 'A102', 'A103', 'B101', 'B102', 'B103', 'C101', 'C102', 'C103', 'D101', 'D102', 'D103'] as $kodeRuang)
-                            <label class="flex items-center">
-                                <input type="checkbox" name="kode_ruang[]" value="{{ $kodeRuang }}" class="mr-2"
-                                    id="kode_ruang_{{ $kodeRuang }}">
-                                {{ $kodeRuang }}
-                            </label>
-                        @endforeach
+                    <!-- Gedung -->
+                    <div class="mb-4">
+                        <label for="editGedung" class="block text-sm font-medium text-gray-700">Gedung</label>
+                        <input type="text" id="editGedung" name="gedung" class="w-full p-2 border rounded" required>
                     </div>
-                </div>
 
-                <!-- Kapasitas -->
-                <div class="mb-4">
-                    <label for="editKapasitas" class="block text-sm font-medium text-gray-700">Kapasitas</label>
-                    <input type="number" id="editKapasitas" name="kapasitas" class="w-full p-2 border rounded" required>
-                </div>
+                    <!-- Kode Ruang -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Kode Ruang</label>
+                        <div class="grid grid-cols-3 gap-4">
+                            @foreach (['E101', 'E102', 'E103', 'A101', 'A102', 'A103', 'B101', 'B102', 'B103', 'C101', 'C102', 'C103', 'D101', 'D102', 'D103'] as $kodeRuang)
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="kode_ruang[]" value="{{ $kodeRuang }}" class="mr-2"
+                                        id="kode_ruang_{{ $kodeRuang }}">
+                                    {{ $kodeRuang }}
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
 
-                <!-- Status -->
-                <div class="mb-4">
-                    <label for="editStatus" class="block text-sm font-medium text-gray-700">Status</label>
-                    <input type="text" id="editStatus" name="status" class="w-full p-2 border rounded" readonly>
-                </div>
+                    <!-- Kapasitas -->
+                    <div class="mb-4">
+                        <label for="editKapasitas" class="block text-sm font-medium text-gray-700">Kapasitas</label>
+                        <input type="number" id="editKapasitas" name="kapasitas" class="w-full p-2 border rounded" required>
+                    </div>
 
-                <!-- Jurusan -->
-                <div class="mb-4">
-                    <label for="editJurusan" class="block text-sm font-medium text-gray-700">Jurusan</label>
-                    <select name="jurusan" id="editJurusan" class="w-full p-2 border rounded" required>
-                        <option value="">Pilih Jurusan</option>
-                        <option value="Informatika">Informatika</option>
-                        <option value="Statistika">Statistika</option>
-                        <option value="Fisika">Fisika</option>
-                        <option value="Biologi">Biologi</option>
-                        <option value="Bioteknologi">Bioteknologi</option>
-                        <option value="Kimia">Kimia</option>
-                        <option value="Matematika">Matematika</option>
-                    </select>
-                </div>
+                    <!-- Status -->
+                    <div class="mb-4">
+                        <label for="editStatus" class="block text-sm font-medium text-gray-700">Status</label>
+                        <input type="text" id="editStatus" name="status" class="w-full p-2 border rounded" readonly>
+                    </div>
 
-                <!-- Tombol -->
-                <div class="flex justify-end">
-                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">Submit</button>
-                    <button type="button" onclick="closeEditModal()" class="bg-gray-500 text-white py-2 px-4 rounded ml-2">
-                        Cancel
-                    </button>
-                </div>
-            </form>
+                    <!-- Jurusan -->
+                    <div class="mb-4">
+                        <label for="editJurusan" class="block text-sm font-medium text-gray-700">Jurusan</label>
+                        <select name="jurusan" id="editJurusan" class="w-full p-2 border rounded" required>
+                            <option value="">Pilih Jurusan</option>
+                            <option value="Informatika">Informatika</option>
+                            <option value="Statistika">Statistika</option>
+                            <option value="Fisika">Fisika</option>
+                            <option value="Biologi">Biologi</option>
+                            <option value="Bioteknologi">Bioteknologi</option>
+                            <option value="Kimia">Kimia</option>
+                            <option value="Matematika">Matematika</option>
+                        </select>
+                    </div>
+
+                    <!-- Tombol -->
+                    <div class="flex justify-end">
+                        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">Submit</button>
+                        <button type="button" onclick="closeEditModal()" class="bg-gray-500 text-white py-2 px-4 rounded ml-2">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
-
-
-
 
     <script>
             function openEditModal(classroom) {
