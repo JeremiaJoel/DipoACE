@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('jadwal', function (Blueprint $table) {
             $table->id();
             $table->string('ruang');
-            $table->string('matakuliah');
+            $table->integer('sks')->default(0);
             $table->string('waktu');
             $table->string('kelas');
             $table->string('semester_aktif');
@@ -23,8 +23,13 @@ return new class extends Migration
             $table->string('pengampu_2')->default('');
             $table->string('pengampu_3')->nullable();
             $table->enum('status', ['Belum Disetujui', 'Sudah Disetujui'])->default('Belum Disetujui');
-            $table->foreignId('matakuliah_id')->nullable();
             $table->timestamps();
+            $table->string('kodemk')->nullable();
+
+            // foreign key constraint
+            $table->foreign('kodemk')
+                ->references('kodemk')
+                ->on('matakuliah');
         });
     }
 

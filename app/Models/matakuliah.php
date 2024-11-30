@@ -20,9 +20,9 @@ class Matakuliah extends Model
         'jenis_matkul'
     ];
 
-    public function schedules()
+    public function jadwal()
     {
-        return $this->hasMany(Jadwal::class);
+        return $this->hasMany(Jadwal::class ,'kodemk' ,'kodemk');
     }
 
     public function khs()
