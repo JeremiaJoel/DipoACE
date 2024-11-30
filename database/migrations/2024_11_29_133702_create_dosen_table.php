@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mahasiswa', function (Blueprint $table) {
-            $table->id();
-            $table->string('nim')->unique();
+        Schema::create('dosen', function (Blueprint $table) {
+            $table->id(); // Menggunakan id sebagai primary key
+            $table->string('nip')->unique(); // Menyimpan NIP, harus unik
             $table->string('nama');
-            $table->string('jurusan');
             $table->string('email');
+            $table->string('jurusan');
+            $table->string('tempat_lahir');
             $table->string('tanggal_lahir');
-            $table->string('no_hp');
-            $table->string('status');
-            $table->string('pembimbing_akademik');
-            $table->foreignId('dosen_id')->nullable();
+            $table->string('jenis_kelamin');
+            $table->text('alamat');
+            $table->string('no_handphone');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mahasiswa');
+        Schema::dropIfExists('dosen');
     }
 };
