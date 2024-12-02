@@ -21,7 +21,8 @@ class mahasiswa extends Model
         'tanggal_lahir',
         'no_hp',
         'pembimbing_akademik',
-        'status'
+        'status',
+        'semester'
     ];
 
     public function dosen(): BelongsTo

@@ -13,16 +13,21 @@ return new class extends Migration
     {
         Schema::create('irs', function (Blueprint $table) {
             $table->id();
-            $table->string('nim');
+            $table->string('ruang');
+            $table->integer('sks')->default(0);
+            $table->string('kodemk')->nullable();
+            $table->string('hari');
+            $table->time('jam_mulai');
+            $table->time('jam_selesai');
+            $table->string('kelas');
             $table->string('semester');
             $table->string('tahun_ajaran');
-            $table->string('kodemk');
-            // $table->string('matakuliah');
-            // $table->string('kelas');
-            // $table->integer('sks');
-            // $table->string('ruang');
-            // $table->string('status');
-            // $table->string('dosen_pengampu');
+            $table->string('jurusan');
+            $table->string('pengampu_1')->default('');
+            $table->string('pengampu_2')->nullable();
+            $table->string('pengampu_3')->nullable();
+            $table->enum('status_irs', ['Belum Disetujui', 'Sudah Disetujui'])->default('Belum Disetujui');
+            $table->enum('status_mk', ['Baru', 'Perbaikan'])->default('Baru');
             $table->timestamps();
         });
     }

@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('mahasiswa', function (Blueprint $table) {
             $table->string('nim')->primary();
             $table->string('nama');
+            // $table->string('semester');
+            // $table->float('ipk');
+            // $table->integer('sks');
             $table->string('jurusan');
             $table->string('email');
             $table->string('tanggal_lahir');

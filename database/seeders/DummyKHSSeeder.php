@@ -20,32 +20,42 @@ class DummyKHSSeeder extends Seeder
         // Data mahasiswa yang ingin dimasukkan
         $mahasiswaData = [
             [
-                'nim' => '24060121130076',  
-                'nilai_huruf' => 'A',  
-                'kodemk' => 'PAIK6505',  
+                'nim' => '24060121130076',
+                'nilai_huruf' => 'A',
+                'kodemk' => 'PAIK6501',
             ],
             [
                 'nim' => '24060121130076',  
-                'nilai_huruf' => 'B',  
-                'kodemk' => 'PAIK6503', 
-            ],
-            // [
-            //     'nim' => '24060121130076',  
-            //     'nilai_huruf' => 'C',  
-            //     'kodemk' => 'PAIK6105',  
-            // ],
-            // [
-            //     'nim' => '24060121130076',  
-            //     'nilai_huruf' => 'A',  
-            //     'kodemk' => 'PAIK6504',  
-            // ],
-            [
-                'nim' => '24060121130076',  
-                'nilai_huruf' => 'B',  
+                'nilai_huruf' => 'C',  
                 'kodemk' => 'PAIK6401',  
             ],
-            
-            
+            [
+                'nim' => '24060121130076',  
+                'nilai_huruf' => 'A',  
+                'kodemk' => 'PAIK6402',  
+            ],
+            [
+                'nim' => '24060121130076',  
+                'nilai_huruf' => 'C',  
+                'kodemk' => 'PAIK6403',  
+            ],
+            [
+                'nim' => '24060121130076',  
+                'nilai_huruf' => 'C',  
+                'kodemk' => 'PAIK6404',  
+            ],
+            [
+                'nim' => '24060121130076',  
+                'nilai_huruf' => 'C',  
+                'kodemk' => 'PAIK6405',  
+            ],
+            [
+                'nim' => '24060121130076',  
+                'nilai_huruf' => 'B',  
+                'kodemk' => 'PAIK6406',  
+            ],
+
+
         ];
 
         foreach ($mahasiswaData as $data) {
@@ -54,7 +64,11 @@ class DummyKHSSeeder extends Seeder
 
             if ($mahasiswa) {
                 // Ambil data IRS berdasarkan NIM
-                $irs = Irs::where('nim', $mahasiswa->nim)->first();
+                $irs = Irs::where('nim', $mahasiswa->nim)
+                    ->where('kodemk', $data['kodemk']) // Pastikan ini relevan untuk matakuliah
+                    ->first();
+
+
 
                 if ($irs) {
                     // Ambil data matakuliah berdasarkan kodemk

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Menyusun Ruang Kelas</title>
 </head>
 
@@ -24,7 +25,8 @@
                     </div>
                     <div class="hidden md:block">
                         <div class="flex items-baseline space-x-4">
-                            <span class="rounded-md px-3 py-2 text-2xl font-medium text-white">DipoACE</span>
+                            <a class="rounded-md px-3 py-2 text-2xl font-medium text-white"
+                                href="{{ url('/dashboard-mahasiswa') }}">DipoACE</a>
                         </div>
                     </div>
 
@@ -44,9 +46,7 @@
                                     id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                     <span class="absolute -inset-1.5"></span>
                                     <span class="sr-only">Open user menu</span>
-                                    <img class="h-8 w-8 rounded-full"
-                                        src="../img/saiful.png"
-                                        alt="">
+                                    <img class="h-8 w-8 rounded-full" src="../img/saiful.png" alt="">
                                 </button>
                             </div>
 
@@ -80,19 +80,19 @@
     <div class="flex border-b p-8">
         <button class="flex-1 py-4 px-6 text-center text-gray-500 hover border-gray-500 border-b-2"
             onclick="window.location.href='/mahasiswa-buatirs'">Buat IRS</button>
-        <button
-            class="flex-1 py-4 px-6 text-center text-gray-500 hover border-b-2"
+        <button class="flex-1 py-4 px-6 text-center text-gray-500 hover border-b-2"
             onclick="window.location.href='/mahasiswa-irs'">IRS</button>
-        <button
-            class="flex-1 py-4 px-6 text-center text-gray-500 border-b-2">KHS</button>
+        <button class="flex-1 py-4 px-6 text-center text-gray-500 border-b-2">KHS</button>
     </div>
 
     <div class="bg-white shadow-md rounded-lg p-8 mx-8">
         <h2 class="text 2-xl font-semibold text-center mb-5">Mengambil IRS</h2>
         <div class="mb-4 max-w-2xl">
-            <input type="text" placeholder="Search Bar" class="w-72 p-2 border border-gray-300 rounded-md bg-gray-200">
+            <input type="text" placeholder="Search Bar" id="search-bar"
+                class="w-72 p-2 border border-gray-300 rounded-md bg-gray-200">
         </div>
-        <table class="w-full text-left border-collapse">
+        <div class="mb-4">Total SKS yang Dapat Diambil: <strong>{{ $sksLoad }} SKS</strong></div>
+        <table id="jadwal-table" class="w-full text-left border-collapse">
             <thead>
                 <tr>
                     <th class="border-b p-2">Kode Mata Kuliah</th>
@@ -102,38 +102,38 @@
                     <th class="border-b p-2">Waktu</th>
                     <th class="border-b p-2">Kelas</th>
                     <th class="border-b p-2">Semester</th>
-                    <th class="border-b p-2">Status</th>
+                    <th class="border-b p-2"></th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="border-b p-2">PAIK 6105</td>
-                    <td class="border-b p-2">BASIS DATA</td>
-                    <td class="border-b p-2">E101</td>
-                    <td class="border-b p-2">4</td>
-                    <td class="border-b p-2">07:00 - 09:30</td>
-                    <td class="border-b p-2">A</td>
-                    <td class="border-b p-2">3</td>
-                    <td class="border-b p-2">Baru</td>
-                    <td>
-                        <button class="bg-blue-500 text-white px-4 py-2 rounded-md">Ambil</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="border-b p-2">PAIK 6105</td>
-                    <td class="border-b p-2">Dasar Pemrograman</td>
-                    <td class="border-b p-2">E101</td>
-                    <td class="border-b p-2">4</td>
-                    <td class="border-b p-2">07:00 - 09:30</td>
-                    <td class="border-b p-2">A</td>
-                    <td class="border-b p-2">3</td>
-                    <td class="border-b p-2">Baru</td>
-                    <td>
-                        <button class="bg-blue-500 text-white px-4 py-2 rounded-md">Ambil</button>
-                    </td>
+                @foreach ($jadwals as $jadwal)
+                    <tr>
+                        <td class="border-b p-2">{{ $jadwal->kodemk }}</td>
+                        <td class="border-b p-2">{{ $jadwal->matakuliah->nama ?? 'Tidak ada Mata Kuliah' }}</td>
+                        <td class="border-b p-2">{{ $jadwal->ruang }}</td>
+                        <td class="border-b p-2">{{ $jadwal->sks }}</td>
+                        <td class="border-b p-2">{{ $jadwal->waktu }}</td>
+                        <td class="border-b p-2">{{ $jadwal->kelas }}</td>
+                        <td class="border-b p-2">{{ $jadwal->semester_aktif }}</td>
+                        <td class="border-b p-2 text-right">
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 ambil-btn"
+                                data-id="{{ $jadwal->id }}" data-row-id="course-row-{{ $jadwal->id }}"
+                                data-kode="{{ $jadwal->kodemk }}"
+                                data-matakuliah="{{ $jadwal->matakuliah->nama ?? 'Tidak ada Mata Kuliah' }}"
+                                data-ruang="{{ $jadwal->ruang }}" data-sks="{{ $jadwal->sks }}"
+                                data-waktu="{{ $jadwal->waktu }}" data-kelas="{{ $jadwal->kelas }}"
+                                data-semester="{{ $jadwal->semester_aktif }}">
+                                Ambil
+                            </button>
+                        </td>
+                    </tr>
+                @endforeach
                 </tr>
             </tbody>
         </table>
+        <div class="mt-4">
+            {{ $jadwals->links() }}
+        </div>
     </div>
 
     <div class="bg-white shadow-md rounded-lg p-8 mt-8 mx-8">
@@ -152,29 +152,178 @@
                     <th class="border-b p-2"></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td class="border-b p-2">PAIK 6105</td>
-                    <td class="border-b p-2">BASIS DATA</td>
-                    <td class="border-b p-2">E101</td>
-                    <td class="border-b p-2">4</td>
-                    <td class="border-b p-2">07:00 - 09:30</td>
-                    <td class="border-b p-2">A</td>
-                    <td class="border-b p-2">3</td>
-                    <td class="border-b p-2">Baru</td>
-                    <td class="border-b p-2">
-                        <button class="bg-red-500 text-white px-4 py-2 rounded-md">Delete</button>
-                    </td>
-                </tr>
+            <tbody id="irs-dipilih">
+
             </tbody>
         </table>
-        
+
         <div class="flex justify-between items-center mt-4">
-            <div class="text-gray-700 ml-2 text-xl font-semibold">Total SKS : 10</div>
+            <div id="total-sks" class="text-gray-700 ml-2 text-xl font-semibold">Total SKS: 0</div>
             <button class="bg-green-500 text-white px-4 py-2 rounded-md mr-14">Submit</button>
         </div>
     </div>
-    
+
+    <script>
+        $(document).ready(function() {
+            let currentSKS = 0;
+            let jadwalDipilih = [];
+            let selectedCourses = new Set();
+
+            // Fungsi untuk memuat IRS dari localStorage dan mengupdate tampilan SKS
+            function loadIRSfromStorage() {
+                const storedIRS = localStorage.getItem('irsData');
+                if (storedIRS) {
+                    $('#irs-dipilih').html(storedIRS);
+                    updateCurrentSKS();
+                    $('#irs-dipilih tr').each(function() {
+                        const kode = $(this).find('td:first').text();
+                        selectedCourses.add(kode); // Menambahkan kode ke set
+                        jadwalDipilih.push($(this).find('td:eq(4)').text()); // Menambahkan waktu ke array
+                    });
+                }
+            }
+
+            // Fungsi untuk menyimpan IRS ke localStorage
+            function saveIRStoStorage() {
+                const irsData = $('#irs-dipilih').html();
+                localStorage.setItem('irsData', irsData);
+            }
+
+            // Fungsi untuk mengupdate total SKS yang ditampilkan
+            function updateCurrentSKS() {
+                let totalSKS = 0;
+                $('#irs-dipilih tr').each(function() {
+                    const sks = parseInt($(this).find('td:eq(3)').text());
+                    totalSKS += sks;
+                });
+                currentSKS = totalSKS;
+                $('#total-sks').text(`Total SKS: ${currentSKS}`);
+            }
+
+            // Memuat IRS saat halaman dimuat
+            loadIRSfromStorage();
+
+            // Event handler untuk pencarian mata kuliah
+            $('#search-bar').on('keyup', function() {
+                const query = $(this).val();
+                if (query.length > 0) {
+                    $.ajax({
+                        url: "{{ route('jadwals.search') }}",
+                        type: "GET",
+                        data: {
+                            query: query
+                        },
+                        success: function(data) {
+                            $('#jadwal-table tbody').empty();
+                            $.each(data, function(key, jadwal) {
+                                $('#jadwal-table tbody').append(`
+                                <tr>
+                                    <td>${jadwal.kodemk}</td>
+                                    <td>${jadwal.matakuliah.nama}</td>
+                                    <td>${jadwal.ruang}</td>
+                                    <td>${jadwal.sks}</td>
+                                    <td>${jadwal.waktu}</td>
+                                    <td>${jadwal.kelas}</td>
+                                    <td>${jadwal.semester_aktif}</td>
+                                    <td class="text-right">
+                                        <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 ambil-btn"
+                                            data-id="${jadwal.id}"
+                                            data-kode="${jadwal.kodemk}"
+                                            data-matakuliah="${jadwal.matakuliah.nama}"
+                                            data-ruang="${jadwal.ruang}"
+                                            data-sks="${jadwal.sks}"
+                                            data-waktu="${jadwal.waktu}"
+                                            data-kelas="${jadwal.kelas}"
+                                            data-semester="${jadwal.semester_aktif}">
+                                            Ambil
+                                        </button>
+                                    </td>
+                                </tr>
+                            `);
+                            });
+                        }
+                    });
+                } else {
+                    location.reload(); // Reload halaman jika pencarian dikosongkan
+                }
+            });
+
+            // Menggunakan event delegation untuk menangani klik pada tombol Ambil yang dinamis
+            $(document).on('click', '.ambil-btn', function() {
+                const btn = $(this);
+                const courseSKS = parseInt(btn.data('sks'));
+                const kode = btn.data('kode');
+                const waktu = btn.data('waktu');
+
+                if (selectedCourses.has(kode)) {
+                    Swal.fire('Error', 'You have already selected this course.', 'error');
+                    return;
+                }
+
+                if (isWaktuBentrok(waktu)) {
+                    Swal.fire('Error', 'Schedule conflict detected!', 'error');
+                    return;
+                }
+
+                if (currentSKS + courseSKS > {{ $sksLoad }}) {
+                    Swal.fire('Error', 'Total SKS would exceed your limit', 'error');
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'Do you want to take this course?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, take it!',
+                    cancelButtonText: 'No, cancel!',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        selectedCourses.add(kode);
+                        $('#irs-dipilih').append(`
+                        <tr>
+                            <td>${btn.data('kode')}</td>
+                            <td>${btn.data('matakuliah')}</td>
+                            <td>${btn.data('ruang')}</td>
+                            <td>${courseSKS}</td>
+                            <td>${btn.data('waktu')}</td>
+                            <td>${btn.data('kelas')}</td>
+                            <td>${btn.data('semester')}</td>
+                            <td>New</td>
+                            <td>
+                                <button class="bg-red-500 text-white px-4 py-2 rounded-md delete-btn">Delete</button>
+                            </td>
+                        </tr>
+                    `);
+                        saveIRStoStorage();
+                        currentSKS += courseSKS;
+                        $('#total-sks').text(`Total SKS: ${currentSKS}`);
+                        Swal.fire('Enrolled!', 'You have successfully enrolled in the course.',
+                            'success');
+                    }
+                });
+            });
+
+            $(document).on('click', '.delete-btn', function() {
+                const row = $(this).closest('tr');
+                const kode = row.find('td:first').text();
+                selectedCourses.delete(kode);
+                row.remove();
+                updateCurrentSKS();
+                saveIRStoStorage();
+                Swal.fire('Removed!', 'The course has been removed.', 'success');
+                location.reload();
+            });
+
+            // Fungsi untuk mengecek bentrokan waktu
+            function isWaktuBentrok(waktuBaru) {
+                return jadwalDipilih.includes(waktuBaru);
+            }
+        });
+    </script>
+
+
 
 </body>
 

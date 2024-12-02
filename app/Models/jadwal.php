@@ -18,6 +18,9 @@ class Jadwal extends Model
         'matakuliah',
         'waktu',
         'kelas',
+        'hari',
+        'jam_mulai',
+        'jam_selesai',
         'semester_aktif',
         'jurusan',
         'pengampu_1',
@@ -28,7 +31,7 @@ class Jadwal extends Model
 
     public function matakuliah()
     {
-        return $this->belongsTo(matakuliah::class);
+        return $this->belongsTo(matakuliah::class,'kodemk', 'kodemk');
     }
 
     public function dosen()
