@@ -10,6 +10,8 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+
     <title>Menyusun Ruang Kelas</title>
 </head>
 
@@ -98,10 +100,12 @@
                     <th class="border-b p-2">Kode Mata Kuliah</th>
                     <th class="border-b p-2">MataKuliah</th>
                     <th class="border-b p-2">Ruang</th>
-                    <th class="border-b p-2">SKS</th>
+                    <th class="border-b p-2">Hari</th>
                     <th class="border-b p-2">Waktu</th>
                     <th class="border-b p-2">Kelas</th>
+                    <th class="border-b p-2">SKS</th>
                     <th class="border-b p-2">Semester</th>
+                    <th class="border-b p-2">Status </th>
                     <th class="border-b p-2"></th>
                 </tr>
             </thead>
@@ -111,18 +115,21 @@
                         <td class="border-b p-2">{{ $jadwal->kodemk }}</td>
                         <td class="border-b p-2">{{ $jadwal->matakuliah->nama ?? 'Tidak ada Mata Kuliah' }}</td>
                         <td class="border-b p-2">{{ $jadwal->ruang }}</td>
-                        <td class="border-b p-2">{{ $jadwal->sks }}</td>
-                        <td class="border-b p-2">{{ $jadwal->waktu }}</td>
+                        <td class="border-b p-2">{{ $jadwal->hari }}</td>
+                        <td class="border-b p-2">{{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</td>
                         <td class="border-b p-2">{{ $jadwal->kelas }}</td>
+                        <td class="border-b p-2">{{ $jadwal->sks }}</td>
                         <td class="border-b p-2">{{ $jadwal->semester_aktif }}</td>
+                        <td class="border-b p-2">{{ $jadwal->matakuliah->jenis_matkul ?? 'Tidak ada Status' }}</td>
                         <td class="border-b p-2 text-right">
                             <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 ambil-btn"
                                 data-id="{{ $jadwal->id }}" data-row-id="course-row-{{ $jadwal->id }}"
-                                data-kode="{{ $jadwal->kodemk }}"
+                                data-kode="{{ $jadwal->kodemk }}" data-hari="{{ $jadwal->hari }}"
                                 data-matakuliah="{{ $jadwal->matakuliah->nama ?? 'Tidak ada Mata Kuliah' }}"
                                 data-ruang="{{ $jadwal->ruang }}" data-sks="{{ $jadwal->sks }}"
-                                data-waktu="{{ $jadwal->waktu }}" data-kelas="{{ $jadwal->kelas }}"
-                                data-semester="{{ $jadwal->semester_aktif }}">
+                                data-waktu="{{ $jadwal->jam_mulai }}-{{ $jadwal->jam_selesai }}"
+                                data-kelas="{{ $jadwal->kelas }}" data-semester="{{ $jadwal->semester_aktif }}"
+                                data-status="{{ $jadwal->matakuliah->jenis_matkul }}">
                                 Ambil
                             </button>
                         </td>
@@ -144,9 +151,10 @@
                     <th class="border-b p-2">Kode Mata Kuliah</th>
                     <th class="border-b p-2">MataKuliah</th>
                     <th class="border-b p-2">Ruang</th>
-                    <th class="border-b p-2">SKS</th>
+                    <th class="border-b p-2">Hari</th>
                     <th class="border-b p-2">Waktu</th>
                     <th class="border-b p-2">Kelas</th>
+                    <th class="border-b p-2">SKS</th>
                     <th class="border-b p-2">Semester</th>
                     <th class="border-b p-2">Status</th>
                     <th class="border-b p-2"></th>
@@ -159,7 +167,7 @@
 
         <div class="flex justify-between items-center mt-4">
             <div id="total-sks" class="text-gray-700 ml-2 text-xl font-semibold">Total SKS: 0</div>
-            <button class="bg-green-500 text-white px-4 py-2 rounded-md mr-14">Submit</button>
+            <button class="bg-green-500 text-white px-4 py-2 rounded-md mr-14 submit-btn ">Submit</button>
         </div>
     </div>
 
@@ -193,15 +201,24 @@
             function updateCurrentSKS() {
                 let totalSKS = 0;
                 $('#irs-dipilih tr').each(function() {
-                    const sks = parseInt($(this).find('td:eq(3)').text());
-                    totalSKS += sks;
+                    const sksText = $(this).find('td:eq(6)')
+                .text(); // Ambil teks SKS dari kolom yang benar (kolom ke-6)
+                    const sks = parseInt(sksText); // Ubah teks menjadi integer
+
+                    // Jika parseInt menghasilkan NaN, anggap SKSnya 0
+                    if (!isNaN(sks)) {
+                        totalSKS += sks;
+                    }
                 });
+
                 currentSKS = totalSKS;
                 $('#total-sks').text(`Total SKS: ${currentSKS}`);
             }
 
+
             // Memuat IRS saat halaman dimuat
             loadIRSfromStorage();
+
 
             // Event handler untuk pencarian mata kuliah
             $('#search-bar').on('keyup', function() {
@@ -221,19 +238,23 @@
                                     <td>${jadwal.kodemk}</td>
                                     <td>${jadwal.matakuliah.nama}</td>
                                     <td>${jadwal.ruang}</td>
-                                    <td>${jadwal.sks}</td>
+                                    <td>${jadwal.hari}</td>
                                     <td>${jadwal.waktu}</td>
                                     <td>${jadwal.kelas}</td>
+                                    <td>${jadwal.sks}</td>
                                     <td>${jadwal.semester_aktif}</td>
+                                    <td>${jadwal.matakuliah.jenis_matkul}</td>
                                     <td class="text-right">
                                         <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 ambil-btn"
                                             data-id="${jadwal.id}"
                                             data-kode="${jadwal.kodemk}"
                                             data-matakuliah="${jadwal.matakuliah.nama}"
                                             data-ruang="${jadwal.ruang}"
-                                            data-sks="${jadwal.sks}"
-                                            data-waktu="${jadwal.waktu}"
+                                            data-hari="${jadwal.hari}"
+                                            data-waktu="${jadwal.mulai}-${jadwal.jam_selesai}"
                                             data-kelas="${jadwal.kelas}"
+                                            data-sks="${jadwal.sks}"
+                                            data-status="${jadwal.matakuliah.jenis_matkul}"
                                             data-semester="${jadwal.semester_aktif}">
                                             Ambil
                                         </button>
@@ -248,23 +269,25 @@
                 }
             });
 
+
+
             // Menggunakan event delegation untuk menangani klik pada tombol Ambil yang dinamis
             $(document).on('click', '.ambil-btn', function() {
                 const btn = $(this);
                 const courseSKS = parseInt(btn.data('sks'));
                 const kode = btn.data('kode');
                 const waktu = btn.data('waktu');
+                const hari = btn.data('hari');
 
                 if (selectedCourses.has(kode)) {
                     Swal.fire('Error', 'You have already selected this course.', 'error');
                     return;
                 }
 
-                if (isWaktuBentrok(waktu)) {
-                    Swal.fire('Error', 'Schedule conflict detected!', 'error');
+                if (isWaktuBentrok(waktu, hari)) {
+                    Swal.fire('Error', 'Schedule conflict detected! Same time and day.', 'error');
                     return;
                 }
-
                 if (currentSKS + courseSKS > {{ $sksLoad }}) {
                     Swal.fire('Error', 'Total SKS would exceed your limit', 'error');
                     return;
@@ -286,9 +309,10 @@
                             <td>${btn.data('kode')}</td>
                             <td>${btn.data('matakuliah')}</td>
                             <td>${btn.data('ruang')}</td>
-                            <td>${courseSKS}</td>
+                            <td>${btn.data('hari')}</td>
                             <td>${btn.data('waktu')}</td>
                             <td>${btn.data('kelas')}</td>
+                            <td>${courseSKS}</td>
                             <td>${btn.data('semester')}</td>
                             <td>New</td>
                             <td>
@@ -310,6 +334,7 @@
                 const kode = row.find('td:first').text();
                 selectedCourses.delete(kode);
                 row.remove();
+
                 updateCurrentSKS();
                 saveIRStoStorage();
                 Swal.fire('Removed!', 'The course has been removed.', 'success');
@@ -317,13 +342,11 @@
             });
 
             // Fungsi untuk mengecek bentrokan waktu
-            function isWaktuBentrok(waktuBaru) {
-                return jadwalDipilih.includes(waktuBaru);
+            function isWaktuBentrok(waktuBaru, hari) {
+                return jadwalDipilih.includes(waktuBaru, hari);
             }
         });
     </script>
-
-
 
 </body>
 

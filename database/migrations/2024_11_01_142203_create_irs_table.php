@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('irs', function (Blueprint $table) {
             $table->id();
+            $table->string('nim');
             $table->string('ruang');
             $table->integer('sks')->default(0);
             $table->string('kodemk')->nullable();

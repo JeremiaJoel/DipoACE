@@ -12,12 +12,21 @@ class irs extends Model
     protected $table = 'irs';
     protected $fillable = [
         'nim',
+        'ruang',
+        'sks',
+        'kodemk',
+        'hari',
+        'jam_mulai',
+        'jam_selesai',
+        'kelas',
         'semester',
         'tahun_ajaran',
-        'kodemk',
-        // 'ruang',
-        // 'status',
-        // 'dosen_pengampu'
+        'jurusan',
+        'pengampu_1',
+        'pengampu_2',
+        'pengampu_3',
+        'status_irs', 
+        'status_mk'
     ];
 
     public function khs()

@@ -43,7 +43,7 @@ class DummySchedulesSeeder extends Seeder
             ],
             [
                 'ruang' => 'E101',
-                'kelas' => 'A',
+                'kelas' => 'C',
                 'semester_aktif' => '3',
                 'jurusan' => 'Informatika',
                 'sks' => 4,
@@ -56,7 +56,7 @@ class DummySchedulesSeeder extends Seeder
             ],
             [
                 'ruang' => 'E101',
-                'kelas' => 'A',
+                'kelas' => 'D',
                 'semester_aktif' => '3',
                 'jurusan' => 'Informatika',
                 'sks' => 4,
@@ -82,7 +82,7 @@ class DummySchedulesSeeder extends Seeder
             ],
             [
                 'ruang' => 'E102',
-                'kelas' => 'A',
+                'kelas' => 'B',
                 'semester_aktif' => '3',
                 'jurusan' => 'Informatika',
                 'sks' => 3,
@@ -95,7 +95,7 @@ class DummySchedulesSeeder extends Seeder
             ],
             [
                 'ruang' => 'E102',
-                'kelas' => 'A',
+                'kelas' => 'C',
                 'semester_aktif' => '3',
                 'jurusan' => 'Informatika',
                 'sks' => 3,
@@ -108,7 +108,7 @@ class DummySchedulesSeeder extends Seeder
             ],
             [
                 'ruang' => 'E102',
-                'kelas' => 'A',
+                'kelas' => 'D',
                 'semester_aktif' => '3',
                 'jurusan' => 'Informatika',
                 'sks' => 3,
