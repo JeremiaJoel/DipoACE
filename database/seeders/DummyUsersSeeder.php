@@ -50,8 +50,17 @@ class DummyUsersSeeder extends Seeder
             //     'kaprodi' => '0',
             //     'bagian_akademik' => '1'
             // ],
+            // [
+            //     'email' => 'atengbaplang@students.dipoace.ac.id',
+            //     'password' => bcrypt('123456'),
+            //     'dekan' => '0',
+            //     'mahasiswa' => '1',
+            //     'pembimbing_akademik' => '0',
+            //     'kaprodi' => '0',
+            //     'bagian_akademik' => '0'
+            // ],
             [
-                'email' => 'atengbaplang@students.dipoace.ac.id',
+                'email' => 'dadangkarbu@kaprodi.dipoace.ac.id',
                 'password' => bcrypt('123456'),
                 'dekan' => '0',
                 'mahasiswa' => '1',
@@ -59,6 +68,7 @@ class DummyUsersSeeder extends Seeder
                 'kaprodi' => '0',
                 'bagian_akademik' => '0'
             ],
+
 
         ];
 
