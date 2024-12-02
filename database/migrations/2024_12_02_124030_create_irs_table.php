@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('irs', function (Blueprint $table) {
             $table->id();
+<<<<<<< HEAD:database/migrations/2024_11_01_142203_create_irs_table.php
             $table->string('nim');
+=======
+            $table->string('nim'); // Ganti foreignId menjadi string
+            $table->foreign('nim')->references('nim')->on('mahasiswa');
+>>>>>>> 20fd4a511fac639243745b73813a50cde8374f9c:database/migrations/2024_12_02_124030_create_irs_table.php
             $table->string('ruang');
             $table->integer('sks')->default(0);
             $table->string('kodemk')->nullable();

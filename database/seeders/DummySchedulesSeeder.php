@@ -720,7 +720,336 @@ class DummySchedulesSeeder extends Seeder
                 'kodemk' => 'UUW00008',
                 'jam_mulai' => '16:30:00',
                 'jam_selesai' => '17:40:00'
-            ]
+            ],
+        
+            //pbo
+            [
+                'ruang' => 'A101',
+                'kelas' => 'A',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Senin',
+                'pengampu_1' => 'Edy Suharto, S.T., M.Kom',
+                'pengampu_2' => 'Khadijah, S.Kom., M.Cs.',
+                'kodemk' => 'PAIK6401',
+                'jam_mulai' => '07:00:00',
+                'jam_selesai' => '09:30:00'
+            ],
+            [
+                'ruang' => 'A102',
+                'kelas' => 'B',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Senin',
+                'pengampu_1' => 'Edy Suharto, S.T., M.Kom',
+                'pengampu_2' => 'Khadijah, S.Kom., M.Cs.',
+                'kodemk' => 'PAIK6401',
+                'jam_mulai' => '09:40:00',
+                'jam_selesai' => '12:10:00'
+            ],
+            [
+                'ruang' => 'A103',
+                'kelas' => 'C',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Senin',
+                'pengampu_1' => 'Edy Suharto, S.T., M.Kom',
+                'pengampu_2' => 'Khadijah, S.Kom., M.Cs.',
+                'kodemk' => 'PAIK6401',
+                'jam_mulai' => '13:00:00',
+                'jam_selesai' => '15:30:00'
+            ],
+            [
+                'ruang' => 'B101',
+                'kelas' => 'D',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Senin',
+                'pengampu_1' => 'Edy Suharto, S.T., M.Kom',
+                'pengampu_2' => 'Khadijah, S.Kom., M.Cs.',
+                'kodemk' => 'PAIK6401',
+                'jam_mulai' => '15:40:00',
+                'jam_selesai' => '18:10:00'
+            ],
+
+            // Jadwal untuk Jaringan Komputer
+            [
+                'ruang' => 'B102',
+                'kelas' => 'A',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Selasa',
+                'pengampu_1' => 'Guruh Aryotejo, S.Kom., M.Sc.',
+                'pengampu_2' => 'Muhammad Malik Hakim, S.T., M.T.I.',
+                'pengampu_3' => 'Dr. Indra Waspada, S.T., M.TI',
+                'kodemk' => 'PAIK6402',
+                'jam_mulai' => '07:00:00',
+                'jam_selesai' => '09:30:00'
+            ],
+            [
+                'ruang' => 'B103',
+                'kelas' => 'B',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Selasa',
+                'pengampu_1' => 'Guruh Aryotejo, S.Kom., M.Sc.',
+                'pengampu_2' => 'Muhammad Malik Hakim, S.T., M.T.I.',
+                'pengampu_3' => 'Dr. Indra Waspada, S.T., M.TI',
+                'kodemk' => 'PAIK6402',
+                'jam_mulai' => '09:40:00',
+                'jam_selesai' => '12:10:00'
+            ],
+            [
+                'ruang' => 'C101',
+                'kelas' => 'C',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Selasa',
+                'pengampu_1' => 'Guruh Aryotejo, S.Kom., M.Sc.',
+                'pengampu_2' => 'Muhammad Malik Hakim, S.T., M.T.I.',
+                'pengampu_3' => 'Dr. Indra Waspada, S.T., M.TI',
+                'kodemk' => 'PAIK6402',
+                'jam_mulai' => '13:00:00',
+                'jam_selesai' => '15:30:00'
+            ],
+            [
+                'ruang' => 'C102',
+                'kelas' => 'D',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Selasa',
+                'pengampu_1' => 'Guruh Aryotejo, S.Kom., M.Sc.',
+                'pengampu_2' => 'Muhammad Malik Hakim, S.T., M.T.I.',
+                'pengampu_3' => 'Dr. Indra Waspada, S.T., M.TI',
+                'kodemk' => 'PAIK6402',
+                'jam_mulai' => '15:40:00',
+                'jam_selesai' => '18:10:00'
+            ],
+
+            // Jadwal untuk Manajemen Basis Data
+            [
+                'ruang' => 'C103',
+                'kelas' => 'A',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Rabu',
+                'pengampu_1' => 'Edy Suharto, S.T., M.Kom',
+                'pengampu_2' => 'Beta Noranita, S.Si., M.Kom.',
+                'kodemk' => 'PAIK6403',
+                'jam_mulai' => '07:00:00',
+                'jam_selesai' => '09:30:00'
+            ],
+            [
+                'ruang' => 'C101',
+                'kelas' => 'B',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Rabu',
+                'pengampu_1' => 'Edy Suharto, S.T., M.Kom',
+                'pengampu_2' => 'Beta Noranita, S.Si., M.Kom.',
+                'kodemk' => 'PAIK6403',
+                'jam_mulai' => '09:40:00',
+                'jam_selesai' => '12:10:00'
+            ],
+            [
+                'ruang' => 'C102',
+                'kelas' => 'C',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Rabu',
+                'pengampu_1' => 'Edy Suharto, S.T., M.Kom',
+                'pengampu_2' => 'Beta Noranita, S.Si., M.Kom.',
+                'kodemk' => 'PAIK6403',
+                'jam_mulai' => '13:00:00',
+                'jam_selesai' => '15:30:00'
+            ],
+            [
+                'ruang' => 'D101',
+                'kelas' => 'D',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Rabu',
+                'pengampu_1' => 'Edy Suharto, S.T., M.Kom',
+                'pengampu_2' => 'Beta Noranita, S.Si., M.Kom.',
+                'kodemk' => 'PAIK6403',
+                'jam_mulai' => '15:40:00',
+                'jam_selesai' => '18:10:00'
+            ],
+
+            // Jadwal untuk Gravika dan Komputasi Visual
+            [
+                'ruang' => 'D102',
+                'kelas' => 'A',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Kamis',
+                'pengampu_1' => 'Dr. Aris Sugiharto, S.Si., M.Kom.',
+                'pengampu_2' => 'Dr. Helmie Arif Wibawa, S.Si., M.Cs.',
+                'kodemk' => 'PAIK6404',
+                'jam_mulai' => '07:00:00',
+                'jam_selesai' => '09:30:00'
+            ],
+            [
+                'ruang' => 'D103',
+                'kelas' => 'B',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Kamis',
+                'pengampu_1' => 'Dr. Aris Sugiharto, S.Si., M.Kom.',
+                'pengampu_2' => 'Dr. Helmie Arif Wibawa, S.Si., M.Cs.',
+                'kodemk' => 'PAIK6404',
+                'jam_mulai' => '09:40:00',
+                'jam_selesai' => '12:10:00'
+            ],
+            [
+                'ruang' => 'E101',
+                'kelas' => 'C',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Kamis',
+                'pengampu_1' => 'Dr. Aris Sugiharto, S.Si., M.Kom.',
+                'pengampu_2' => 'Dr. Helmie Arif Wibawa, S.Si., M.Cs.',
+                'kodemk' => 'PAIK6404',
+                'jam_mulai' => '13:00:00',
+                'jam_selesai' => '15:30:00'
+            ],
+            [
+                'ruang' => 'E102',
+                'kelas' => 'D',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Kamis',
+                'pengampu_1' => 'Dr. Aris Sugiharto, S.Si., M.Kom.',
+                'pengampu_2' => 'Dr. Helmie Arif Wibawa, S.Si., M.Cs.',
+                'kodemk' => 'PAIK6404',
+                'jam_mulai' => '15:40:00',
+                'jam_selesai' => '18:10:00'
+            ],
+
+            // Jadwal untuk Rekayasa Perangkat Lunak
+            [
+                'ruang' => 'A101',
+                'kelas' => 'A',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Jumat',
+                'pengampu_1' => 'Dr. Aris Puji Widodo, S.Si., M.T.',
+                'pengampu_2' => 'Satriyo Adhy, S.Si., M.T.',
+                'kodemk' => 'PAIK6405',
+                'jam_mulai' => '07:00:00',
+                'jam_selesai' => '09:30:00'
+            ],
+            [
+                'ruang' => 'A102',
+                'kelas' => 'B',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Jumat',
+                'pengampu_1' => 'Dr. Aris Puji Widodo, S.Si., M.T.',
+                'pengampu_2' => 'Satriyo Adhy, S.Si., M.T.',
+                'kodemk' => 'PAIK6405',
+                'jam_mulai' => '09:40:00',
+                'jam_selesai' => '12:10:00'
+            ],
+            [
+                'ruang' => 'A103',
+                'kelas' => 'C',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Jumat',
+                'pengampu_1' => 'Dr. Aris Puji Widodo, S.Si., M.T.',
+                'pengampu_2' => 'Satriyo Adhy, S.Si., M.T.',
+                'kodemk' => 'PAIK6405',
+                'jam_mulai' => '13:00:00',
+                'jam_selesai' => '15:30:00'
+            ],
+            [
+                'ruang' => 'B101',
+                'kelas' => 'D',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Jumat',
+                'pengampu_1' => 'Dr. Aris Puji Widodo, S.Si., M.T.',
+                'pengampu_2' => 'Satriyo Adhy, S.Si., M.T.',
+                'kodemk' => 'PAIK6405',
+                'jam_mulai' => '15:40:00',
+                'jam_selesai' => '18:10:00'
+            ],
+
+            // Jadwal untuk Sistem Cerdas
+            [
+                'ruang' => 'B102',
+                'kelas' => 'A',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Sabtu',
+                'pengampu_1' => 'Sandy Kurniawan, S.Kom., M.Kom.',
+                'pengampu_2' => 'Dr. Helmie Arif Wibawa, S.Si., M.Cs.',
+                'kodemk' => 'PAIK6406',
+                'jam_mulai' => '07:00:00',
+                'jam_selesai' => '09:30:00'
+            ],
+            [
+                'ruang' => 'B103',
+                'kelas' => 'B',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Sabtu',
+                'pengampu_1' => 'Sandy Kurniawan, S.Kom., M.Kom.',
+                'pengampu_2' => 'Dr. Helmie Arif Wibawa, S.Si., M.Cs.',
+                'kodemk' => 'PAIK6406',
+                'jam_mulai' => '09:40:00',
+                'jam_selesai' => '12:10:00'
+            ],
+            [
+                'ruang' => 'C101',
+                'kelas' => 'C',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Sabtu',
+                'pengampu_1' => 'Sandy Kurniawan, S.Kom., M.Kom.',
+                'pengampu_2' => 'Dr. Helmie Arif Wibawa, S.Si., M.Cs.',
+                'kodemk' => 'PAIK6406',
+                'jam_mulai' => '13:00:00',
+                'jam_selesai' => '15:30:00'
+            ],
+            [
+                'ruang' => 'C102',
+                'kelas' => 'D',
+                'semester_aktif' => 4,
+                'jurusan' => 'Informatika',
+                'sks' => 3,
+                'hari' => 'Sabtu',
+                'pengampu_1' => 'Sandy Kurniawan, S.Kom., M.Kom.',
+                'pengampu_2' => 'Dr. Helmie Arif Wibawa, S.Si., M.Cs.',
+                'kodemk' => 'PAIK6406',
+                'jam_mulai' => '15:40:00',
+                'jam_selesai' => '18:10:00'
+            ],
+            
         ];
         
         
