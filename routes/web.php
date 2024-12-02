@@ -68,6 +68,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mahasiswa-buatirs', [IRSController::class, 'index'])->name('jadwals.index');
     Route::get('/mahasiswa-buatirs/search', [IRSController::class, 'search'])->name('jadwals.search');
 
+    Route::post('/irs/store', [IRSController::class, 'store'])->name('irs.store');
+    Route::post('/mahasiswa/submit-irs', [IrsController::class, 'submitIRS'])->name('mahasiswa.submitIRS'); 
+
     Route::post('/jadwal/{id}/ambil', [IRSController::class, 'ambil'])->name('jadwal.ambil');
 });
 
@@ -96,6 +99,7 @@ Route::get('/status-mahasiswa', function () {
 Route::get('/mahasiswa-irs', function () {
     return view('mahasiswa-irs');
 });
+
 
 Route::get('/classrooms', [ClassroomController::class, 'index'])->name('classrooms.index');
 Route::get('/nyusunruangkelas', [ClassroomController::class, 'index'])->name('nyusunruangkelas'); // Route tambahan

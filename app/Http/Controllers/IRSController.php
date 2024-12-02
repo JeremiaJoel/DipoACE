@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Jadwal;
 use App\Models\khs;
+use App\Models\irs;
 use App\Models\mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -112,6 +113,72 @@ class IRSController extends Controller
             return 20;
         } else {
             return 18;
+        }
+    }
+
+    public function store(Request $request)
+    {
+        // Validasi input data (sesuaikan dengan field di form)
+        $validated = $request->validate([
+            'student_id' => 'required|integer',
+            'tahun_akademik' => 'required|string',
+            // Tambahkan validasi untuk field lain sesuai kebutuhan
+        ]);
+
+        // Simpan data ke tabel irs dan set status ke 'Belum Disetujui'
+        IRS::create([
+            'student_id' => $validated['student_id'],
+            'tahun_akademik' => $validated['tahun_akademik'],
+            'status' => 'Belum Disetujui',
+            // Tambahkan kolom lain yang sesuai dengan tabel irs
+        ]);
+
+        // Redirect atau response sukses
+        return redirect()->route('irs.index')->with('success', 'Data IRS berhasil disimpan!');
+    }
+
+    public function submitIRS(Request $request)
+    {
+        // Validasi data
+        $request->validate([
+            'courses' => 'required|array',
+            'courses.*.kodemk' => 'required|string',
+            'courses.*.mata_kuliah' => 'required|string',
+            // 'courses.*.hari' => 'required|string',
+            'courses.*.sks' => 'required|integer',
+            'courses.*.waktu' => 'required|string',
+            'courses.*.kelas' => 'required|string',
+            'courses.*.semester' => 'required|string',
+            'sks' => 'required|integer',
+            'student_id' => 'required|integer|exists:users,id',
+        ]);
+
+        try {
+            // Simpan data IRS untuk setiap mata kuliah
+            $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
+            $nim = $mahasiswa ? $mahasiswa->nim : null;
+            foreach ($request->courses as $course) {
+                Irs::create([
+                    'nim' => $nim,
+                    'kodemk' => $course['kodemk'],
+                    'sks' => $course['sks'],
+                    'ruang' => $course['ruang'],
+                    'hari' => $course['hari'], // Sesuaikan jika perlu
+                    'jam_mulai' => '08:00:00', // Sesuaikan data jam mulai dan selesai
+                    'jam_selesai' => '10:00:00', // Sesuaikan data jam selesai
+                    'kelas' => $course['kelas'],
+                    'semester' => $course['semester'],
+                    'tahun_ajaran' => '2024/2025', // Sesuaikan dengan tahun ajaran aktif
+                    'jurusan' => 'Informatika', // Sesuaikan dengan jurusan
+                    'pengampu_1' => 'Dr. A', // Sesuaikan dengan pengampu
+                    'status_irs' =>  $request->status_irs ?? 'Belum Disetujui',
+                    'status_mk' =>  $request->status_mk ?? 'Baru' // Sesuaikan status mata kuliah
+                ]);
+            }
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
 }
