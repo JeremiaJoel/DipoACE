@@ -31,11 +31,17 @@ class Jadwal extends Model
 
     public function matakuliah()
     {
-        return $this->belongsTo(matakuliah::class,'kodemk', 'kodemk');
+        return $this->belongsTo(matakuliah::class, 'kodemk', 'kodemk');
     }
 
     public function dosen()
     {
         return $this->belongsToMany(dosen::class, 'dosen_jadwal', 'jadwal_id', 'dosen_id');
+    }
+
+    // Jadwal.php (Model)
+    public function irs()
+    {
+        return $this->hasMany(Irs::class, 'kodemk', 'kodemk');
     }
 }

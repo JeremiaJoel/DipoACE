@@ -26,14 +26,9 @@ class irs extends Model
         'pengampu_1',
         'pengampu_2',
         'pengampu_3',
-<<<<<<< HEAD
-        'status_irs', 
-        'status_mk'
-=======
         'status_irs',
-        'status_mk',
+        'status_mk'
         
->>>>>>> 20fd4a511fac639243745b73813a50cde8374f9c
     ];
 
     public function khs()

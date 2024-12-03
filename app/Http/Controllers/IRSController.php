@@ -59,17 +59,17 @@ class IRSController extends Controller
         $jadwals = Jadwal::whereHas('matakuliah', function ($q) use ($query) {
             $q->where('nama', 'like', '%' . $query . '%');
         })
-        ->orWhere('kodemk', 'like', "%{$query}%")
-        ->with('matakuliah')
-        ->get();
-    
+            ->orWhere('kodemk', 'like', "%{$query}%")
+            ->with('matakuliah')
+            ->get();
+
         if ($request->ajax()) {
             return response()->json($jadwals);
         }
-    
+
         return view('mahasiswa.buatirs', compact('jadwals'));
     }
-    
+
 
     public function calculateSKSLoad($nim)
     {
@@ -144,7 +144,7 @@ class IRSController extends Controller
             'courses' => 'required|array',
             'courses.*.kodemk' => 'required|string',
             'courses.*.mata_kuliah' => 'required|string',
-            // 'courses.*.hari' => 'required|string',
+            'courses.*.hari' => 'required|string',
             'courses.*.sks' => 'required|integer',
             'courses.*.waktu' => 'required|string',
             'courses.*.kelas' => 'required|string',
@@ -157,23 +157,59 @@ class IRSController extends Controller
             // Simpan data IRS untuk setiap mata kuliah
             $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
             $nim = $mahasiswa ? $mahasiswa->nim : null;
+
+
             foreach ($request->courses as $course) {
+                // Pisahkan jam_mulai dan jam_selesai dari string 'waktu' yang digabung
+                list($jam_mulai, $jam_selesai) = explode('-', $course['waktu']);
+                $jadwal = Jadwal::where('kodemk', $course['kodemk'])->first();
+
+                // Jika jadwal ditemukan, ambil jurusan dan pengampu_1
+                $jurusan = $jadwal ? $jadwal->jurusan : 'Tidak Diketahui';
+                $pengampu_1 = $jadwal ? $jadwal->pengampu_1 : 'Tidak Diketahui';
+                $pengampu_2 = $jadwal ? $jadwal->pengampu_2 : 'Tidak Diketahui';
+                $pengampu_3 = $jadwal ? $jadwal->pengampu_3 : 'Tidak Diketahui';
+
                 Irs::create([
                     'nim' => $nim,
                     'kodemk' => $course['kodemk'],
                     'sks' => $course['sks'],
                     'ruang' => $course['ruang'],
                     'hari' => $course['hari'], // Sesuaikan jika perlu
-                    'jam_mulai' => '08:00:00', // Sesuaikan data jam mulai dan selesai
-                    'jam_selesai' => '10:00:00', // Sesuaikan data jam selesai
+                    'jam_mulai' => $jam_mulai, // Sesuaikan data jam mulai dan selesai
+                    'jam_selesai' => $jam_selesai, // Sesuaikan data jam selesai
                     'kelas' => $course['kelas'],
                     'semester' => $course['semester'],
                     'tahun_ajaran' => '2024/2025', // Sesuaikan dengan tahun ajaran aktif
-                    'jurusan' => 'Informatika', // Sesuaikan dengan jurusan
-                    'pengampu_1' => 'Dr. A', // Sesuaikan dengan pengampu
+                    'jurusan' => $jurusan,
+                    'pengampu_1' => $pengampu_1,
+                    'pengampu_2' => $pengampu_2,
+                    'pengampu_3' => $pengampu_3,
                     'status_irs' =>  $request->status_irs ?? 'Belum Disetujui',
                     'status_mk' =>  $request->status_mk ?? 'Baru' // Sesuaikan status mata kuliah
                 ]);
+            }
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    public function cancelIRS(Request $request)
+    {
+        try {
+            $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
+            $nim = $mahasiswa ? $mahasiswa->nim : null;
+
+            // Hapus data IRS yang telah disubmit dari database
+            foreach ($request->courses as $course) {
+                Irs::where('nim', $nim)
+                    ->where('kodemk', $course['kodemk'])
+                    ->where('sks', $course['sks'])
+                    ->where('kelas', $course['kelas'])
+                    ->where('semester', $course['semester'])
+                    ->delete(); // Hapus IRS dari database
             }
 
             return response()->json(['success' => true]);

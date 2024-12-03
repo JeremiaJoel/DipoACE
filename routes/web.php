@@ -70,6 +70,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/irs/store', [IRSController::class, 'store'])->name('irs.store');
     Route::post('/mahasiswa/submit-irs', [IrsController::class, 'submitIRS'])->name('mahasiswa.submitIRS'); 
+    Route::post('/mahasiswa/cancel-irs', [IRSController::class, 'cancelIRS'])->name('mahasiswa.cancelIRS');
 
     Route::post('/jadwal/{id}/ambil', [IRSController::class, 'ambil'])->name('jadwal.ambil');
 });
