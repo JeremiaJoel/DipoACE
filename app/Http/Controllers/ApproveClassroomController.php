@@ -19,23 +19,29 @@ class ApproveClassroomController extends Controller
     }
 
     public function submit($id)
-    {
-            $classroom = Classroom::findOrFail($id);
+{
+    $classroom = Classroom::findOrFail($id);
 
-        // Cek apakah sudah diajukan sebelumnya
-        $existingApproval = ApproveClassroom::where('classroom_id', $id)->first();
-        if ($existingApproval) {
-            return redirect()->back()->with('error', 'Pengajuan sudah dibuat sebelumnya.');
-        }
-
-        // Simpan pengajuan
-        ApproveClassroom::create([
-            'classroom_id' => $id,
-            'status' => 'Menunggu',
+    // Cek apakah sudah diajukan sebelumnya
+    $existingApproval = ApproveClassroom::where('classroom_id', $id)->first();
+    if ($existingApproval) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Pengajuan sudah dibuat sebelumnya.'
         ]);
-
-        return redirect()->back()->with('success', 'Pengajuan berhasil dikirim.');
     }
+
+    // Simpan pengajuan
+    ApproveClassroom::create([
+        'classroom_id' => $id,
+        'status' => 'Menunggu',
+    ]);
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Pengajuan berhasil dikirim.'
+    ]);
+}
 
     public function approve($id)
     {

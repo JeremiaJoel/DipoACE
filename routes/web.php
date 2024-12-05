@@ -62,6 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/classrooms/{id}', [ClassroomController::class, 'destroy'])->name('classrooms.destroy');
     Route::patch('/classrooms/{id}', [ClassroomController::class, 'update'])->name('classrooms.update');
     Route::post('/submit-form', [ClassroomController::class, 'store'])->name('submit.form');
+    Route::get('classrooms/{id}/edit', [ClassroomController::class, 'edit'])->name('classrooms.edit');
 
     Route::get('/khs', [KHSController::class, 'showKhs'])->name('khsData.showKhs');
 
@@ -84,9 +85,9 @@ Route::middleware(['auth', UserAkses::class])->group(function () {
 });
 
 
-Route::get('/nyusunruangkelas', function () {
-    return view('nyusunruangkelas');
-});
+// Route::get('/nyusunruangkelas', function () {
+//     return view('nyusunruangkelas');
+// });
 
 Route::get('/nyusunkuotakelas', function () {
     return view('nyusunkuotakelas');
@@ -103,8 +104,7 @@ Route::get('/mahasiswa-irs', function () {
 
 
 Route::get('/classrooms', [ClassroomController::class, 'index'])->name('classrooms.index');
-Route::get('/nyusunruangkelas', [ClassroomController::class, 'index'])->name('nyusunruangkelas'); // Route tambahan
-Route::get('/classrooms/{id}/edit', [ClassroomController::class, 'edit'])->name('classrooms.edit');
+Route::get('/nyusunruangkelas', [ClassroomController::class, 'index'])->name('nyusunruangkelas'); 
 
 // Route punya pembimbing akademik
 Route::get('/tabelMahasiswa', [menuPembimbingController::class, 'menuIrs'])->name('tabelMahasiswa');
