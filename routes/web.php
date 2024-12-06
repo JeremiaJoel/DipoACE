@@ -56,13 +56,23 @@ Route::middleware(['auth'])->group(function () {
 
     //Route menampilkan detail irs mahasiswa
     // Route untuk melihat IRS mahasiswa yang statusnya 'Belum Disetujui'
-    Route::get('/irs/{nim}/belum-disetujui', [IrsController::class, 'showBelumDisetujui'])->name('irs.belumDisetujui');
+    Route::get('/irs/{nim}/belum-disetujui', [menuPembimbingController::class, 'showBelumDisetujui'])->name('irs.belumDisetujui');
+    
+    Route::get('/irs', [IRSController::class, 'index'])->name('irs.index');
 
     // Route untuk melihat IRS mahasiswa yang statusnya 'Sudah Disetujui'
-    Route::get('/irs/{nim}/sudah-disetujui', [IrsController::class, 'showSudahDisetujui'])->name('irs.sudahDisetujui');
+    Route::get('/irs/{nim}/sudah-disetujui', [menuPembimbingController::class, 'showSudahDisetujui'])->name('irs.sudahDisetujui');
 
     // Route untuk menyetujui IRS mahasiswa
-    Route::post('/irs/{nim}/approve', [IrsController::class, 'approveIrs'])->name('approveIrs');
+    Route::post('/approve-irs/{mahasiswaId}', [menuPembimbingController::class, 'approveIRS']);
+    Route::post('/irs/{nim}/cancelApprove', [menuPembimbingController::class, 'cancelApproveIrs'])->name('cancelApproveIrs');
+
+    //Sinkronisasi tabel irs mahasiswa
+    Route::get('/sync-irs', [IRSController::class, 'syncIRSData']);
+    Route::get('/mata-kuliah/{mahasiswaId}', [IRSController::class, 'getMataKuliah']);
+
+    
+
 
 
 
@@ -96,6 +106,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/irs/store', [IRSController::class, 'store'])->name('irs.store');
     Route::post('/mahasiswa/submit-irs', [IrsController::class, 'submitIRS'])->name('mahasiswa.submitIRS');
     Route::post('/mahasiswa/cancel-irs', [IRSController::class, 'cancelIRS'])->name('mahasiswa.cancelIRS');
+    Route::post('/mahasiswa/ajukan-pembatalan', [IRSController::class, 'ajukanPembatalan'])->name('mahasiswa.ajukanPembatalan');
+
 
     Route::post('/jadwal/{id}/ambil', [IRSController::class, 'ambil'])->name('jadwal.ambil');
 });

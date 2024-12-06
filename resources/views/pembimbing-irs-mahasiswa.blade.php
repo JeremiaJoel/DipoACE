@@ -102,13 +102,18 @@
     </nav>
 
     <header class="bg-white shadow">
-        <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <button type="button"
-                class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 -translate-x-48 translate-y-5"
-                onclick="window.location.href='{{ route('tabelMahasiswa') }}'">Kembali</button>
-            <a class="text-3xl font-bold tracking-tight text-gray-900 flex justify-center">Isian Rencana Studi
-                Mahasiswa</a>
-        </div>
+        <a href="{{ route('tabelMahasiswa') }}">
+            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                <button type="button"
+                    class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700
+                    sm:translate-x-0 sm:translate-y-0 translate-x-48 translate-y-5">
+                    Kembali
+                </button>
+                <a class="text-3xl font-bold tracking-tight text-gray-900 flex justify-center">Isian Rencana Studi
+                    Mahasiswa</a>
+            </div>
+        </a>
+        
     </header>
 
     <!-- Isi konten table IRS -->
@@ -134,33 +139,29 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($irs as $item)
+                        @foreach ($item->irs as $matkul) <!-- Mengakses data IRS dari relasi -->
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $loop->iteration }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $item->kodemk }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $item->matakuliah->nama }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $item->sks }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $loop->parent->iteration }}.</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $matkul->kodemk }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $matkul->nama_mk }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $matkul->sks }}</td>
                             </tr>
                         @endforeach
+                    @endforeach
                     </tbody>
                 </table>
 
                 <form
-                    action="{{ route(
-                        isset($irs->first()->mahasiswa) && $irs->first()->mahasiswa->statusGlobalIrs() === 'Sudah Disetujui'
-                            ? 'cancelApproveIrs'
-                            : 'approveIrs',
-                        $irs->first()->mahasiswa->nim ?? '#',
-                    ) }}"
+                    action="{{ route('approveIrs', $irs->first()->mahasiswa->nim ?? '#') }}"
                     method="POST">
                     @csrf
-                    <button type="submit"
-                        class="{{ isset($irs->first()->mahasiswa) && $irs->first()->mahasiswa->statusGlobalIrs() === 'Sudah Disetujui'
-                            ? 'bg-red-700 hover:bg-red-800'
-                            : 'bg-green-700 hover:bg-green-800' }} focus:outline-none text-white focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 flex items-center">
-                        {{ isset($irs->first()->mahasiswa) && $irs->first()->mahasiswa->statusGlobalIrs() === 'Sudah Disetujui'
-                            ? 'Batal Setujui IRS'
-                            : 'Setujui IRS' }}
+                    <div class="flex justify-center mt-4">
+                        <button type="submit"
+                            class="bg-green-700 hover:bg-green-800 focus:outline-none text-white focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 flex items-center">
+                            Setujui IRS
                     </button>
+                    </div>
+                    
                 </form>
 
 

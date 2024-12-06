@@ -14,7 +14,8 @@
             <div class="flex h-16 items-center justify-between">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <img class="h-10 w-10" src="{{ asset('img/logoundip.png') }}" alt="Your Company">
+                        <img class="h-8 w-8" src="../img/undipdashboard.png" alt="Your Company">
+
                     </div>
                     <div class="hidden md:block">
                         <div class="flex items-baseline space-x-4">
@@ -24,7 +25,7 @@
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-4 flex items-center md:ml-6">
-                        <span class="rounded-md px-1 py-2 text-xl font-medium text-white">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</span>
+                        <span class="rounded-md px-1 py-2 text-xl font-medium text-white"></span>
 
                         <!-- Profile dropdown -->
                         <div class="relative ml-3">
@@ -103,68 +104,38 @@
 
     <header class="bg-white shadow">
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <div class="translate-y-4">
-                <a href="{{ route('tabelMahasiswa') }}">
-                    <button type="button"
-                class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700
-                sm:translate-x-0 sm:translate-y-0 translate-x-48">
-                Kembali
-            </button>
-            </div>
-                </a>
-            <a class="text-3xl font-bold tracking-tight text-gray-900 flex justify-center">Isian Rencana Studi
-                Mahasiswa</a>
+            {{-- <h1 class="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1> --}}
+            <a class="text-3xl font-bold tracking-tight text-gray-900">IRS Mahasiswa Perwalian</a>
         </div>
     </header>
 
     <!-- Isi konten table IRS -->
     <div class="container mx-auto mt-10">
         <div class="bg-white shadow-md rounded-lg">
+            <div class="flex border-b">
+                <h1 class="text-lg font-bold p-4">Data IRS</h1>
+            </div>
             <div class="p-6">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead>
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                No
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Kode MK
+                                Hari
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Mata Kuliah
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                SKS
+                                Ruang
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Waktu
                             </th>
                         </tr>
+
+
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach ($irs as $item)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $loop->iteration }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $item->kodemk }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $item->matakuliah->nama }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $item->sks }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
                 </table>
-
-                <form
-                    action="{{ route('cancelApproveIrs', $irs->first()->mahasiswa->nim ?? '#') }}"
-                    method="POST">
-                    @csrf
-                    <div class="flex justify-center mt-4">
-                        <button type="submit"
-                            class="bg-red-500 hover:bg-red-800 focus:outline-none text-red-100 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 flex items-center">
-                            Batalkan IRS
-                    </button>
-                    </div>
-                    
-                </form>
-
-
             </div>
         </div>
-    </div>
     </div>

@@ -126,9 +126,11 @@
                             class="bg-white shadow rounded-lg p-4 h-20 hover:bg-blue-700 hover:text-white cursor-pointer">
                             <h2 class="text-xl font-semibold">KHS</h2>
                         </div>
-                        <div class="bg-white shadow rounded-lg p-4">
+                        <a href="{{ url('/sync-irs') }}" class="btn btn-primary"><div class="bg-white shadow rounded-lg p-4">
                             <h2 class="text-xl font-semibold">Status</h2>
-                        </div>
+                        </div></a>
+
+                        
                     </div>
                 </div>
         </main>
