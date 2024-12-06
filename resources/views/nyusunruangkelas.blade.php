@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Menyusun Ruang Kelas</title>
 </head>
 
@@ -79,11 +80,6 @@
 
 
     <div class="mt-10" x-data="{ open: false }">
-        <!-- Button untuk membuka modal -->
-        <button @click="open = true" class="ml-72 bg-blue-500 text-white font-bold rounded py-2 px-4 w-20 text-center">
-            Buat
-        </button>
-
         <!-- Modal -->
         <div x-show="open" x-transition
     class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
@@ -105,77 +101,127 @@
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700" for="kode_ruang">Kode Ruang</label>
                 <div class="grid grid-cols-3 gap-4 mt-1">
-                    <!-- Kode Ruang E -->
-                    <label class="flex items-center">
-                        <input type="checkbox" id="kode_ruang_e101" name="kode_ruang[]" value="E101" class="mr-2">
-                        E101
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" id="kode_ruang_e102" name="kode_ruang[]" value="E102" class="mr-2">
-                        E102
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" id="kode_ruang_e103" name="kode_ruang[]" value="E103" class="mr-2">
-                        E103
-                    </label>
-                    
                     <!-- Kode Ruang A -->
                     <label class="flex items-center">
-                        <input type="checkbox" id="kode_ruang_a101" name="kode_ruang[]" value="A101" class="mr-2">
+                        <input type="checkbox" id="kode_ruang_a101" name="kode_ruang[]" value="A101" class="mr-2"
+                            @if(in_array('A101', $selectedClassrooms)) disabled @endif>
                         A101
                     </label>
                     <label class="flex items-center">
-                        <input type="checkbox" id="kode_ruang_a102" name="kode_ruang[]" value="A102" class="mr-2">
+                        <input type="checkbox" id="kode_ruang_a102" name="kode_ruang[]" value="A102" class="mr-2"
+                            @if(in_array('A102', $selectedClassrooms)) disabled @endif>
                         A102
                     </label>
                     <label class="flex items-center">
-                        <input type="checkbox" id="kode_ruang_a103" name="kode_ruang[]" value="A103" class="mr-2">
+                        <input type="checkbox" id="kode_ruang_a103" name="kode_ruang[]" value="A103" class="mr-2"
+                            @if(in_array('A103', $selectedClassrooms)) disabled @endif>
                         A103
                     </label>
-                    
+            
                     <!-- Kode Ruang B -->
                     <label class="flex items-center">
-                        <input type="checkbox" id="kode_ruang_b101" name="kode_ruang[]" value="B101" class="mr-2">
+                        <input type="checkbox" id="kode_ruang_b101" name="kode_ruang[]" value="B101" class="mr-2"
+                            @if(in_array('B101', $selectedClassrooms)) disabled @endif>
                         B101
                     </label>
                     <label class="flex items-center">
-                        <input type="checkbox" id="kode_ruang_b102" name="kode_ruang[]" value="B102" class="mr-2">
+                        <input type="checkbox" id="kode_ruang_b102" name="kode_ruang[]" value="B102" class="mr-2"
+                            @if(in_array('B102', $selectedClassrooms)) disabled @endif>
                         B102
                     </label>
                     <label class="flex items-center">
-                        <input type="checkbox" id="kode_ruang_b103" name="kode_ruang[]" value="B103" class="mr-2">
+                        <input type="checkbox" id="kode_ruang_b103" name="kode_ruang[]" value="B103" class="mr-2"
+                            @if(in_array('B103', $selectedClassrooms)) disabled @endif>
                         B103
                     </label>
-                    
+            
                     <!-- Kode Ruang C -->
                     <label class="flex items-center">
-                        <input type="checkbox" id="kode_ruang_c101" name="kode_ruang[]" value="C101" class="mr-2">
+                        <input type="checkbox" id="kode_ruang_c101" name="kode_ruang[]" value="C101" class="mr-2"
+                            @if(in_array('C101', $selectedClassrooms)) disabled @endif>
                         C101
                     </label>
                     <label class="flex items-center">
-                        <input type="checkbox" id="kode_ruang_c102" name="kode_ruang[]" value="C102" class="mr-2">
+                        <input type="checkbox" id="kode_ruang_c102" name="kode_ruang[]" value="C102" class="mr-2"
+                            @if(in_array('C102', $selectedClassrooms)) disabled @endif>
                         C102
                     </label>
                     <label class="flex items-center">
-                        <input type="checkbox" id="kode_ruang_c103" name="kode_ruang[]" value="C103" class="mr-2">
+                        <input type="checkbox" id="kode_ruang_c103" name="kode_ruang[]" value="C103" class="mr-2"
+                            @if(in_array('C103', $selectedClassrooms)) disabled @endif>
                         C103
                     </label>
-                    
+            
                     <!-- Kode Ruang D -->
                     <label class="flex items-center">
-                        <input type="checkbox" id="kode_ruang_d101" name="kode_ruang[]" value="D101" class="mr-2">
+                        <input type="checkbox" id="kode_ruang_d101" name="kode_ruang[]" value="D101" class="mr-2"
+                            @if(in_array('D101', $selectedClassrooms)) disabled @endif>
                         D101
                     </label>
                     <label class="flex items-center">
-                        <input type="checkbox" id="kode_ruang_d102" name="kode_ruang[]" value="D102" class="mr-2">
+                        <input type="checkbox" id="kode_ruang_d102" name="kode_ruang[]" value="D102" class="mr-2"
+                            @if(in_array('D102', $selectedClassrooms)) disabled @endif>
                         D102
                     </label>
                     <label class="flex items-center">
-                        <input type="checkbox" id="kode_ruang_d103" name="kode_ruang[]" value="D103" class="mr-2">
+                        <input type="checkbox" id="kode_ruang_d103" name="kode_ruang[]" value="D103" class="mr-2"
+                            @if(in_array('D103', $selectedClassrooms)) disabled @endif>
                         D103
                     </label>
+            
+                    <!-- Kode Ruang E -->
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_e101" name="kode_ruang[]" value="E101" class="mr-2"
+                            @if(in_array('E101', $selectedClassrooms)) disabled @endif>
+                        E101
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_e102" name="kode_ruang[]" value="E102" class="mr-2"
+                            @if(in_array('E102', $selectedClassrooms)) disabled @endif>
+                        E102
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_e103" name="kode_ruang[]" value="E103" class="mr-2"
+                            @if(in_array('E103', $selectedClassrooms)) disabled @endif>
+                        E103
+                    </label>
+            
+                    <!-- Kode Ruang F -->
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_f101" name="kode_ruang[]" value="F101" class="mr-2"
+                            @if(in_array('F101', $selectedClassrooms)) disabled @endif>
+                        F101
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_f102" name="kode_ruang[]" value="F102" class="mr-2"
+                            @if(in_array('F102', $selectedClassrooms)) disabled @endif>
+                        F102
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_f103" name="kode_ruang[]" value="F103" class="mr-2"
+                            @if(in_array('F103', $selectedClassrooms)) disabled @endif>
+                        F103
+                    </label>
+            
+                    <!-- Kode Ruang G -->
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_g101" name="kode_ruang[]" value="G101" class="mr-2"
+                            @if(in_array('G101', $selectedClassrooms)) disabled @endif>
+                        G101
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_g102" name="kode_ruang[]" value="G102" class="mr-2"
+                            @if(in_array('G102', $selectedClassrooms)) disabled @endif>
+                        G102
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="kode_ruang_g103" name="kode_ruang[]" value="G103" class="mr-2"
+                            @if(in_array('G103', $selectedClassrooms)) disabled @endif>
+                        G103
+                    </label>
                 </div>
-            </div>
+            </div>            
+
 
             <!-- Kapasitas -->
             <div class="mb-4">
@@ -214,13 +260,13 @@
         </form>
     </div>
 </div>
-    </<div class="container mx-auto mt-10">
+    <div class="container mx-auto mt-10">
         <div class="bg-white shadow-md rounded-lg">
-            <div class="flex border-b">
-                <button class="flex-1 py-4 px-6 text-center text-blue-500 border-b-2 border-blue-500 text-2xl">Menyusun Ruang</button>
-            </div>
-            <div class="p-6">
-                <h2 class="text-center text-gray-700 font-medium mb-6">Daftar Ruangan</h2>
+            
+            
+            <div class="p-6 mx-8">
+                
+                <h2 class="text-center text-gray-700 mb-6 text-2xl font-semibold">Daftar Ruangan</h2>
                 <table class="w-full bg-white text-center">
                     <thead>
                         <tr>
@@ -248,33 +294,46 @@
                                 </td>
                                 <td>
                                     <!-- Tombol Edit -->
-                                    <button onclick="openEditModal({{ json_encode($classroom) }})"
-                                        class="font-bold rounded bg-blue-500 text-white hover:text-white w-20 py-2 px-4">Edit</button>
+                                    @if ($classroom->status === 'Belum Disetujui')
+                                    <form action="" class="inline-block">
+                                        <button onclick="openEditModal({{ json_encode($classroom) }})" type="button"
+                                            class="font-bold rounded bg-blue-500 text-white hover:text-white w-20 py-2 px-4">Edit</button>
+                                    </form>
+                                    @endif
 
                                     <!-- Form Hapus -->
-                                    <form action="{{ route('classrooms.destroy', $classroom->id) }}" method="POST"
-                                        onsubmit="return confirm('Yakin ingin menghapus data ini?');" class="inline-block">
+                                    @if ($classroom->status === 'Belum Disetujui')
+                                    <form action="{{ route('classrooms.destroy', $classroom->id) }}" method="POST" class="inline-block" id="delete-form-{{ $classroom->id }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit"
-                                            class="font-bold rounded bg-red-500 text-white hover:text-white w-20 py-2 px-4">Hapus</button>
+                                        <button type="button" onclick="deleteRuangan(event, '{{ route('classrooms.destroy', $classroom->id) }}', '{{ $classroom->id }}')" 
+                                            class="font-bold rounded bg-red-500 text-white hover:text-white w-20 py-2 px-4">
+                                            Hapus
+                                        </button>
                                     </form>
+                                    @endif
+                                    
 
                                     <!-- Form Ajukan -->
                                     @if ($classroom->status === 'Belum Disetujui')
-                                    <form action="{{ route('approveclassrooms.submit', $classroom->id) }}" method="POST"
-                                        onsubmit="return confirm('Yakin ingin mengajukan jadwal ini ke dekan?');" class="inline-block">
-                                        @csrf
-                                        <button type="submit"
-                                            class="font-bold rounded bg-yellow-500 text-white hover:text-white w-20 py-2 px-4">Ajukan</button>
-                                    </form>
+                                        <form action="{{ route('approveclassrooms.submit', $classroom->id) }}" method="POST" id="ajukan-form-{{ $classroom->id }}" class="inline-block">
+                                            @csrf
+                                            <button type="button" onclick="ajukanRuangan(event, '{{ route('approveclassrooms.submit', $classroom->id) }}', '{{ $classroom->id }}')" 
+                                                class="font-bold rounded bg-yellow-500 text-white hover:text-white w-20 py-2 px-4">
+                                                Ajukan
+                                            </button>
+                                        </form>
                                     @endif
+
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
+            <button @click="open = true" class="ml-24 bg-blue-500 text-white font-bold rounded py-2 px-4 w-20 mb-4 text-center">
+                    Buat
+            </button>
         </div>
     </div>
     
@@ -292,14 +351,14 @@
                     <!-- Gedung -->
                     <div class="mb-4">
                         <label for="editGedung" class="block text-sm font-medium text-gray-700">Gedung</label>
-                        <input type="text" id="editGedung" name="gedung" class="w-full p-2 border rounded" required>
+                        <input type="text" id="editGedung" name="gedung" class="w-full p-2 border rounded" value="{{ old('gedung', $classroom->gedung ?? '') }}" required>
                     </div>
 
                     <!-- Kode Ruang -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Kode Ruang</label>
                         <div class="grid grid-cols-3 gap-4">
-                            @foreach (['E101', 'E102', 'E103', 'A101', 'A102', 'A103', 'B101', 'B102', 'B103', 'C101', 'C102', 'C103', 'D101', 'D102', 'D103'] as $kodeRuang)
+                            @foreach (['A101', 'A102', 'A103', 'B101', 'B102', 'B103', 'C101', 'C102', 'C103', 'D101', 'D102', 'D103', 'E101', 'E102', 'E103', 'F101', 'F102', 'F103', 'G101', 'G102', 'G103'] as $kodeRuang)
                                 <label class="flex items-center">
                                     <input type="checkbox" name="kode_ruang[]" value="{{ $kodeRuang }}" class="mr-2"
                                         id="kode_ruang_{{ $kodeRuang }}">
@@ -308,6 +367,7 @@
                             @endforeach
                         </div>
                     </div>
+                    
 
                     <!-- Kapasitas -->
                     <div class="mb-4">
@@ -349,29 +409,151 @@
     </div>
 
     <script>
-            function openEditModal(classroom) {
-            // Tampilkan modal
-            document.getElementById('editModal').classList.remove('hidden');
 
-            // Atur action form dengan URL ID
-            document.getElementById('editForm').action = `/classrooms/${classroom.id}`;
+        document.addEventListener('DOMContentLoaded', function() {
+                // Ambil array kode ruang yang sudah dipilih dari server (Laravel)
+                const selectedClassrooms = @json($selectedClassrooms);
 
-            // Isi input dengan data yang diterima
-            document.getElementById('editGedung').value = classroom.gedung;
-            document.getElementById('editKapasitas').value = classroom.kapasitas;
-            document.getElementById('editStatus').value = classroom.status;
-            document.getElementById('editJurusan').value = classroom.jurusan;
-
-            // Checkbox Kode Ruang
-            const kodeRuangCheckboxes = document.querySelectorAll('input[name="kode_ruang[]"]');
-            kodeRuangCheckboxes.forEach(checkbox => {
-                checkbox.checked = classroom.kode_ruang.includes(checkbox.value);
+                // Nonaktifkan checkbox yang sudah dipilih
+                selectedClassrooms.forEach(function(kode) {
+                    const checkbox = document.getElementById('kode_ruang_' + kode);
+                    if (checkbox) {
+                        checkbox.disabled = true; // Nonaktifkan checkbox
+                    }
                 });
-            }
+            });
+
+        function openEditModal(classroom) {
+        // Tampilkan modal
+        document.getElementById('editModal').classList.remove('hidden');
+
+        // Atur action form dengan URL ID
+        document.getElementById('editForm').action = `/classrooms/${classroom.id}`;
+        console.log(`/classrooms/${classroom.id}`);
+
+        // Isi input dengan data yang diterima
+        document.getElementById('editGedung').value = classroom.gedung;
+        document.getElementById('editKapasitas').value = classroom.kapasitas;
+        document.getElementById('editStatus').value = classroom.status;
+        document.getElementById('editJurusan').value = classroom.jurusan;
+
+        // Checkbox Kode Ruang
+        const kodeRuangCheckboxes = document.querySelectorAll('input[name="kode_ruang[]"]');
+        kodeRuangCheckboxes.forEach(checkbox => {
+            checkbox.checked = classroom.kode_ruang.includes(checkbox.value);
+            });
+        }
 
         function closeEditModal() {
             document.getElementById('editModal').classList.add('hidden');
+        } 
+
+        function deleteRuangan(event, url, classroomId) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: "Apakah Anda yakin?",
+                text: "Ruangan yang sudah anda susun akan dihapus!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Hapus"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                        _method: 'DELETE' // Laravel menggunakan _method untuk menandakan method DELETE
+                    })
+                    })
+                    .then(response => {
+                        console.log(response); // Debugging: Cek respons dari server
+                        if (response.ok) {
+                            return response.json(); // Parsing respons ke JSON
+                        } else {
+                            throw new Error('Terjadi masalah saat menghapus.');
+                        }
+                    })
+                    .then(data => {
+                        console.log(data); // Debugging: Cek data JSON yang diterima
+                        Swal.fire({
+                            title: 'Disetujui!',
+                            text: data.message || 'Pengajuan berhasil disetujui.',
+                            icon: 'success',
+                            timer: 5000,
+                            willClose: () => {
+                                location.reload();
+                            }
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error); // Debugging: Log error ke console
+                        Swal.fire('Error!', error.message || 'Terjadi masalah pada permintaan Anda.', 'error');
+                    });
+                }
+            });
         }
+
+        function ajukanRuangan(event, url, classroomId) {
+    event.preventDefault(); // Mencegah form untuk disubmit secara langsung
+
+    Swal.fire({
+        title: "Apakah Anda yakin?",
+        text: "Ruangan yang sudah disusun akan diajukan ke dekan!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, Ajukan!",
+        cancelButtonText: "Batal"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Kirimkan request menggunakan fetch API
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({}) // Data kosong untuk pengajuan
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Sukses!',
+                        text: data.message,
+                        icon: 'success',
+                        timer: 5000,
+                        willClose: () => {
+                            location.reload(); // Reload untuk melihat perubahan
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: data.message,
+                        icon: 'error',
+                        timer: 5000
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Terjadi masalah pada permintaan Anda.',
+                    icon: 'error'
+                });
+            });
+        }
+    });
+}
+
 
     </script>
 

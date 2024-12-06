@@ -69,10 +69,11 @@ Route::middleware(['auth'])->group(function () {
 
 
     //mahasiswa
-    // Route::get('/irs', [IRSController::class, 'showIRSForm'])->name('irs.form');
-    // Route::post('/irs', [IRSController::class, 'storeIRS'])->middleware('auth')->name('irs.store');
+    Route::get('/irs', [IRSController::class, 'showIRSForm'])->name('irs.form');
+    Route::post('/irs', [IRSController::class, 'storeIRS'])->middleware('auth')->name('irs.store');
     Route::get('/download-pdf', 'PDFController@downloadPDF');
     // Route::get('/search-mata-kuliah', [MataKuliahController::class, 'search'])->name('search.mata-kuliah');
+    Route::get('/classrooms/{id}/edit', [ClassroomController::class, 'edit'])->name('classrooms.edit');
 
 
 
@@ -109,13 +110,9 @@ Route::middleware(['auth', UserAkses::class])->group(function () {
 });
 
 
-Route::get('/nyusunruangkelas', function () {
-    return view('nyusunruangkelas');
-});
-
-Route::get('/nyusunkuotakelas', function () {
-    return view('nyusunkuotakelas');
-});
+// Route::get('/nyusunruangkelas', function () {
+//     return view('nyusunruangkelas');
+// });
 
 Route::get('/status-mahasiswa', function () {
     return view('status-mahasiswa');
@@ -129,7 +126,6 @@ Route::get('/mahasiswa-irs', function () {
 
 Route::get('/classrooms', [ClassroomController::class, 'index'])->name('classrooms.index');
 Route::get('/nyusunruangkelas', [ClassroomController::class, 'index'])->name('nyusunruangkelas'); // Route tambahan
-Route::get('/classrooms/{id}/edit', [ClassroomController::class, 'edit'])->name('classrooms.edit');
 
 
 
