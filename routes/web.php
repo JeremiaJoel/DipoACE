@@ -43,6 +43,31 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/approveclassrooms/{id}/reject', [ApproveClassroomController::class, 'reject'])->name('kelas.reject');
     Route::get('/dashboard-akademik', [ApproveClassroomController::class, 'dashboard'])->name('dashboard-akademik');
 
+    // Route punya pembimbing akademik
+    Route::get('/tabelMahasiswa/{status}', [menuPembimbingController::class, 'menuIrs'])->name('tabelMahasiswa');
+
+    // Route untuk menampilkan daftar mahasiswa dengan status IRS 
+    Route::get('/tabelMahasiswa', [MenuPembimbingController::class, 'index'])->name('tabelMahasiswa');
+    Route::middleware('auth')->get('/tabel-mahasiswa', [MenuPembimbingController::class, 'index'])->name('tabel-mahasiswa');
+
+
+    Route::get('/pembimbing-irs-mahasiswa', [menuPembimbingController::class, 'listMahasiswaBelumDisetujui'])->name('pembimbing-irs-mahasiswa');;
+    Route::get('/pembimbing-irs-sudah-disetujui', [menuPembimbingController::class, 'listMahasiswaSudahDisetujui'])->name('pembimbing-irs-sudah-disetujui');;
+
+    //Route menampilkan detail irs mahasiswa
+    // Route untuk melihat IRS mahasiswa yang statusnya 'Belum Disetujui'
+    Route::get('/irs/{nim}/belum-disetujui', [IrsController::class, 'showBelumDisetujui'])->name('irs.belumDisetujui');
+
+    // Route untuk melihat IRS mahasiswa yang statusnya 'Sudah Disetujui'
+    Route::get('/irs/{nim}/sudah-disetujui', [IrsController::class, 'showSudahDisetujui'])->name('irs.sudahDisetujui');
+
+    // Route untuk menyetujui IRS mahasiswa
+    Route::post('/irs/{nim}/approve', [IrsController::class, 'approveIrs'])->name('approveIrs');
+
+
+
+
+
     //mahasiswa
     // Route::get('/irs', [IRSController::class, 'showIRSForm'])->name('irs.form');
     // Route::post('/irs', [IRSController::class, 'storeIRS'])->middleware('auth')->name('irs.store');
@@ -69,7 +94,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mahasiswa-buatirs/search', [IRSController::class, 'search'])->name('jadwals.search');
 
     Route::post('/irs/store', [IRSController::class, 'store'])->name('irs.store');
-    Route::post('/mahasiswa/submit-irs', [IrsController::class, 'submitIRS'])->name('mahasiswa.submitIRS'); 
+    Route::post('/mahasiswa/submit-irs', [IrsController::class, 'submitIRS'])->name('mahasiswa.submitIRS');
     Route::post('/mahasiswa/cancel-irs', [IRSController::class, 'cancelIRS'])->name('mahasiswa.cancelIRS');
 
     Route::post('/jadwal/{id}/ambil', [IRSController::class, 'ambil'])->name('jadwal.ambil');
@@ -106,9 +131,6 @@ Route::get('/classrooms', [ClassroomController::class, 'index'])->name('classroo
 Route::get('/nyusunruangkelas', [ClassroomController::class, 'index'])->name('nyusunruangkelas'); // Route tambahan
 Route::get('/classrooms/{id}/edit', [ClassroomController::class, 'edit'])->name('classrooms.edit');
 
-// Route punya pembimbing akademik
-Route::get('/tabelMahasiswa', [menuPembimbingController::class, 'menuIrs'])->name('tabelMahasiswa');
 
-Route::get('/pembimbing-irs-mahasiswa', [menuPembimbingController::class, 'irsMahasiswa'])->name('pembimbing-irs-mahasiswa');;
 
 //menampilkan data irs mahasiswa tertentu

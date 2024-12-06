@@ -35,4 +35,9 @@ class Dosen extends Model
     {
         return $this->belongsToMany(Jadwal::class, 'dosen_jadwal', 'dosen_id', 'jadwal_id');
     }
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'nip', 'dosen_id');
+    }
 }

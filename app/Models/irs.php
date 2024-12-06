@@ -28,11 +28,21 @@ class irs extends Model
         'pengampu_3',
         'status_irs',
         'status_mk'
-        
+
     ];
 
     public function khs()
     {
         return $this->hasMany(Khs::class, 'nim', 'nim');
+    }
+
+    public function mahasiswa()
+    {
+        return $this->belongsTo(mahasiswa::class, 'nim', 'nim');
+    }
+
+    public function matakuliah()
+    {
+        return $this->belongsTo(matakuliah::class, 'kodemk', 'kodemk');
     }
 }

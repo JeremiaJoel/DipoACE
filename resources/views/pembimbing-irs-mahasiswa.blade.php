@@ -14,8 +14,7 @@
             <div class="flex h-16 items-center justify-between">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <img class="h-8 w-8" src="../img/undipdashboard.png" alt="Your Company">
-
+                        <img class="h-10 w-10" src="{{ asset('img/logoundip.png') }}" alt="Your Company">
                     </div>
                     <div class="hidden md:block">
                         <div class="flex items-baseline space-x-4">
@@ -104,17 +103,17 @@
 
     <header class="bg-white shadow">
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            {{-- <h1 class="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1> --}}
-            <a class="text-3xl font-bold tracking-tight text-gray-900">IRS Mahasiswa Perwalian</a>
+            <button type="button"
+                class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 -translate-x-48 translate-y-5"
+                onclick="window.location.href='{{ route('tabelMahasiswa') }}'">Kembali</button>
+            <a class="text-3xl font-bold tracking-tight text-gray-900 flex justify-center">Isian Rencana Studi
+                Mahasiswa</a>
         </div>
     </header>
 
     <!-- Isi konten table IRS -->
     <div class="container mx-auto mt-10">
         <div class="bg-white shadow-md rounded-lg">
-            <div class="flex border-b">
-                <h1 class="text-lg font-bold p-4">Data IRS</h1>
-            </div>
             <div class="p-6">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead>
@@ -129,112 +128,43 @@
                                 Mata Kuliah
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Kelas
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 SKS
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Ruang
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Dosen Pengampu
                             </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <!-- Row 1 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">1</td>
-                            <td class="px-6 py-4 whitespace-nowrap">PAIK6105</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Struktur Diskrit</td>
-                            <td class="px-6 py-4 whitespace-nowrap">A</td>
-                            <td class="px-6 py-4 whitespace-nowrap">4</td>
-                            <td class="px-6 py-4 whitespace-nowrap">E101</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Dr. Budi Santoso, M.T.</td>
-                        </tr>
-                        <!-- Row 2 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">2</td>
-                            <td class="px-6 py-4 whitespace-nowrap">PAIK6103</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Dasar Sistem</td>
-                            <td class="px-6 py-4 whitespace-nowrap">B</td>
-                            <td class="px-6 py-4 whitespace-nowrap">3</td>
-                            <td class="px-6 py-4 whitespace-nowrap">E102</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Prof. Siti Aminah, Ph.D.</td>
-                        </tr>
-                        <!-- Row 3 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">3</td>
-                            <td class="px-6 py-4 whitespace-nowrap">PAIK6306</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Statistika</td>
-                            <td class="px-6 py-4 whitespace-nowrap">C</td>
-                            <td class="px-6 py-4 whitespace-nowrap">2</td>
-                            <td class="px-6 py-4 whitespace-nowrap">E103</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Dr. Agus Wijaya, M.Sc.</td>
-                        </tr>
-                        <!-- Row 4 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">4</td>
-                            <td class="px-6 py-4 whitespace-nowrap">PAIK6505</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Machine Learning</td>
-                            <td class="px-6 py-4 whitespace-nowrap">D</td>
-                            <td class="px-6 py-4 whitespace-nowrap">3</td>
-                            <td class="px-6 py-4 whitespace-nowrap">E102</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Dr. Rina Kurniawati, M.T.</td>
-                        </tr>
-                        <!-- Row 5 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">5</td>
-                            <td class="px-6 py-4 whitespace-nowrap">PAIK6503</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Sistem Informasi</td>
-                            <td class="px-6 py-4 whitespace-nowrap">E</td>
-                            <td class="px-6 py-4 whitespace-nowrap">3</td>
-                            <td class="px-6 py-4 whitespace-nowrap">E101</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Dr. Ahmad Setiawan, M.Kom.</td>
-                        </tr>
-                        <!-- Row 6 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">6</td>
-                            <td class="px-6 py-4 whitespace-nowrap">PAIK6406</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Sistem Cerdas</td>
-                            <td class="px-6 py-4 whitespace-nowrap">A</td>
-                            <td class="px-6 py-4 whitespace-nowrap">3</td>
-                            <td class="px-6 py-4 whitespace-nowrap">E103</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Prof. Taufik Hidayat, M.Sc.</td>
-                        </tr>
-                        <!-- Row 7 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">7</td>
-                            <td class="px-6 py-4 whitespace-nowrap">PAIK6404</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Grafika dan Komputasi Visual</td>
-                            <td class="px-6 py-4 whitespace-nowrap">B</td>
-                            <td class="px-6 py-4 whitespace-nowrap">3</td>
-                            <td class="px-6 py-4 whitespace-nowrap">E107</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Dr. Ida Fauziah, M.Kom.</td>
-                        </tr>
-                        <!-- Row 8 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">8</td>
-                            <td class="px-6 py-4 whitespace-nowrap">PAIK6401</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Pemrograman Berorientasi Objek</td>
-                            <td class="px-6 py-4 whitespace-nowrap">C</td>
-                            <td class="px-6 py-4 whitespace-nowrap">3</td>
-                            <td class="px-6 py-4 whitespace-nowrap">E108</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Dr. Andi Wijaya, M.T.</td>
-                        </tr>
-                        <!-- Row 9 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">9</td>
-                            <td class="px-6 py-4 whitespace-nowrap">PAIK6402</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Data Mining</td>
-                            <td class="px-6 py-4 whitespace-nowrap">D</td>
-                            <td class="px-6 py-4 whitespace-nowrap">3</td>
-                            <td class="px-6 py-4 whitespace-nowrap">E109</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Dr. Sri Rahmi, M.Si.</td>
-                        </tr>
+                        @foreach ($irs as $item)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $loop->iteration }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $item->kodemk }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $item->matakuliah->nama }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $item->sks }}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
+
+                <form
+                    action="{{ route(
+                        isset($irs->first()->mahasiswa) && $irs->first()->mahasiswa->statusGlobalIrs() === 'Sudah Disetujui'
+                            ? 'cancelApproveIrs'
+                            : 'approveIrs',
+                        $irs->first()->mahasiswa->nim ?? '#',
+                    ) }}"
+                    method="POST">
+                    @csrf
+                    <button type="submit"
+                        class="{{ isset($irs->first()->mahasiswa) && $irs->first()->mahasiswa->statusGlobalIrs() === 'Sudah Disetujui'
+                            ? 'bg-red-700 hover:bg-red-800'
+                            : 'bg-green-700 hover:bg-green-800' }} focus:outline-none text-white focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 flex items-center">
+                        {{ isset($irs->first()->mahasiswa) && $irs->first()->mahasiswa->statusGlobalIrs() === 'Sudah Disetujui'
+                            ? 'Batal Setujui IRS'
+                            : 'Setujui IRS' }}
+                    </button>
+                </form>
+
+
             </div>
         </div>
+    </div>
     </div>
