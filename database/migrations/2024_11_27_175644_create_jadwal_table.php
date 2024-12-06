@@ -25,6 +25,8 @@ return new class extends Migration
             $table->enum('status', ['Belum Disetujui', 'Sudah Disetujui'])->default('Belum Disetujui');
             $table->timestamps();
             $table->string('kodemk')->nullable();
+            $table->time('jam_mulai');
+            $table->time('jam_selesai');
 
             // foreign key constraint
             $table->foreign('kodemk')
