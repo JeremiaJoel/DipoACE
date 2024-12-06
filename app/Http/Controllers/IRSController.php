@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Jadwal;
-use App\Models\khs;
 use App\Models\irs;
+use App\Models\khs;
+use App\Models\User;
+use App\Models\Jadwal;
 use App\Models\mahasiswa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\PembatalanIrsEvent;
 
 class IRSController extends Controller
 {
@@ -215,6 +218,58 @@ class IRSController extends Controller
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
+     
+     
         }
     }
+
+    public function syncIRSData()
+{
+    // Ambil data teragregasi dari tabel irs
+    $aggregatedData = DB::table('irs')
+        ->selectRaw('
+            nim AS mahasiswa_id,
+            CONCAT(tahun_ajaran, semester) AS periode,
+            MAX(status_irs) AS status,
+            MAX(created_at) AS tanggal_submit
+        ')
+        ->groupBy('nim', 'tahun_ajaran', 'semester')
+        ->get();
+
+    // Simpan data ke tabel irs_mahasiswa
+    foreach ($aggregatedData as $data) {
+        DB::table('irs_mahasiswa')->updateOrInsert(
+            [
+                'mahasiswa_id' => $data->mahasiswa_id,
+                'periode' => $data->periode,
+            ],
+            [
+                'status' => $data->status,
+                'tanggal_submit' => $data->tanggal_submit,
+                'updated_at' => now(),
+                'created_at' => now(),
+            ]
+        );
+    }
+
+    return response()->json([
+        'message' => 'Data berhasil disinkronisasi!',
+        'data' => $aggregatedData,
+    ]);
+}
+
+public function getMataKuliah($mahasiswaId)
+{
+    // Ambil semua mata kuliah dengan relasi ke tabel matakuliah (jika ada)
+    $mataKuliah = DB::table('irs')
+        ->join('matakuliah', 'irs.kodemk', '=', 'matakuliah.kode')
+        ->where('irs.nim', $mahasiswaId)
+        ->get(['irs.kodemk', 'matakuliah.nama as nama_mk', 'irs.sks']);
+
+    // Kirim data ke view
+    return view('mata_kuliah', ['mataKuliah' => $mataKuliah]);
+}
+
+
+
 }
