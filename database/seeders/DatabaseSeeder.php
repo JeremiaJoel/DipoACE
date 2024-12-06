@@ -7,20 +7,20 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
-{
+
     /**
      * Seed the application's database.
      */
-    public function run(): void
+    // public function run(): void
     {
         // User::factory(10)->create();
 
-        $this->call([
+        // $this->call([
             // DummyClassSeeder::class,
-            DummyDosensSeeder::class,
+            // DummyDosensSeeder::class,
             // DummySchedulesSeeder::class,
-            DummyMahasiswasSeeder::class,
-            DummyUsersSeeder::class
-        ]);
-    }
+        //     DummyMahasiswasSeeder::class,
+        //     DummyUsersSeeder::class
+        // ]);
+    // }
 }

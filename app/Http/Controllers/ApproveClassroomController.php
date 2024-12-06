@@ -70,9 +70,8 @@ class ApproveClassroomController extends Controller
 
     public function filter(Request $request)
     {
-        $jurusan = $request->get('jurusan'); // Ambil filter jurusan dari request
+        $jurusan = $request->get('jurusan');
 
-        // Ambil data pengajuan dengan filter jurusan dan status "Menunggu"
         $approvals = ApproveClassroom::whereHas('classroom', function ($query) use ($jurusan) {
             if ($jurusan) {
                 $query->where('jurusan', $jurusan);

@@ -80,9 +80,6 @@
 
 
     <div class="mt-10" x-data="{ open: false }">
-        <!-- Button untuk membuka modal -->
-        
-
         <!-- Modal -->
         <div x-show="open" x-transition
     class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">

@@ -188,8 +188,7 @@
             let currentSKS = 0;
             let jadwalDipilih = [];
             let selectedCourses = new Set();
-            let isSubmitted = false; // Flag untuk memeriksa apakah IRS sudah disubmit
-    
+            let isSubmitted = false;
             // Fungsi untuk memuat data IRS dari localStorage
             function loadIRSfromStorage() {
                 const storedIRS = localStorage.getItem('irsData');

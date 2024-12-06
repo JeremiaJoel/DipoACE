@@ -110,5 +110,3 @@ Route::get('/nyusunruangkelas', [ClassroomController::class, 'index'])->name('ny
 Route::get('/tabelMahasiswa', [menuPembimbingController::class, 'menuIrs'])->name('tabelMahasiswa');
 
 Route::get('/pembimbing-irs-mahasiswa', [menuPembimbingController::class, 'irsMahasiswa'])->name('pembimbing-irs-mahasiswa');;
-
-//menampilkan data irs mahasiswa tertentu
