@@ -724,9 +724,8 @@ class DummyJadwalSeeder extends Seeder
         ];
 
 
-
         foreach ($jadwal as $val) {
             Jadwal::create($val);
         }
     }
-}
+
