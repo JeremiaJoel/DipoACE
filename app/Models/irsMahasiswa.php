@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,8 +17,8 @@ class IrsMahasiswa extends Model
         return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id', 'nim');
     }
 
-    public function irs()
+    public function details()
     {
-        return $this->hasMany(Irs::class, 'mahasiswa_id', 'id');
+        return $this->hasMany(Irs::class, 'nim', 'nim');
     }
 }
