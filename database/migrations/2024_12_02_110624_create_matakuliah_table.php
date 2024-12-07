@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dosen_jadwal', function (Blueprint $table) {
-            $table->foreignId('dosen_id')->constrained('dosen')->onDelete('cascade');
-            $table->foreignId('jadwal_id')->constrained('jadwal')->onDelete('cascade');
+        Schema::create('matakuliah', function (Blueprint $table) {
+            $table->string('kodemk')->primary();
+            $table->string('nama');
+            $table->string('jurusan');
+            $table->integer('sks');
+            $table->integer('semester');
+            $table->string('jenis_matkul');
             $table->timestamps();
         });
     }
@@ -23,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dosen_jadwal');
+        Schema::dropIfExists('matakuliah');
     }
 };

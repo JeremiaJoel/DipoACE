@@ -16,6 +16,9 @@ class jadwal extends Model
     protected $fillable = [
         'ruang',
         'kelas',
+        'hari',
+        'jam_mulai',
+        'jam_selesai',
         'semester_aktif',
         'jurusan',
         'sks',
@@ -31,15 +34,13 @@ class jadwal extends Model
 
     public function matakuliah()
     {
-        return $this->belongsTo(matakuliah::class);
+        return $this->belongsTo(matakuliah::class, 'kodemk', 'kodemk');
     }
 
     public function dosen()
     {
         return $this->belongsToMany(dosen::class, 'dosen_jadwal', 'jadwal_id', 'dosen_id');
     }
-    public function approval()
-    {
-        return $this->hasOne(approvejadwal::class, 'jadwal_id');
+
     }
 }

@@ -21,7 +21,8 @@ class mahasiswa extends Model
         'tanggal_lahir',
         'no_hp',
         'pembimbing_akademik',
-        'status'
+        'status',
+        'semester'
     ];
 
     public function dosen(): BelongsTo
@@ -32,5 +33,15 @@ class mahasiswa extends Model
     public function khs()
     {
         return $this->hasMany(Khs::class, 'nim', 'nim');
+    }
+
+    public function irs()
+    {
+        return $this->hasMany(irs::class, 'nim', 'nim');
+    }
+
+    public function irsMahasiswa()
+    {
+        return $this->hasMany(IrsMahasiswa::class, 'nim', 'nim');
     }
 }

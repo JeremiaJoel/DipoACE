@@ -22,11 +22,16 @@ class matakuliah extends Model
 
     public function jadwal()
     {
-        return $this->hasMany(Jadwal::class ,'kodemk' ,'kodemk');
+        return $this->hasMany(Jadwal::class, 'kodemk', 'kodemk');
     }
 
     public function khs()
     {
         return $this->hasMany(Khs::class, 'kodemk', 'kodemk');
+    }
+
+    public function irs()
+    {
+        return $this->hasMany(irs::class, 'kodemk', 'kodemk');
     }
 }

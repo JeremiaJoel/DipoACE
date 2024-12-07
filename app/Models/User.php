@@ -48,4 +48,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function dosen()
+    {
+        return $this->belongsTo(dosen::class, 'dosen_id', 'nip');
+    }
 }

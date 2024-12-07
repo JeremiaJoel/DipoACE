@@ -14,7 +14,7 @@ class DummyJadwalSeeder extends Seeder
     public function run(): void
     {
         $jadwal = [
-            
+
             [
                 'ruang' => 'E101',
                 'kelas' => 'A',
@@ -119,7 +119,7 @@ class DummyJadwalSeeder extends Seeder
                 'jam_mulai' => '15:40:00',
                 'jam_selesai' => '18:10:00'
             ],
-            
+
             // Basis Data
             [
                 'ruang' => 'A101',
@@ -173,7 +173,7 @@ class DummyJadwalSeeder extends Seeder
                 'jam_mulai' => '13:00:00',
                 'jam_selesai' => '16:20:00'
             ],
-        
+
             // Metode Numerik
             [
                 'ruang' => 'A102',
@@ -231,7 +231,7 @@ class DummyJadwalSeeder extends Seeder
                 'jam_mulai' => '15:40:00',
                 'jam_selesai' => '18:10:00'
             ],
-        
+
             // Interaksi Manusia dan Komputer
             [
                 'ruang' => 'B103',
@@ -285,7 +285,7 @@ class DummyJadwalSeeder extends Seeder
                 'jam_mulai' => '13:00:00',
                 'jam_selesai' => '16:20:00'
             ],
-            
+
             // Statistika
             [
                 'ruang' => 'C101',
@@ -397,7 +397,7 @@ class DummyJadwalSeeder extends Seeder
                 'jam_mulai' => '13:00:00',
                 'jam_selesai' => '16:20:00'
             ],
-        
+
             // Komputasi Tersebar dan Paralel
             [
                 'ruang' => 'D102',
@@ -451,7 +451,7 @@ class DummyJadwalSeeder extends Seeder
                 'jam_mulai' => '15:40:00',
                 'jam_selesai' => '18:10:00'
             ],
-        
+
             // Sistem Informasi
             [
                 'ruang' => 'B102',
@@ -505,7 +505,7 @@ class DummyJadwalSeeder extends Seeder
                 'jam_mulai' => '15:40:00',
                 'jam_selesai' => '18:20:00'
             ],
-        
+
             // Proyek Perangkat Lunak
             [
                 'ruang' => 'B102',
@@ -559,7 +559,7 @@ class DummyJadwalSeeder extends Seeder
                 'jam_mulai' => '15:40:00',
                 'jam_selesai' => '18:10:00'
             ],
-        
+
             // Machine Learning
             [
                 'ruang' => 'A102',
@@ -613,7 +613,7 @@ class DummyJadwalSeeder extends Seeder
                 'jam_mulai' => '13:00:00',
                 'jam_selesai' => '16:20:00'
             ],
-        
+
             // Keamanan dan Jaminan Informasi
             [
                 'ruang' => 'C103',
@@ -722,11 +722,10 @@ class DummyJadwalSeeder extends Seeder
                 'jam_selesai' => '17:40:00'
             ]
         ];
-        
-        
+
 
         foreach ($jadwal as $val) {
             Jadwal::create($val);
         }
     }
-}
+

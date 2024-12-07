@@ -182,7 +182,7 @@
                                         <div class="bg-white rounded-lg shadow-md p-4 mb-4">
                                             <div class="flex items-center justify-between">
                                                 <div>
-                                                    <h2 class="text-lg font-semibold">{{ $item->matakuliah }}</h2>
+                                                    <h2 class="text-lg font-semibold">{{ $item->matakuliah->nama ?? 'Nama Mata Kuliah Tidak Ditemukan' }}</h2>
                                                     <button onclick="openModal('{{ json_encode($item) }}')"
                                                         class="text-blue-500 hover:text-blue-700">
                                                         <i class="fas fa-eye"></i>
@@ -286,7 +286,7 @@
                 console.log('Data received:', data); // Debugging
                 const mk = JSON.parse(data);
 
-                document.getElementById('modalMatakuliah').textContent = mk.matakuliah;
+                document.getElementById('modalMatakuliah').textContent = mk.matakuliah.nama;
                 document.getElementById('modalKelas').textContent = mk.kelas;
                 document.getElementById('modalRuang').textContent = mk.ruang;
                 document.getElementById('modalWaktu').textContent = mk.waktu;
