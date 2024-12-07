@@ -7,7 +7,7 @@ use App\Models\mahasiswa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Dosen extends Model
+class dosen extends Model
 {
     use HasFactory;
 

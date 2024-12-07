@@ -12,6 +12,8 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\menuPembimbingController;
 use App\Http\Controllers\ApproveClassroomController;
 use App\Http\Controllers\KHSController;
+use App\Http\Controllers\ApproveJadwalController;
+use App\Http\Controllers\KaprodiController;
 
 // Route::get('/', function () {
 //     return view('dashboard-mahasiswa');
@@ -109,3 +111,31 @@ Route::get('/tabelMahasiswa', [menuPembimbingController::class, 'menuIrs'])->nam
 Route::get('/pembimbing-irs-mahasiswa', [menuPembimbingController::class, 'irsMahasiswa'])->name('pembimbing-irs-mahasiswa');;
 
 //menampilkan data irs mahasiswa tertentu
+
+// Route punya Kaprodi
+
+Route::get('/tabelVerifikasiIRS', [KaprodiController::class, 'menuVerifikasi'])->name('tabelVerifikasiIRS');
+Route::get('/pembimbing-irs-mahasiswa', [KaprodiController::class, 'irsMahasiswa'])->name('pembimbing-irs-mahasiswa');
+Route::get('/nyusunJadwalKaprodi', [KaprodiController::class, 'menuNyusunJadwal'])->name('nyusunJadwalKaprodi');
+
+Route::delete('/kaprodi/jadwal/{id}', [KaprodiController::class, 'hapusJadwal'])->name('kaprodi.hapusJadwal');
+Route::patch('/kaprodi/jadwal/{id}', [KaprodiController::class, 'updateJadwal'])->name('kaprodi.updateJadwal');
+Route::post('/simpan-jadwal', [KaprodiController::class, 'simpanJadwal'])->name('simpan.jadwal');
+
+Route::get('/kaprodi/jadwal/{id}/edit', [KaprodiController::class, 'edit'])->name('kaprodi.edit');
+
+
+// Halaman Dekan: Approve Classrooms
+//Route::get('/academic-classpage-dekan', [ApproveJadwalController::class, 'index'])->name('academic-classpage-dekan');
+//Route::get('/academic-classpage-dekan/filter', [ApproveJadwalController::class, 'filter'])->name('jadwal.filter');
+
+// Role Akademik: Mengirim pengajuan
+// Route::post('/jadwal/{id}/submit-approval', [ApproveJadwalController::class, 'submit'])->name('approvejadwal.submit');
+    
+// // Approve dan Reject Pengajuan
+// Route::post('/approvejadwal/{id}/approve', [ApproveJadwalController::class, 'approve'])->name('jadwal.approve');
+// Route::post('/approvejadwal/{id}/reject', [ApproveJadwalController::class, 'reject'])->name('jadwal.reject');
+//Route::get('/dashboard-kaprodi', [ApproveJadwalController::class, 'dashboard'])->name('dashboard-kaprodi');
+
+
+
