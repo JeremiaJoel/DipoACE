@@ -157,10 +157,10 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach ($mahasiswaBelum as $mahasiswa)
+                        @foreach ($notApproved as $mahasiswa)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $loop->iteration }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $mahasiswa->mahasiswa->nama }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $mahasiswa->mahasiswa_nama }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $mahasiswa->mahasiswa_id }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
 
@@ -204,11 +204,11 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach ($mahasiswaSudah as $mahasiswa)
+                        @foreach ($approved as $mahasiswa)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $loop->iteration }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $mahasiswa->nama }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $mahasiswa->nim }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $mahasiswa->mahasiswa_nama }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $mahasiswa->mahasiswa_id }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span
                                         class="inline-flex text-xs leading-9 font-semibold rounded-full bg-green-500 px-1 text-green-100">
@@ -216,7 +216,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="{{ route('irs.sudahDisetujui', $mahasiswa->nim) }}">
+                                    <a href="{{ route('irs.sudahDisetujui', ['nim' => $mahasiswa->mahasiswa_id]) }}">
                                         <div
                                             class="py-1 px-4 border-solid border-2 border-gray-500 flex rounded-lg w-fit cursor-pointer hover:bg-blue-600 hover:text-white hover:border-blue-500">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"

@@ -176,6 +176,7 @@
     </div>
 
     <script>
+
         document.addEventListener("DOMContentLoaded", () => {
             console.log("JavaScript is running!");
         });
@@ -188,14 +189,14 @@
 
             // Fungsi untuk memuat data IRS dari localStorage
             function loadIRSfromStorage() {
-                const storedIRS = localStorage.getItem('irsData');
+                const storedIRS = localStorage.getItem(localStorageKey);
                 if (storedIRS) {
                     $('#irs-dipilih').html(storedIRS);
                     updateCurrentSKS();
-                    $('#irs-dipilih tr').each(function() {
+                    $('#irs-dipilih tr').each(function () {
                         const kode = $(this).find('td:first').text();
                         selectedCourses.add(kode);
-                        jadwalDipilih.push($(this).find('td:eq(4)').text());
+                        jadwalDipilih.push($(this).find('td:eq(5)').text());
                     });
                 }
             }
@@ -203,13 +204,13 @@
             // Fungsi untuk menyimpan data IRS ke localStorage
             function saveIRStoStorage() {
                 const irsData = $('#irs-dipilih').html();
-                localStorage.setItem('irsData', irsData);
+                localStorage.setItem(localStorageKey, irsData);
             }
 
             // Fungsi untuk memperbarui total SKS
             function updateCurrentSKS() {
                 let totalSKS = 0;
-                $('#irs-dipilih tr').each(function() {
+                $('#irs-dipilih tr').each(function () {
                     const sks = parseInt($(this).find('td:eq(3)').text(), 10);
                     totalSKS += sks;
                 });
@@ -280,14 +281,24 @@
                         }
                     });
                 } else {
-                    location.reload();
+                    isSubmitted = false;
+                    $('#submit-irs-btn')
+                        .text('Submit')
+                        .removeClass('btn-danger')
+                        .addClass('btn-primary');
+                    $('.delete-btn').show(); // Tampilkan tombol delete
                 }
             });
 
             let sksLoad = {{ $sksLoad ?? 0 }}; // Pastikan $sksLoad didefinisikan di controller atau view
 
             // Mengambil mata kuliah yang dipilih
-            $(document).on('click', '.ambil-btn', function() {
+            $(document).on('click', '.ambil-btn', function () {
+                if (isSubmitted) {
+                    Swal.fire('Error', 'You cannot add courses after submitting IRS.', 'error');
+                    return;
+                }
+    
                 const btn = $(this);
                 const courseSKS = parseInt(btn.data('sks'), 10);
                 const kode = btn.data('kode');
@@ -305,7 +316,7 @@
                 }
 
                 if (currentSKS + courseSKS > sksLoad) {
-                    Swal.fire('Error', 'Total SKS would exceed your limit', 'error');
+                    Swal.fire('Error', 'Total SKS would exceed your limit.', 'error');
                     return;
                 }
 
@@ -338,16 +349,20 @@
                         `);
                         saveIRStoStorage();
                         currentSKS += courseSKS;
-                        jadwalDipilih.push(waktu); // Tambahkan waktu ke array
+                        jadwalDipilih.push(waktu);
                         $('#total-sks').text(`Total SKS: ${currentSKS}`);
-                        Swal.fire('Enrolled!', 'You have successfully enrolled in the course.',
-                            'success');
+                        Swal.fire('Enrolled!', 'You have successfully enrolled in the course.', 'success');
                     }
                 });
             });
 
             // Menghapus mata kuliah dari IRS yang sudah dipilih
-            $(document).on('click', '.delete-btn', function() {
+            $(document).on('click', '.delete-btn', function () {
+                if (isSubmitted) {
+                    Swal.fire('Error', 'You cannot remove courses after submitting IRS.', 'error');
+                    return;
+                }
+    
                 const row = $(this).closest('tr');
                 const kode = row.find('td:first').text();
                 selectedCourses.delete(kode);
@@ -387,10 +402,11 @@
 
 
 
+
             // Fungsi untuk mengumpulkan data IRS yang dipilih
             function collectSelectedIRS() {
                 let courses = [];
-                $('#irs-dipilih tr').each(function() {
+                $('#irs-dipilih tr').each(function () {
                     let course = {
                         kodemk: $(this).find('td:eq(0)').text(),
                         mata_kuliah: $(this).find('td:eq(1)').text(),
@@ -400,14 +416,15 @@
                         waktu: $(this).find('td:eq(5)').text(),
                         kelas: $(this).find('td:eq(6)').text(),
                         semester: $(this).find('td:eq(7)').text(),
-                        status: $(this).find('td:eq(8)').text(), // Status IRS
+                        status: $(this).find('td:eq(8)').text(),
                     };
                     courses.push(course);
                 });
                 return courses;
             }
 
-            // Menangani klik pada tombol submit
+
+            // Menangani klik pada tombol submit ini kebawah hapus
             $('#submit-irs-btn').on('click', function() {
                 if (isSubmitted) {
                     // Jika sudah disubmit, tombol Cancel akan menghapus data IRS di database saja

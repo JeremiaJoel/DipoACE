@@ -96,20 +96,21 @@
                         </div>
                         <div class="mt-4 grid grid-cols-3 gap-4 text-center cursor-pointer">
                             <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-blue-700 hover:text-white"
-                                onclick="window.location.href='{{ route('tabelMahasiswa', ['status' => 'belum_disetujui']) }}'">
+                                onclick="window.location.href='{{ route('tabelMahasiswa', ['status' => 'belum_disetujui', 'periode' => '2024-2025']) }}'">
                                 <p class="">Belum Disetujui</p>
                                 <p class="text-2xl">20</p>
                             </div>
                             <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-blue-700 hover:text-white"
-                                onclick="window.location.href='{{ route('tabelMahasiswa', ['status' => 'sudah_disetujui']) }}'">
+                                onclick="window.location.href='{{ route('tabelMahasiswa', ['status' => 'sudah_disetujui', 'periode' => '2024-2025']) }}'">
                                 <p>Sudah disetujui</p>
                                 <p class="text-2xl">5</p>
                             </div>
                             <div class="bg-white shadow rounded-lg p-4 h-20 hover:bg-blue-700 hover:text-white"
-                                onclick="window.location.href='{{ route('tabelMahasiswa', ['status' => 'belum_mengambil']) }}'">
+                                onclick="window.location.href='{{ route('tabelMahasiswa', ['status' => 'belum_mengambil', 'periode' => '2024-2025']) }}'">
                                 <p>Belum Mengambil</p>
                                 <p class="text-2xl">15</p>
                             </div>
+
                         </div>
                     </div>
 
@@ -126,7 +127,7 @@
                             class="bg-white shadow rounded-lg p-4 h-20 hover:bg-blue-700 hover:text-white cursor-pointer">
                             <h2 class="text-xl font-semibold">KHS</h2>
                         </div>
-                        <a href="{{ url('/sync-irs') }}" class="btn btn-primary"><div class="bg-white shadow rounded-lg p-4">
+                        <a class="btn btn-primary"><div class="bg-white shadow rounded-lg p-4">
                             <h2 class="text-xl font-semibold">Status</h2>
                         </div></a>
 

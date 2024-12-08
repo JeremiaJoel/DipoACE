@@ -207,7 +207,7 @@ class IRSController extends Controller
                     'jam_selesai' => $jam_selesai,
                     'kelas' => $course['kelas'],
                     'semester' => $course['semester'],
-                    'tahun_ajaran' => '2024/2025',
+                    'tahun_ajaran' => '2024-2025',
                     'jurusan' => $jurusan,
                     'pengampu_1' => $pengampu_1,
                     'pengampu_2' => $pengampu_2,
@@ -227,30 +227,56 @@ class IRSController extends Controller
     }
 
     public function cancelIRS(Request $request)
-    {
-        try {
-            $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
-            $nim = $mahasiswa ? $mahasiswa->nim : null;
+{
+    try {
+        // Validasi input
+        $request->validate([
+            'courses' => 'required|array|min:1',
+            'courses.*.kodemk' => 'required|string',
+            'courses.*.kelas' => 'required|string',
+            'courses.*.semester' => 'required|integer',
+        ]);
 
-            if (!$nim) {
-                return response()->json(['success' => false, 'message' => 'Mahasiswa tidak ditemukan']);
-            }
+        // Ambil mahasiswa berdasarkan email
+        $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
+        $nim = $mahasiswa ? $mahasiswa->nim : null;
 
-            // Hapus data IRS yang telah disubmit dari database
-            Irs::where('nim', $nim)
-                ->whereIn('kodemk', array_column($request->courses, 'kodemk')) // Hapus berdasarkan kode mata kuliah
-                ->whereIn('kelas', array_column($request->courses, 'kelas'))  // Hapus berdasarkan kelas
-                ->where('semester', $request->courses[0]['semester'])         // Pastikan semester sesuai
-                ->delete();
-
-            // Sinkronisasi ke tabel irs_mahasiswa
-            $this->syncIRSDataForStudent($nim);
-
-            return response()->json(['success' => true, 'message' => 'IRS berhasil dibatalkan']);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        if (!$nim) {
+            return response()->json(['success' => false, 'message' => 'Mahasiswa tidak ditemukan']);
         }
+
+        // Cek status IRS pada tabel irs_mahasiswa berdasarkan nim mahasiswa
+        $irsMahasiswa = DB::table('irs_mahasiswa')
+            ->where('mahasiswa_id', $nim)
+            ->first();
+
+        // Jika status IRS sudah disetujui, cancel tidak boleh dilakukan
+        if ($irsMahasiswa && $irsMahasiswa->status === 'Sudah Disetujui') {
+            return response()->json([
+                'success' => false,
+                'message' => "Tidak bisa membatalkan IRS karena statusnya sudah disetujui."
+            ]);
+        }
+
+        // Loop untuk menghapus semua mata kuliah yang dikirimkan
+        foreach ($request->courses as $course) {
+            Irs::where('nim', $nim)
+                ->where('kodemk', $course['kodemk'])
+                ->where('kelas', $course['kelas'])
+                ->where('semester', $course['semester'])
+                ->delete();
+        }
+
+        // Sinkronisasi data di irs_mahasiswa
+        $this->syncIRSDataForStudent($nim);
+
+        return response()->json(['success' => true, 'message' => 'IRS berhasil dibatalkan dan semua data terkait telah dihapus']);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => $e->getMessage()]);
     }
+}
+
+    
 
     private function syncIRSDataForStudent($nim)
     {
@@ -284,6 +310,7 @@ class IRSController extends Controller
             DB::table('irs_mahasiswa')->where('mahasiswa_id', $nim)->delete();
         }
     }
+
 
     public function showIrs()
     {

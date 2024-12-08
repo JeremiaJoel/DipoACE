@@ -12,28 +12,67 @@ use Illuminate\Support\Facades\DB;
 class menuPembimbingController extends Controller
 {
 
-    public function index()
-{
-    $dosenId = Auth::user()->id;
-
-    // Ambil mahasiswa dengan IRS "Belum Disetujui"
-    $mahasiswaBelum = IrsMahasiswa::with('mahasiswa') // Menghubungkan dengan tabel mahasiswa
-            ->where('status', 'Belum Disetujui') // Filter data dengan status "Belum Disetujui"
-            ->get();
-
-    // Ambil mahasiswa dengan IRS "Sudah Disetujui"
-    $mahasiswaSudah = IrsMahasiswa::with('mahasiswa') // Menghubungkan dengan tabel mahasiswa
-    ->where('status', 'Sudah Disetujui') // Filter data dengan status "Belum Disetujui"
-    ->get();
-
-    return view('tabelMahasiswa', compact('mahasiswaBelum', 'mahasiswaSudah'));
-}
-
-
-    public function menuIrs()
+    public function index($periode)
     {
-        return view('tabelMahasiswa');
+        try {
+            // Ambil data dosen yang login
+            $dosen = Auth::user(); // Asumsikan dosen sudah login
+            $dosen_id = $dosen->id; // ID dosen dari user login
+    
+            // Query mahasiswa perwalian berdasarkan periode dan status disetujui
+                $approved = DB::table('irs_mahasiswa')
+                ->join('mahasiswa', 'irs_mahasiswa.mahasiswa_id', '=', 'mahasiswa.nim')
+                ->where('irs_mahasiswa.periode', '2024-2025')
+                ->where('irs_mahasiswa.status', 'Sudah Disetujui')
+                ->where('mahasiswa.dosen_id', $dosen_id)
+                ->select('irs_mahasiswa.*', 'mahasiswa.nama as mahasiswa_nama', 'mahasiswa_id as mahasiswa_nim')
+                ->get();
+    
+                $notApproved = DB::table('irs_mahasiswa')
+                ->join('mahasiswa', 'irs_mahasiswa.mahasiswa_id', '=', 'mahasiswa.nim')
+                ->where('irs_mahasiswa.periode', '2024-2025')
+                ->where('irs_mahasiswa.status', 'Belum Disetujui')
+                ->where('mahasiswa.dosen_id', $dosen_id)
+                ->select('irs_mahasiswa.*', 'mahasiswa.nama as mahasiswa_nama', 'mahasiswa_id as mahasiswa_nim')
+                ->get();
+
+            
+            // Kirim data ke view
+            return view('tabelMahasiswa', [
+                'approved' => $approved,
+                'notApproved' => $notApproved,
+                'periode' => $periode,
+            ]);
+            
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
+    
+
+
+    public function tabelMahasiswa(Request $request, $periode)
+    {
+        // Jika format periode adalah 2024-2025, ubah menjadi 2024/2025
+        $periode = str_replace('-', '/', $periode);
+    
+        $status = $request->query('status');
+    
+        // Validasi format periode
+        if (!preg_match('/^\d{4}\/\d{4}$/', $periode)) {
+            abort(404, 'Periode tidak valid.');
+        }
+    
+        // Lakukan pengolahan data
+        $mahasiswa = IrsMahasiswa::where('periode', $periode)
+            ->where('status', $status)
+            ->get();
+    
+        return view('tabelMahasiswa', compact('mahasiswa', 'status', 'periode'));
+    }
+    
+
     public function listMahasiswaBelumDisetujui()
     {
         return view('pembimbing-irs-mahasiswa');
@@ -45,31 +84,33 @@ class menuPembimbingController extends Controller
     }
 
     public function showBelumDisetujui($nim)
-    {
-        // Ambil data IRS beserta mata kuliah terkait
-        $irs = IrsMahasiswa::with(['irs' => function ($query) {
-            $query->where('status_irs', 'Belum Disetujui')
-                  ->with('matakuliah'); // Pastikan relasi ke matakuliah sudah didefinisikan
-        }])
+{
+    // Ambil data IRS dengan relasi ke irs dan matakuliah
+    $irs = IrsMahasiswa::with(['irs.matakuliah'])
         ->where('mahasiswa_id', $nim) // Filter berdasarkan mahasiswa_id
+        ->where('periode', '2024-2025') // Filter periode di tabel irs_mahasiswa
+        ->whereHas('irs', function ($query) {
+            $query->where('status_irs', 'Belum Disetujui') // Filter status IRS di tabel irs
+                  ->where('tahun_ajaran', '2024-2025'); // Filter tahun ajaran di tabel irs
+        })
         ->get();
-    
-        return view('pembimbing-irs-mahasiswa', compact('irs'));
-    }
-    
 
-    
+    return view('pembimbing-irs-mahasiswa', compact('irs'));
+}
 
 
 
 
 public function showSudahDisetujui($nim)
 {
-    $irs = Irs::with('matakuliah')
-        ->where('nim', $nim)
-        ->whereRaw('semester % 2 = 1') // Menampilkan semester ganjil
-        ->where('status_irs', 'Sudah Disetujui')
-        ->get();
+    $irs = IrsMahasiswa::with(['irs.matakuliah'])
+    ->where('mahasiswa_id', $nim) // Filter berdasarkan mahasiswa_id
+    ->where('periode', '2024-2025') // Filter periode di tabel irs_mahasiswa
+    ->whereHas('irs', function ($query) {
+        $query->where('status_irs', 'Sudah Disetujui') // Filter status IRS di tabel irs
+              ->where('tahun_ajaran', '2024-2025'); // Filter tahun ajaran di tabel irs
+    })
+    ->get();
 
     return view('pembimbing-irs-sudah-disetujui', compact('irs'));
 }
@@ -113,54 +154,42 @@ public function showSudahDisetujui($nim)
 
 public function approveIRS(Request $request, $mahasiswaId)
 {
-    // Validasi input
-    $request->validate([
-        'status' => 'required|in:Belum Disetujui,Sudah Disetujui',
-    ]);
-
-    // Perbarui status di tabel irs_mahasiswa
+    // 1. Update status di tabel irs_mahasiswa
     DB::table('irs_mahasiswa')
         ->where('mahasiswa_id', $mahasiswaId)
-        ->update(['status' => $request->status]);
+        ->where('status', 'Belum Disetujui')  // Pastikan hanya mengupdate jika status masih 'Belum Disetujui'
+        ->update(['status' => 'Sudah Disetujui']); // Ubah status menjadi 'Sudah Disetujui'
 
-    // Perbarui status di tabel irs untuk semua mata kuliah mahasiswa tersebut
+    // 2. Update status di tabel irs untuk semua mata kuliah terkait mahasiswa ini
     DB::table('irs')
-        ->where('nim', $mahasiswaId)
-        ->update(['status_irs' => $request->status]);
+        ->where('nim', $mahasiswaId)  // Menggunakan nim untuk memperbarui mata kuliah mahasiswa
+        ->where('status_irs', 'Belum Disetujui') // Pastikan hanya yang statusnya masih 'Belum Disetujui' yang diupdate
+        ->update(['status_irs' => 'Sudah Disetujui']); // Ubah status_irs menjadi 'Sudah Disetujui'
 
-    return response()->json(['message' => 'Status berhasil diperbarui!']);
+    return redirect()->back()->with('success', 'Status IRS berhasil diperbarui!');
+
+
 }
 
 
 
 
-public function cancelApproveIrs($nim)
+
+public function cancelApproveIrs(Request $request, $mahasiswaId)
 {
-    // Pastikan mahasiswa dengan NIM ini ada
-    $mahasiswa = Mahasiswa::where('nim', $nim)->first();
+    // 1. Update status di tabel irs_mahasiswa
+    DB::table('irs_mahasiswa')
+        ->where('mahasiswa_id', $mahasiswaId)
+        ->where('status', 'Sudah Disetujui')  // Pastikan hanya mengupdate jika status masih 'Belum Disetujui'
+        ->update(['status' => 'Belum Disetujui']); // Ubah status menjadi 'Sudah Disetujui'
 
-    if (!$mahasiswa) {
-        return redirect()->back()->with('error', 'Mahasiswa tidak ditemukan.');
-    }
+    // 2. Update status di tabel irs untuk semua mata kuliah terkait mahasiswa ini
+    DB::table('irs')
+        ->where('nim', $mahasiswaId)  // Menggunakan nim untuk memperbarui mata kuliah mahasiswa
+        ->where('status_irs', 'Sudah Disetujui') // Pastikan hanya yang statusnya masih 'Belum Disetujui' yang diupdate
+        ->update(['status_irs' => 'Belum Disetujui']); // Ubah status_irs menjadi 'Sudah Disetujui'
 
-    // Update semua IRS semester 5 menjadi 'Belum Disetujui' untuk mahasiswa ini
-    $updated = Irs::where('nim', $nim)
-        ->where('semester', 5)
-        ->update(['status_irs' => 'Belum Disetujui']);
-
-    if ($updated === 0) {
-        // Jika tidak ada baris yang diperbarui
-        return redirect()->back()->with('error', 'Tidak ada data IRS yang dibatalkan.');
-    }
-
-    // Setelah pembatalan, dapatkan status global IRS terbaru
-    $statusGlobal = Irs::where('nim', $nim)
-        ->selectRaw('CASE WHEN SUM(CASE WHEN status_irs = "Belum Disetujui" THEN 1 ELSE 0 END) > 0 THEN "Belum Disetujui" ELSE "Sudah Disetujui" END as status_global')
-        ->groupBy('nim')
-        ->first()->status_global;
-
-    // Redirect dengan pesan sukses dan status global IRS terbaru
-    return redirect()->back()->with('success', 'IRS berhasil dibatalkan. Status Global IRS: ' . $statusGlobal);
+    return redirect()->back()->with('success', 'Status IRS berhasil diperbarui!');
 }
 
 public function getMataKuliah($mahasiswaId)

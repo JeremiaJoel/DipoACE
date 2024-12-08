@@ -104,7 +104,7 @@
     <header class="bg-white shadow">
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             <div class="translate-y-4">
-                <a href="{{ route('tabelMahasiswa') }}">
+                <a href="{{ route('tabelMahasiswa', ['periode' => '2024-2025']) }}">
                     <button type="button"
                 class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700
                 sm:translate-x-0 sm:translate-y-0 translate-x-48">
@@ -140,13 +140,15 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($irs as $item)
+                        @foreach ($item->irs as $matkul) <!-- Mengakses data IRS dari relasi -->
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $loop->iteration }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $item->kodemk }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $item->matakuliah->nama }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $item->sks }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $loop->iteration }}.</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $matkul->kodemk }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $matkul->matakuliah->nama }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $matkul->sks }}</td>
                             </tr>
                         @endforeach
+                    @endforeach
                     </tbody>
                 </table>
 

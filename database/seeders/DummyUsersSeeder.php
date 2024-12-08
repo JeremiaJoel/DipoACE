@@ -14,11 +14,11 @@ class DummyUsersSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
-            'email' => 'arispujiwidodp@lecturer.dipoace.ac.id',
+            'email' => 'ateng.baplang@students.dipoace.ac.id',
             'password' => Hash::make('123456'), // Ganti dengan password yang aman
             'dekan' => '0',
-            'mahasiswa' => '0', // Menandakan user adalah mahasiswa
-            'pembimbing_akademik' => '1',
+            'mahasiswa' => '1', // Menandakan user adalah mahasiswa
+            'pembimbing_akademik' => '0',
             'kaprodi' => '0',
             'bagian_akademik' => '0',
             'email_verified_at' => now(),
