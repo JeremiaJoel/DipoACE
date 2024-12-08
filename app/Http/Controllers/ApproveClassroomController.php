@@ -60,13 +60,7 @@ class ApproveClassroomController extends Controller
         }
     }
 
-    public function reject($id)
-    {
-        $approval = ApproveClassroom::findOrFail($id);
-        $approval->update(['status' => 'Ditolak']);
 
-        return redirect()->back()->with('success', 'Pengajuan berhasil ditolak.');
-    }
 
     public function filter(Request $request)
     {
@@ -83,6 +77,29 @@ class ApproveClassroomController extends Controller
 
         // Kirim data ke view
         return view('academic-classpage-dekan', compact('approvals'));
+    }
+
+    public function approveAll(Request $request)
+    {
+        // $semester = $request->input('semester');
+        $jurusan = $request->input('jurusan');
+        // $kelas = $request->input('kelas');
+
+        $kelas = Classroom::query();
+
+        // if ($semester) {
+        //     $jadwal->where('semester_aktif', $semester);
+        // }
+        if ($jurusan) {
+            $kelas->where('jurusan', $jurusan);
+        }
+        // if ($kelas) {
+        //     $jadwal->where('kelas', $kelas);
+        // }
+
+        $updatedCount = $kelas->update(['status' => 'Sudah Disetujui']);
+
+        return response()->json(['message' => 'Approved ' .' schedules successfully']);
     }
 
 

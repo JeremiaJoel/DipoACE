@@ -56,11 +56,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pembimbing-irs-mahasiswa', [menuPembimbingController::class, 'listMahasiswaBelumDisetujui'])->name('pembimbing-irs-mahasiswa');;
     Route::get('/pembimbing-irs-sudah-disetujui', [menuPembimbingController::class, 'listMahasiswaSudahDisetujui'])->name('pembimbing-irs-sudah-disetujui');;
 
+
+    Route::post('/approve-all-jadwal', [ScheduleController::class, 'approveAll']);
+    Route::post('/approve-all-kelas', [ApproveClassroomController::class, 'approveAll']);
+
     //Route menampilkan detail irs mahasiswa
     // Route untuk melihat IRS mahasiswa yang statusnya 'Belum Disetujui'
     Route::get('/irs/{nim}/belum-disetujui', [menuPembimbingController::class, 'showBelumDisetujui'])->name('irs.belumDisetujui');
     
     Route::get('/irs', [IRSController::class, 'index'])->name('irs.index');
+
 
     // Route untuk melihat IRS mahasiswa yang statusnya 'Sudah Disetujui'
     Route::get('/irs/{nim}/sudah-disetujui', [menuPembimbingController::class, 'showSudahDisetujui'])->name('irs.sudahDisetujui');
@@ -89,6 +94,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/classrooms/{id}', [ClassroomController::class, 'destroy'])->name('classrooms.destroy');
     Route::patch('/classrooms/{id}', [ClassroomController::class, 'update'])->name('classrooms.update');
     Route::post('/submit-form', [ClassroomController::class, 'store'])->name('submit.form');
+    Route::get('classrooms/{id}/edit', [ClassroomController::class, 'edit'])->name('classrooms.edit');
 
     Route::get('/khs', [KHSController::class, 'showKhs'])->name('khsData.showKhs');
     // Route::get('/mahasiswa-buatirs', [IRSController::class, 'buatIRS'])->middleware('auth')->name('mahasiswa.buatirs');\
@@ -135,6 +141,7 @@ Route::middleware([\App\Http\Middleware\StatusMahasiswa::class . ':Aktif'])->gro
     Route::get('/print-irs/{mahasiswaId}', [PdfController::class, 'generatePDF'])->name('irs.print');
     Route::get('/khs', [KHSController::class, 'showKhs'])->name('khsData.showKhs');
 });
+
 
 
 // Rute untuk mahasiswa cuti (tidak memerlukan middleware khusus)
