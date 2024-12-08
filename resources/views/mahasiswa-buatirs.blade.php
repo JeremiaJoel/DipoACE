@@ -180,26 +180,26 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            console.log("JavaScript is running!");
-        });
-    
-        $(document).ready(function() {
+        $(document).ready(function () {
             let currentSKS = 0;
             let jadwalDipilih = [];
             let selectedCourses = new Set();
-            let isSubmitted = false; // Flag untuk memeriksa apakah IRS sudah disubmit
+            let isSubmitted = false;
+    
+            const userId = '{{ Auth::user()->id }}'; // Ambil ID pengguna yang sedang login
+            const localStorageKey = `irsData_${userId}`; // Kunci unik untuk menyimpan IRS per pengguna
+            const localStorageStatusKey = `isSubmitted_${userId}`; // Kunci unik untuk status submit IRS
     
             // Fungsi untuk memuat data IRS dari localStorage
             function loadIRSfromStorage() {
-                const storedIRS = localStorage.getItem('irsData');
+                const storedIRS = localStorage.getItem(localStorageKey);
                 if (storedIRS) {
                     $('#irs-dipilih').html(storedIRS);
                     updateCurrentSKS();
-                    $('#irs-dipilih tr').each(function() {
+                    $('#irs-dipilih tr').each(function () {
                         const kode = $(this).find('td:first').text();
                         selectedCourses.add(kode);
-                        jadwalDipilih.push($(this).find('td:eq(4)').text());
+                        jadwalDipilih.push($(this).find('td:eq(5)').text());
                     });
                 }
             }
@@ -207,13 +207,13 @@
             // Fungsi untuk menyimpan data IRS ke localStorage
             function saveIRStoStorage() {
                 const irsData = $('#irs-dipilih').html();
-                localStorage.setItem('irsData', irsData);
+                localStorage.setItem(localStorageKey, irsData);
             }
     
             // Fungsi untuk memperbarui total SKS
             function updateCurrentSKS() {
                 let totalSKS = 0;
-                $('#irs-dipilih tr').each(function() {
+                $('#irs-dipilih tr').each(function () {
                     const sks = parseInt($(this).find('td:eq(3)').text(), 10);
                     totalSKS += sks;
                 });
@@ -221,76 +221,39 @@
                 $('#total-sks').text(`Total SKS: ${currentSKS}`);
             }
     
-            // Load data IRS saat halaman dimuat
-            loadIRSfromStorage();
-    
-            // Memuat status isSubmitted dari localStorage
-            const storedIsSubmitted = localStorage.getItem('isSubmitted');
-            if (storedIsSubmitted === 'true') {
-                isSubmitted = true;
-                $('#submit-irs-btn').text('Cancel') // Ubah tombol menjadi 'Cancel'
-                    .removeClass('btn-primary')
-                    .addClass('btn-danger'); // Tombol cancel menjadi merah
-                $('.delete-btn').hide(); // Sembunyikan tombol delete
-            } else {
-                isSubmitted = false;
-                $('#submit-irs-btn').text('Submit') // Tombol default
-                    .removeClass('btn-danger')
-                    .addClass('btn-primary'); // Tombol submit normal
+            // Fungsi untuk memuat status `isSubmitted` dari localStorage
+            function loadSubmissionStatus() {
+                const storedIsSubmitted = localStorage.getItem(localStorageStatusKey);
+                if (storedIsSubmitted === 'true') {
+                    isSubmitted = true;
+                    $('#submit-irs-btn')
+                        .text('Cancel')
+                        .removeClass('btn-primary')
+                        .addClass('btn-danger');
+                    $('.delete-btn').hide(); // Sembunyikan tombol delete
+                } else {
+                    isSubmitted = false;
+                    $('#submit-irs-btn')
+                        .text('Submit')
+                        .removeClass('btn-danger')
+                        .addClass('btn-primary');
+                    $('.delete-btn').show(); // Tampilkan tombol delete
+                }
             }
     
-            // Pencarian jadwal berdasarkan query
-            $('#search-bar').on('keyup', function() {
-                const query = $(this).val();
-                if (query.length > 0) {
-                    $.ajax({
-                        url: "{{ route('jadwals.search') }}",
-                        type: "GET",
-                        data: {
-                            query: query
-                        },
-                        success: function(data) {
-                            $('#jadwal-table tbody').empty();
-                            $.each(data, function(key, jadwal) {
-                                $('#jadwal-table tbody').append(`
-                                    <tr>
-                                        <td>${jadwal.kodemk}</td>
-                                        <td>${jadwal.matakuliah.nama}</td>
-                                        <td>${jadwal.ruang}</td>
-                                        <td>${jadwal.sks}</td>
-                                        <td>${jadwal.hari}</td>
-                                        <td>${jadwal.jam_mulai}-${jadwal.jam_selesai}</td>
-                                        <td>${jadwal.kelas}</td>
-                                        <td>${jadwal.semester_aktif}</td>
-                                        <td class="text-right">
-                                            <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 ambil-btn"
-                                                data-id="${jadwal.id}"
-                                                data-kode="${jadwal.kodemk}"
-                                                data-matakuliah="${jadwal.matakuliah.nama}"
-                                                data-ruang="${jadwal.ruang}"
-                                                data-sks="${jadwal.sks}"
-                                                data-hari="${jadwal.hari}"
-                                                data-waktu="${jadwal.jam_mulai}-${jadwal.jam_selesai}"
-                                                data-kelas="${jadwal.kelas}"
-                                                data-status="${jadwal.matakuliah.jenis_matkul}"
-                                                data-semester="${jadwal.semester_aktif}">
-                                                Ambil
-                                            </button>
-                                        </td>
-                                    </tr>
-                                `);
-                            });
-                        }
-                    });
-                } else {
-                    location.reload();
-                }
-            });
+            // Load data IRS dan status submit saat halaman dimuat
+            loadIRSfromStorage();
+            loadSubmissionStatus();
     
             let sksLoad = {{ $sksLoad ?? 0 }}; // Pastikan $sksLoad didefinisikan di controller atau view
     
             // Mengambil mata kuliah yang dipilih
-            $(document).on('click', '.ambil-btn', function() {
+            $(document).on('click', '.ambil-btn', function () {
+                if (isSubmitted) {
+                    Swal.fire('Error', 'You cannot add courses after submitting IRS.', 'error');
+                    return;
+                }
+    
                 const btn = $(this);
                 const courseSKS = parseInt(btn.data('sks'), 10);
                 const kode = btn.data('kode');
@@ -307,7 +270,7 @@
                 }
     
                 if (currentSKS + courseSKS > sksLoad) {
-                    Swal.fire('Error', 'Total SKS would exceed your limit', 'error');
+                    Swal.fire('Error', 'Total SKS would exceed your limit.', 'error');
                     return;
                 }
     
@@ -340,16 +303,20 @@
                         `);
                         saveIRStoStorage();
                         currentSKS += courseSKS;
-                        jadwalDipilih.push(waktu); // Tambahkan waktu ke array
+                        jadwalDipilih.push(waktu);
                         $('#total-sks').text(`Total SKS: ${currentSKS}`);
-                        Swal.fire('Enrolled!', 'You have successfully enrolled in the course.',
-                            'success');
+                        Swal.fire('Enrolled!', 'You have successfully enrolled in the course.', 'success');
                     }
                 });
             });
     
             // Menghapus mata kuliah dari IRS yang sudah dipilih
-            $(document).on('click', '.delete-btn', function() {
+            $(document).on('click', '.delete-btn', function () {
+                if (isSubmitted) {
+                    Swal.fire('Error', 'You cannot remove courses after submitting IRS.', 'error');
+                    return;
+                }
+    
                 const row = $(this).closest('tr');
                 const kode = row.find('td:first').text();
                 selectedCourses.delete(kode);
@@ -363,10 +330,89 @@
                 return jadwalDipilih.includes(waktuBaru);
             }
     
-            // Fungsi untuk mengumpulkan data IRS yang dipilih
+            // Menangani klik pada tombol submit
+$('#submit-irs-btn').on('click', function () {
+    if (isSubmitted) {
+        // Jika sudah disubmit, tombol Cancel akan menghapus data IRS di database saja
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to cancel your IRS submission?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, cancel it!',
+            cancelButtonText: 'No, keep it',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{ route('mahasiswa.cancelIRS') }}",
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        courses: collectSelectedIRS(),
+                        student_id: '{{ Auth::user()->id }}'
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire('Cancelled!', response.message, 'success');
+                            $('#submit-irs-btn')
+                                .text('Submit')
+                                .removeClass('btn-danger')
+                                .addClass('btn-primary');
+                            isSubmitted = false;
+                            localStorage.setItem(localStorageStatusKey, 'false');
+                            $('.delete-btn').show();
+                        } else {
+                            Swal.fire('Error', response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        Swal.fire('Error', 'Terjadi kesalahan pada server!', 'error');
+                    }
+                });
+            }
+        });
+    } else {
+        const selectedIRS = collectSelectedIRS();
+        if (selectedIRS.length === 0) {
+            Swal.fire('Error', 'Tidak ada mata kuliah yang dipilih', 'error');
+            return;
+        }
+
+        $.ajax({
+            url: "{{ route('mahasiswa.submitIRS') }}",
+            type: "POST",
+            data: {
+                _token: '{{ csrf_token() }}',
+                courses: selectedIRS,
+                sks: currentSKS,
+                student_id: userId
+            },
+            success: function (response) {
+                if (response.success) {
+                    isSubmitted = true;
+                    $('#submit-irs-btn')
+                        .text('Cancel')
+                        .removeClass('btn-primary')
+                        .addClass('btn-danger');
+                    Swal.fire('Success', 'IRS berhasil disubmit!', 'success');
+                    $('.delete-btn').hide();
+                    localStorage.setItem(localStorageStatusKey, 'true');
+                } else {
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function () {
+                Swal.fire('Error', 'Terjadi kesalahan pada server!', 'error');
+            }
+        });
+    }
+});
+
+
             function collectSelectedIRS() {
                 let courses = [];
-                $('#irs-dipilih tr').each(function() {
+                $('#irs-dipilih tr').each(function () {
                     let course = {
                         kodemk: $(this).find('td:eq(0)').text(),
                         mata_kuliah: $(this).find('td:eq(1)').text(),
@@ -376,106 +422,15 @@
                         waktu: $(this).find('td:eq(5)').text(),
                         kelas: $(this).find('td:eq(6)').text(),
                         semester: $(this).find('td:eq(7)').text(),
-                        status: $(this).find('td:eq(8)').text(), // Status IRS
+                        status: $(this).find('td:eq(8)').text(),
                     };
                     courses.push(course);
                 });
                 return courses;
             }
-    
-            // Menangani klik pada tombol submit
-            $('#submit-irs-btn').on('click', function() {
-                if (isSubmitted) {
-                    // Jika sudah disubmit, tombol Cancel akan menghapus data IRS di database saja
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: 'Do you want to cancel your IRS submission?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes, cancel it!',
-                        cancelButtonText: 'No, keep it',
-                        reverseButtons: true
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Hapus data IRS yang sudah disubmit dari database
-                            $.ajax({
-                                url: "{{ route('mahasiswa.cancelIRS') }}",
-                                type: 'POST',
-                                data: {
-                                    _token: '{{ csrf_token() }}',
-                                    courses: collectSelectedIRS(),
-                                    student_id: '{{ Auth::user()->id }}'
-                                },
-                                success: function(response) {
-                                    if (response.success) {
-                                        Swal.fire('Cancelled!',
-                                            'Your IRS submission has been cancelled.',
-                                            'success');
-                                        $('#submit-irs-btn').text(
-                                            'Submit') // Ubah tombol kembali ke 'Submit'
-                                            .removeClass('btn-danger')
-                                            .addClass('btn-primary'); // Ubah warna tombol Cancel menjadi normal
-                                        isSubmitted = false; // Update status isSubmitted
-                                        localStorage.setItem('isSubmitted', 'false'); // Simpan status di localStorage
-                                        $('.delete-btn').show(); // Sembunyikan tombol delete
-                                    } else {
-                                        Swal.fire('Error', response.message, 'error');
-                                    }
-                                },
-                                error: function(error) {
-                                    Swal.fire('Error', 'Terjadi kesalahan pada server!',
-                                        'error');
-                                }
-                            });
-                        }
-                    });
-                } else {
-                    // Submit data IRS jika belum disubmit
-                    const selectedIRS = collectSelectedIRS();
-                    if (selectedIRS.length === 0) {
-                        Swal.fire('Error', 'Tidak ada mata kuliah yang dipilih', 'error');
-                        return;
-                    }
-    
-                    // Kirim data melalui AJAX
-                    $.ajax({
-                        url: "{{ route('mahasiswa.submitIRS') }}",
-                        type: "POST",
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            courses: selectedIRS,
-                            sks: currentSKS,
-                            student_id: '{{ Auth::user()->id }}'
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                isSubmitted = true;
-                                $('#submit-irs-btn').text(
-                                    'Cancel') // Ubah tombol menjadi 'Cancel'
-                                    .removeClass('btn-primary')
-                                    .addClass('btn-danger'); // Tombol cancel menjadi merah
-                                Swal.fire('Success', 'IRS berhasil disubmit!', 'success');
-                                $('.delete-btn').hide(); // Tombol delete disembunyikan
-                                localStorage.setItem('isSubmitted', 'true'); // Simpan status di localStorage
-                            } else {
-                                Swal.fire('Error', response.message, 'error');
-                            }
-                        },
-                        error: function(error) {
-                            Swal.fire('Error', 'Terjadi kesalahan pada server!', 'error');
-                        }
-                    });
-                }
-            });
-    
-            // Menghapus mata kuliah dari IRS yang sudah dipilih
-            $(document).on('click', '.delete-btn', function() {
-                const row = $(this).closest('tr');
-                row.remove(); // Hapus baris di tampilan
-                updateCurrentSKS(); // Update total SKS
-            });
         });
     </script>
+    
     
 </body>
 
