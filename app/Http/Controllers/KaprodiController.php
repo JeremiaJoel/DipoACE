@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-
 use App\Models\classrooms;
 use App\Models\jadwal;
 
@@ -29,11 +28,15 @@ class KaprodiController extends Controller
         return view('pembimbing-irs-mahasiswa');
     }
 
+    
+
     // Menampilkan halaman nyusun jadwal
     public function menuNyusunJadwal()
     {
         // Ambil data dari tabel 'jadwal' untuk tabel jadwal
         $submissions = jadwal::all();
+
+        $hasPendingStatus = jadwal::where('status', 'Belum Disetujui')->exists();
 
         // Ambil data dosen dan mata kuliah untuk digunakan di form
         $dosenList = DB::table('dosen')->select('nama')->get();
@@ -43,8 +46,9 @@ class KaprodiController extends Controller
         $ruangDisetujui = classrooms::where('status', 'Sudah Disetujui')->get();
 
         // Kirim data ke view
-        return view('nyusunJadwalKaprodi', compact('submissions', 'dosenList', 'matakuliahList', 'ruangDisetujui'));
+        return view('nyusunJadwalKaprodi', compact('submissions', 'hasPendingStatus',  'dosenList', 'matakuliahList', 'ruangDisetujui'));
     }
+
 
     // Menyimpan jadwal baru ke tabel 'jadwal'
     public function simpanJadwal(Request $request)
@@ -111,6 +115,67 @@ class KaprodiController extends Controller
         return view('nyusunJadwalKaprodi', compact('jadwal'));
     }
 
+    public function updateJadwal(Request $request, $id)
+    {
+        
+        // Validasi data yang diterima
+        $data = $request->validate([
+            'ruang' => 'required|string',
+            'kelas' => 'required|string',
+            'semester_aktif' => 'required|integer|min:1|max:14',
+            'jurusan' => 'required|string',
+            'sks' => 'required|integer',
+            'hari' => 'required|string',
+            'pengampu_1' => 'required|string',
+            'pengampu_2' => 'required|string',
+            'pengampu_3' => 'nullable|string',
+            'kodemk' => 'required|string',
+            'jam_mulai' => 'required|date_format:H:i',
+            'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
+        ]);
+
+        // 1. Validasi Kelas dan Kode MK yang sama sudah ada
+        $existingJadwal = DB::table('jadwal')
+            ->where('kelas', $request->kelas)
+            ->where('kodemk', $request->kodemk)
+            ->where('id', '!=', $id) // Mengecualikan jadwal yang sedang diedit
+            ->first();
+
+        if ($existingJadwal) {
+            return redirect()->route('kaprodi.editJadwal', $id)
+                            ->withErrors(['kelas_kodemk' => 'Kelas dan Kode MK sudah ada di jadwal lain.'])
+                            ->withInput();
+        }
+
+        // 2. Validasi Ruang dan Hari tidak bertabrakan dengan jam kuliah
+        $jadwalTabrakan = DB::table('jadwal')
+            ->where('ruang', $request->ruang)
+            ->where('hari', $request->hari)
+            ->where(function($query) use ($request) {
+                $query->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])
+                    ->orWhereBetween('jam_selesai', [$request->jam_mulai, $request->jam_selesai])
+                    ->orWhereRaw('? BETWEEN jam_mulai AND jam_selesai', [$request->jam_mulai])
+                    ->orWhereRaw('? BETWEEN jam_mulai AND jam_selesai', [$request->jam_selesai]);
+            })
+            ->where('id', '!=', $id) // Mengecualikan jadwal yang sedang diedit
+            ->first();
+
+        if ($jadwalTabrakan) {
+            return redirect()->route('kaprodi.editJadwal', $id)
+                            ->withErrors(['jam_tabrakan' => 'Ruang dan Hari ini bertabrakan dengan jadwal lain.'])
+                            ->withInput();
+        }
+
+        
+        // Mengupdate data
+        $jadwal = jadwal::findOrFail($id);
+        $jadwal->update($data);
+
+        
+
+        return redirect()->route('nyusunJadwalKaprodi')->with('success', 'Jadwal berhasil diperbarui.');
+    }
+    
 
     // Fungsi untuk menghapus jadwal
     public function hapusJadwal($id)
@@ -120,5 +185,6 @@ class KaprodiController extends Controller
 
         return redirect()->route('nyusunJadwalKaprodi')->with('success', 'Jadwal berhasil dihapus.');
     }
-}
 
+    
+}

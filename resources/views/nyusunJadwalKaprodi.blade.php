@@ -79,10 +79,26 @@
 
 
     <div class="mt-10" x-data="{ open: false }">
-        <!-- Button untuk membuka modal -->
-        <button @click="open = true" class="ml-72 bg-blue-500 text-white font-bold rounded py-2 px-4 w-20 text-center">
-            Buat
-        </button>
+        <div class="flex justify-start space-x-4 mt-6 ml-10">
+            <!-- Button untuk membuka modal -->
+            <button @click="open = true" class="bg-blue-500 text-white font-bold rounded py-2 px-4 w-20 text-center">
+                Buat
+            </button>
+        
+            <!-- Form Ajukan -->
+            @if ($hasPendingStatus)
+            <form action="{{ route('submit-jadwal')}}" method="POST"
+                onsubmit="return confirm('Yakin ingin mengajukan jadwal ini ke dekan?');" class="inline-block">
+                @csrf
+                <button type="submit"
+                    class="bg-blue-500 text-white font-bold rounded py-2 px-4 w-40 text-center">Ajukan Ke Dekan</button>
+            </form>
+            @endif
+
+            
+        </div>
+        
+        
 
         <!-- Modal -->
         <div x-show="open" x-transition
@@ -90,6 +106,8 @@
             <div class="bg-white p-6 rounded-lg shadow-lg w-1/3 max-h-screen overflow-y-auto">
                 <h2 class="text-xl font-semibold mb-4">Form Menyusun Jadwal</h2>
                     
+                
+
                 <!-- Form dalam Modal -->
                 <form action="{{ route('simpan.jadwal') }}" method="POST">
                     @csrf
@@ -100,7 +118,11 @@
                         <select name="ruang" id="ruang" class="mt-1 block w-full border-gray-300 shadow-sm" required>
                             <option value="">-</option>
                             @foreach ($ruangDisetujui as $ruang)
-                                <option value="{{ $ruang->kode_ruang }}">{{ $ruang->kode_ruang }}</option>
+                                 @if ($ruang->jurusan === \App\Models\Dosen::where('email', auth()->user()->email)->value('jurusan'))  <!-- Filter berdasarkan jurusan user -->
+                                    <option value="{{ $ruang->kode_ruang }}" {{ old('ruang') == $ruang->kode_ruang ? 'selected' : '' }}>
+                                        {{ $ruang->kode_ruang }}
+                                    </option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
@@ -112,7 +134,7 @@
                         <select name="kelas" id="kelas" class="mt-1 block w-full border-gray-300 shadow-sm" required>
                             <option value="">-</option>
                             @foreach (range('A', 'D') as $kelas)
-                                <option value="{{ $kelas }}">{{ $kelas }}</option>
+                                <option value="{{ $kelas }}" {{ old('kelas') == $kelas ? 'selected' : '' }}>{{ $kelas }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -123,7 +145,7 @@
                         <select name="semester_aktif" id="semester_aktif" class="mt-1 block w-full border-gray-300 shadow-sm" required>
                             <option value="">-</option>
                             @foreach (range(1, 14) as $semester)
-                                <option value="{{ $semester }}">{{ $semester }}</option>
+                                <option value="{{ $semester }}" {{ old('semester_aktif') == $semester ? 'selected' : '' }}>{{ $semester }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -132,9 +154,7 @@
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700" for="jurusan">Jurusan</label>
                         <input type="text" id="jurusan" name="jurusan" class="mt-1 block w-full border-gray-300 shadow-sm" 
-
                             value="{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->jurusan }}" readonly>
-
                     </div>
 
                     <!-- Kode MK -->
@@ -143,9 +163,8 @@
                         <select name="kodemk" id="kodemk" class="mt-1 block w-full border-gray-300 shadow-sm" required onchange="setSKSFromKodeMK('kodemk', 'sks')">
                             <option value="">-</option>
                             @foreach ($matakuliahList as $matakuliah)
-
                                 @if ($matakuliah->jurusan === \App\Models\Dosen::where('email', auth()->user()->email)->value('jurusan'))  <!-- Filter berdasarkan jurusan user -->
-                                    <option value="{{ $matakuliah->kodemk }}" data-sks="{{ $matakuliah->sks }}">
+                                    <option value="{{ $matakuliah->kodemk }}" data-sks="{{ $matakuliah->sks }}" {{ old('kodemk') == $matakuliah->kodemk ? 'selected' : '' }}>
                                         {{ $matakuliah->kodemk }} - {{ $matakuliah->nama }}
                                     </option>
                                 @endif
@@ -156,7 +175,7 @@
                     <!-- SKS -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700" for="sks">SKS</label>
-                        <input type="number" id="sks" name="sks" class="mt-1 block w-full border-gray-300 shadow-sm" readonly>
+                        <input type="number" id="sks" name="sks" class="mt-1 block w-full border-gray-300 shadow-sm" value="{{ old('sks') }}" readonly>
                     </div>
 
                     <!-- Hari -->
@@ -165,7 +184,7 @@
                         <select name="hari" id="hari" class="mt-1 block w-full border-gray-300 shadow-sm" required>
                             <option value="">-</option>
                             @foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'] as $hari)
-                                <option value="{{ $hari }}">{{ $hari }}</option>
+                                <option value="{{ $hari }}" {{ old('hari') == $hari ? 'selected' : '' }}>{{ $hari }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -175,8 +194,8 @@
                         <label class="block text-sm font-medium text-gray-700" for="pengampu_1">Pengampu 1</label>
                         <select name="pengampu_1" id="pengampu_1" class="mt-1 block w-full border-gray-300 shadow-sm" required>
                             <option value="">-</option>
-                            @foreach (\App\Models\dosen::all() as $dosen)
-                                <option value="{{ $dosen->nama }}">{{ $dosen->nama }}</option>
+                            @foreach ($dosenList as $dosen)
+                                <option value="{{ $dosen->nama }}" {{ old('pengampu_1') == $dosen->nama ? 'selected' : '' }}>{{ $dosen->nama }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -186,8 +205,8 @@
                         <label class="block text-sm font-medium text-gray-700" for="pengampu_2">Pengampu 2</label>
                         <select name="pengampu_2" id="pengampu_2" class="mt-1 block w-full border-gray-300 shadow-sm" required>
                             <option value="">-</option>
-                            @foreach (\App\Models\dosen::all() as $dosen)
-                                <option value="{{ $dosen->nama }}">{{ $dosen->nama }}</option>
+                            @foreach ($dosenList as $dosen)
+                                <option value="{{ $dosen->nama }}" {{ old('pengampu_2') == $dosen->nama ? 'selected' : '' }}>{{ $dosen->nama }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -197,24 +216,26 @@
                         <label class="block text-sm font-medium text-gray-700" for="pengampu_3">Pengampu 3</label>
                         <select name="pengampu_3" id="pengampu_3" class="mt-1 block w-full border-gray-300 shadow-sm">
                             <option value="">-</option>
-                            @foreach (\App\Models\dosen::all() as $dosen)
-                                <option value="{{ $dosen->nama }}">{{ $dosen->nama }}</option>
+                            @foreach ($dosenList as $dosen)
+                                <option value="{{ $dosen->nama }}" {{ old('pengampu_3') == $dosen->nama ? 'selected' : '' }}>{{ $dosen->nama }}</option>
                             @endforeach
                         </select>
                     </div>
+
+                    
 
                     <!-- Jam Mulai -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700" for="jam_mulai">Jam Mulai</label>
                         <input type="text" id="jam_mulai" name="jam_mulai"
-                            class="mt-1 block w-full border-gray-300 shadow-sm" required>
+                            class="mt-1 block w-full border-gray-300 shadow-sm" value="{{ old('jam_mulai') }}" required>
                     </div>
 
                     <!-- Jam Selesai -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700" for="jam_selesai">Jam Selesai</label>
                         <input type="text" id="jam_selesai" name="jam_selesai"
-                            class="mt-1 block w-full border-gray-300 shadow-sm" required>
+                            class="mt-1 block w-full border-gray-300 shadow-sm"  value="{{ old('jam_selesai') }}" required>
                     </div>
 
 
@@ -232,7 +253,29 @@
             <div class="bg-white shadow-md rounded-lg">
                 <!-- Konten -->
                 <div class="p-6">
-                    <h2 class="text-center text-gray-700 font-medium mb-6">Jadwal</h2>
+                    <h2 class="text-center text-gray-700 font-bold mb-6">JADWAL</h2>
+
+                    <!-- Success Message -->
+                    @if(session('success'))
+                        <div class="bg-green-500 text-white text-center py-2 mb-4 rounded-lg">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <!-- Error Message -->
+                    @if($errors->any())
+                        <h2 class="text-center text-red-500 font-bold">Error Message : </h2>
+                        <div class="text-center text-red-500 font-bold alert alert-danger">
+                            <ul>
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+
+                    <!-- tabel jadwal -->
                     <table class="min-w-full bg-white border">
                         <thead>
                             <tr>
@@ -280,7 +323,6 @@
                                             type="button"
                                             onclick="openEditModal({{ json_encode($submission) }})"
                                             class="font-bold rounded bg-blue-500 text-white hover:bg-blue-600 w-20 py-2 px-4">
-
                                             Edit
                                         </button>
         
@@ -325,7 +367,11 @@
                         <select name="ruang" id="editRuang" class="mt-1 block w-full border-gray-300 shadow-sm" required>
                             <option value="">- Pilih Ruang -</option>
                             @foreach ($ruangDisetujui as $ruang)
-                                <option value="{{ $ruang->kode_ruang }}">{{ $ruang->kode_ruang }}</option>
+                                 @if ($ruang->jurusan === \App\Models\Dosen::where('email', auth()->user()->email)->value('jurusan'))  <!-- Filter berdasarkan jurusan user -->
+                                    <option value="{{ $ruang->kode_ruang }}" {{ old('ruang') == $ruang->kode_ruang ? 'selected' : '' }}>
+                                        {{ $ruang->kode_ruang }}
+                                    </option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
@@ -399,7 +445,7 @@
                         <label class="block text-sm font-medium text-gray-700" for="editPengampu1">Pengampu 1</label>
                         <select name="pengampu_1" id="editPengampu1" class="mt-1 block w-full border-gray-300 shadow-sm" required>
                             <option value="">- Pilih Pengampu 1 -</option>
-                            @foreach (\App\Models\dosen::all() as $dosen)
+                            @foreach ($dosenList as $dosen)
                                 <option value="{{ $dosen->nama }}">{{ $dosen->nama }}</option>
                             @endforeach
                         </select>
@@ -410,7 +456,7 @@
                         <label class="block text-sm font-medium text-gray-700" for="editPengampu2">Pengampu 2</label>
                         <select name="pengampu_2" id="editPengampu2" class="mt-1 block w-full border-gray-300 shadow-sm" required>
                             <option value="">- Pilih Pengampu 2 -</option>
-                            @foreach (\App\Models\dosen::all() as $dosen)
+                            @foreach ($dosenList as $dosen)
                                 <option value="{{ $dosen->nama }}">{{ $dosen->nama }}</option>
                             @endforeach
                         </select>
@@ -421,7 +467,7 @@
                         <label class="block text-sm font-medium text-gray-700" for="editPengampu3">Pengampu 3</label>
                         <select name="pengampu_3" id="editPengampu3" class="mt-1 block w-full border-gray-300 shadow-sm">
                             <option value="">- Pilih Pengampu 3 -</option>
-                            @foreach (\App\Models\dosen::all() as $dosen)
+                            @foreach ($dosenList as $dosen)
                                 <option value="{{ $dosen->nama }}">{{ $dosen->nama }}</option>
                             @endforeach
                         </select>
@@ -454,6 +500,7 @@
         </div>
     </div>
 
+
     <script>
         // Fungsi untuk mengisi SKS berdasarkan kode MK yang dipilih
         function setSKSFromKodeMK(kodemkId, sksId) {
@@ -483,7 +530,7 @@
             
     
             // Setel action URL pada form dengan ID yang benar
-            document.getElementById('editForm').action = `/kaprodi/jadwal/${submission.id}`;
+            document.getElementById('editForm').action = /kaprodi/jadwal/${submission.id};
             
 
     
