@@ -8,24 +8,27 @@ use App\Models\Dosen;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Jadwal extends Model
+class jadwal extends Model
 {
     use HasFactory;
 
     protected $table = 'jadwal';
     protected $fillable = [
         'ruang',
-        'matakuliah',
-        'waktu',
         'kelas',
         'hari',
         'jam_mulai',
         'jam_selesai',
         'semester_aktif',
         'jurusan',
+        'sks',
+        'hari',
         'pengampu_1',
         'pengampu_2',
-        'pengampu_3'
+        'pengampu_3',
+        'kodemk',
+        'jam_mulai',
+        'jam_selesai'
 
     ];
 
@@ -39,9 +42,5 @@ class Jadwal extends Model
         return $this->belongsToMany(dosen::class, 'dosen_jadwal', 'jadwal_id', 'dosen_id');
     }
 
-    // Jadwal.php (Model)
-    public function irs()
-    {
-        return $this->hasMany(Irs::class, 'kodemk', 'kodemk');
     }
-}
+

@@ -38,6 +38,8 @@ class LoginController extends Controller
                 return redirect('/dashboard-mahasiswa');
             } else if (Auth::user()->akademik == '1') {
                 return redirect('/dashboard-akademik');
+            } else if (Auth::user()->pembimbing_akademik == '1') {
+                return redirect('/dashboard-pembimbing');
             }
         } else {
             $errorMessage = 'username dan password yang dimasukkan tidak sesuai';

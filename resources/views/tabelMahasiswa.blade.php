@@ -17,7 +17,7 @@
             <div class="flex h-16 items-center justify-between">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <img class="h-8 w-8" src="../img/undipdashboard.png" alt="Your Company">
+                        <img class="h-8 w-8" src="{{ asset('img/logoundip.png') }}" alt="Your Company">
 
                     </div>
                     <div class="hidden md:block">
@@ -28,7 +28,7 @@
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-4 flex items-center md:ml-6">
-                        <span class="rounded-md px-1 py-2 text-xl font-medium text-white"></span>
+                        <span class="rounded-md px-1 py-2 text-xl font-medium text-white">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</span>
 
                         <!-- Profile dropdown -->
                         <div class="relative ml-3">
@@ -106,11 +106,22 @@
     </nav>
 
     <header class="bg-white shadow">
-        <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            {{-- <h1 class="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1> --}}
-            <a class="text-3xl font-bold tracking-tight text-gray-900">IRS Mahasiswa Perwalian</a>
-        </div>
+        <a href="{{ route('dashboard-pembimbing') }}">
+            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                <div class="translate-y-4">
+                    <button type="button"
+                    class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700
+                    sm:translate-x-0 sm:translate-y-0 translate-x-48">
+                    Kembali
+                </button>
+                </div>
+                
+                <a class="text-3xl font-bold tracking-tight text-gray-900 flex justify-center">Mahasiswa Perwalian</a>
+            </div>
+        </a>
+        
     </header>
+    
 
     <!-- Isi konten table IRS -->
     <div class="container mx-auto mt-10">
@@ -139,8 +150,6 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 NIM</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Jumlah SKS</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Status IRS</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Aksi</th>
@@ -148,63 +157,37 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">1</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Jeremia Joel Richard</td>
-                            <td class="px-6 py-4 whitespace-nowrap">24060122140109</td>
-                            <td class="pl-12 py-4 whitespace-nowrap text-justify"> 22 </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Belum
-                                    Disetujui</span>
+                        @foreach ($mahasiswaBelum as $mahasiswa)
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $loop->iteration }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $mahasiswa->mahasiswa->nama }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $mahasiswa->mahasiswa_id }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
 
-                            </td>
-                            <td class="px-1 py-4 whitespace-nowrap">
-                                <div class="py-1 px-4 border-solid border-2 border-gray-500 flex rounded-lg w-fit cursor-pointer hover:bg-blue-600 hover:text-white hover:border-blue-500"
-                                    onclick="window.location.href='{{ route('pembimbing-irs-mahasiswa') }}'">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                    </svg>
-                                    <span>Lihat</span>
-                                </div>
+                                        <span
+                                            class="inline-flex text-xs leading-9 font-semibold rounded-full bg-red-500 px-1 text-red-100">
+                                            Belum Disetujui</span>
 
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('irs.belumDisetujui', ['nim' => $mahasiswa->mahasiswa_id]) }}">
+                                            <div class="py-1 px-4 border-solid border-2 border-gray-500 flex rounded-lg w-fit cursor-pointer hover:bg-blue-600 hover:text-white hover:border-blue-500">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                </svg>
+                                                <span>Lihat</span>
+                                            </div>
+                                        </a>
+                                        
 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">2</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Nama mahasiswa 2</td>
-                            <td class="px-6 py-4 whitespace-nowrap">24060122019284</td>
-                            <td class="pl-12 py-4 whitespace-nowrap">21</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Belum
-                                    Disetujui</span>
-
-                            </td>
-                            <td class="px-1 py-4 whitespace-nowrap">
-                                <div
-                                    class="py-1 px-4 border-solid border-2 border-gray-500 flex rounded-lg w-fit cursor-pointer hover:bg-blue-600 hover:text-white hover:border-blue-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                    </svg>
-                                    <span>Lihat</span>
-                                </div>
-
-                            </td>
-                        </tr>
+                                    </td>
+                                </tr>
+                        @endforeach
                     </tbody>
                 </table>
 
-                <!--Tabel IRS sudah disetujui-->
+                <!--Tabel sudah disetujui-->
                 <table id="sudah-disetujui" class="min-w-full divide-y divide-gray-200 hidden">
                     <thead>
                         <tr>
@@ -215,152 +198,50 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 NIM</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Jumlah SKS</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Status IRS</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Aksi</th>
-
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">1</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Jeremia Joel Richard</td>
-                            <td class="px-6 py-4 whitespace-nowrap">24060122140109</td>
-                            <td class="pl-12 py-4 whitespace-nowrap text-justify"> 22 </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-500">Sudah
-                                    Disetujui</span>
+                        @foreach ($mahasiswaSudah as $mahasiswa)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $loop->iteration }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $mahasiswa->nama }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $mahasiswa->nim }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span
+                                        class="inline-flex text-xs leading-9 font-semibold rounded-full bg-green-500 px-1 text-green-100">
+                                        Sudah Disetujui
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{{ route('irs.sudahDisetujui', $mahasiswa->nim) }}">
+                                        <div
+                                            class="py-1 px-4 border-solid border-2 border-gray-500 flex rounded-lg w-fit cursor-pointer hover:bg-blue-600 hover:text-white hover:border-blue-500">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="size-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                            </svg>
+                                            <span>Lihat</span>
+                                        </div>
 
-                            </td>
-                            <td class="px-1 py-4 whitespace-nowrap">
-                                <div
-                                    class="py-1 px-4 border-solid border-2 border-gray-500 flex rounded-lg w-fit cursor-pointer hover:bg-blue-600 hover:text-white hover:border-blue-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                    </svg>
-                                    <span>Lihat</span>
-                                </div>
-
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">1</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Nama mahasiswa 2</td>
-                            <td class="px-6 py-4 whitespace-nowrap">2406012213049</td>
-                            <td class="pl-12 py-4 whitespace-nowrap">24
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-500">Sudah
-                                    Disetujui</span>
-
-                            </td>
-                            <td class="px-1 py-4 whitespace-nowrap">
-                                <div
-                                    class="py-1 px-4 border-solid border-2 border-gray-500 flex rounded-lg w-fit cursor-pointer hover:bg-blue-600 hover:text-white hover:border-blue-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                    </svg>
-                                    <span>Lihat</span>
-                                </div>
-
-                            </td>
-                        </tr>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
-
-                <!--Tabel IRS belum mengambil-->
-                <table id="belum-mengambil" class="min-w-full divide-y divide-gray-200 hidden">
-                    <thead>
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                No</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Nama</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                NIM</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Jumlah SKS</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Status IRS</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Aksi</th>
-
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">1</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Jeremia Joel Richard</td>
-                            <td class="px-6 py-4 whitespace-nowrap">24060122140109</td>
-                            <td class="pl-12 py-4 whitespace-nowrap text-justify"> 22 </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-500 text-white">Belum
-                                    Mengambil</span>
-
-                            </td>
-                            <td class="px-1 py-4 whitespace-nowrap">
-                                <div
-                                    class="py-1 px-4 border-solid border-2 border-gray-500 flex rounded-lg w-fit cursor-pointer hover:bg-blue-600 hover:text-white hover:border-blue-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                    </svg>
-                                    <span>Lihat</span>
-                                </div>
-
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">2</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Nama mahasiswa</td>
-                            <td class="px-6 py-4 whitespace-nowrap">24060122140140</td>
-                            <td class="pl-12 py-4 whitespace-nowrap">24
-
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-500 text-white">Belum
-                                    Mengambil</span>
-
-                            </td>
-                            <td class="px-1 py-4 whitespace-nowrap">
-                                <div
-                                    class="py-1 px-4 border-solid border-2 border-gray-500 flex rounded-lg w-fit cursor-pointer hover:bg-blue-600 hover:text-white hover:border-blue-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                    </svg>
-                                    <span>Lihat</span>
-                                </div>
-
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
             </div>
         </div>
+    </div>
+
+    </div>
+    </div>
 
     </div>
     <!--Kode javascript untuk membuat page lebih responsif-->
@@ -389,6 +270,29 @@
             selectedButton.classList.remove('text-gray-500');
 
         }
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const status = getQueryParam('status'); // Mengambil nilai parameter 'status' dari URL
+            console.log(status);
+            switch (status) {
+                case 'belum_disetujui':
+                    showTable('belum-disetujui', 'btn-belum-disetujui'); // Tampilkan tabel 1 dan aktifkan tombol 1
+                    break;
+                case 'sudah_disetujui':
+                    showTable('sudah-disetujui', 'btn-sudah-disetujui'); // Tampilkan tabel 2 dan aktifkan tombol 2
+                    break;
+                case 'belum_mengambil':
+                    showTable('belum-mengambil', 'btn-belum-mengambil'); // Tampilkan tabel 3 dan aktifkan tombol 3
+                    break;
+                default:
+                    console.error('Status tidak dikenal:', status); // Error jika status tidak dikenali
+            }
+        });
     </script>
 
 </body>

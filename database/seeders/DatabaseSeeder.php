@@ -16,11 +16,10 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         $this->call([
-            // DummyClassSeeder::class,
-            DummyDosensSeeder::class,
-            // DummySchedulesSeeder::class,
-            DummyMahasiswasSeeder::class,
-            DummyUsersSeeder::class
+           DummyJadwalSeeder::class,
+           DummyIrsSeeder::class,
+           DummyMatakuliahSeeder::class,
+           DummyKHSSeeder::class
         ]);
     }
 }

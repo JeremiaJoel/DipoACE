@@ -28,11 +28,38 @@ class irs extends Model
         'pengampu_3',
         'status_irs',
         'status_mk'
-        
+
     ];
 
     public function khs()
     {
         return $this->hasMany(Khs::class, 'nim', 'nim');
     }
+
+    public function mahasiswa()
+    {
+        return $this->belongsTo(mahasiswa::class, 'nim', 'nim');
+    }
+
+    public function matakuliah()
+    {
+        return $this->belongsTo(matakuliah::class, 'kodemk', 'kodemk');
+    }
+
+
+    public function irsMahasiswa()
+    {
+        return $this->belongsTo(IrsMahasiswa::class, 'nim', 'nim');
+    }
+
+    public function jadwal()
+    {
+        return $this->hasOne(jadwal::class, 'kodemk', 'kodemk');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

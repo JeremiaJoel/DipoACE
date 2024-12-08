@@ -17,20 +17,19 @@
                 <div class="flex h-16 items-center justify-between">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            {{-- <img class="h-8 w-8" src="../img/logoundip.png" alt="Logo Undip"> --}}
+                            <img class="h-8 w-8" src="../img/logoundip.png" alt="Logo Undip">
 
                         </div>
                         <div class="hidden md:block">
                             <div class="flex items-baseline space-x-4">
-                                <a class="ml-2 text-2xl font-bold text-white"
-                                    href="{{ url('/dashboard-mahasiswa') }}">DipoACE</a>
+                                <span class="rounded-md px-3 py-2 text-2xl font-medium text-white">DipoACE</span>
                             </div>
                         </div>
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
                             <span
-                                class="mr-2 text-white">{{ \App\Models\mahasiswa::where('email', Auth::user()->email)->first()->nama }}</span>
+                                class="rounded-md px-1 py-2 text-xl font-medium text-white">{{\App\Models\mahasiswa::where('email', Auth::user()->email)->first()->nama }}</span>
 
                             <!-- Profile dropdown -->
                             <div class="relative ml-3">
@@ -42,7 +41,7 @@
                                         id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                         <span class="absolute -inset-1.5"></span>
                                         <span class="sr-only">Open user menu</span>
-                                        {{-- <img class="h-8 w-8 rounded-full" src="../img/saiful.png" alt="Foto Profile"> --}}
+                                        <img class="h-8 w-8 rounded-full" src="../img/saiful.png" alt="Foto Profile">
                                     </button>
                                 </div>
 
@@ -56,7 +55,7 @@
                                     class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                                     role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
                                     tabindex="-1">
-
+                                    
                                     <a href="logout" class="block px-4 py-2 text-sm text-gray-700" role="menuitem"
                                         tabindex="-1" id="user-menu-item-2">Sign out</a>
                                 </div>
@@ -69,7 +68,7 @@
 
         <header class="bg-white shadow">
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <a class="text-3xl font-bold tracking-tight text-gray-900">STATUS MAHASISWA</a>
+                <a href="dashboard-mahasiswa" class="text-3xl font-bold tracking-tight text-gray-900">STATUS MAHASISWA</a>
             </div>
         </header>
         {{-- Anda bisa menambahkan kondisi ini di bagian yang relevan dalam template Anda --}}
@@ -84,32 +83,39 @@
                     @endphp
             
                     @if (empty($mahasiswaStatus))
-                        <div class="mb-4">
-                            <p class="text-sm">Anda akan mengikuti kegiatan perkuliahan pada semester ini serta mengisi Isian Rencana Studi (IRS).</p>
-                            <div class="flex items-center justify-between">
-                                <span class="text-green-600 font-bold">Aktif</span>
-                                <button type="button"
-                                    onclick="confirmApprove('{{ route('mahasiswa.status', ['nim' => $nim, 'status' => 'Aktif']) }}', 'Aktif')"
-                                    class="bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded">
-                                    Ya
-                                </button>
-                            </div>
+                    <div class="mb-4">
+                        <p class="text-sm">Anda akan mengikuti kegiatan perkuliahan pada semester ini serta mengisi Isian Rencana Studi (IRS).</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-green-600 font-bold">Aktif</span>
+                            <button type="button"
+                                onclick="confirmApprove('{{ route('mahasiswa.status', ['nim' => $nim, 'status' => 'Aktif']) }}', 'Aktif')"
+                                class="bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded">
+                                Pilih
+                            </button>
                         </div>
-                        <div>
-                            <p class="text-sm">Menghentikan kuliah sementara untuk semester ini tanpa kehilangan status sebagai mahasiswa Undip.</p>
-                            <div class="flex items-center justify-between">
-                                <span class="text-red-600 font-bold">Cuti</span>
-                                <button type="button"
-                                    onclick="confirmApprove('{{ route('mahasiswa.status', ['nim' => $nim, 'status' => 'Cuti']) }}', 'Cuti')"
-                                    class="bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded">
-                                    Ya
-                                </button>
-                            </div>
+                    </div>
+                    <div>
+                        <p class="text-sm">Menghentikan kuliah sementara untuk semester ini tanpa kehilangan status sebagai mahasiswa Undip.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-red-600 font-bold">Cuti</span>
+                            <button type="button"
+                                onclick="confirmApprove('{{ route('mahasiswa.status', ['nim' => $nim, 'status' => 'Cuti']) }}', 'Cuti')"
+                                class="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded">
+                                Pilih
+                            </button>
                         </div>
-                    @else
+                    </div>
+                @else
+                    <div class="mb-4">
                         <p class="text-lg">Status Anda saat ini: <strong class="text-blue-600">{{ $mahasiswaStatus }}</strong></p>
-                        <p class="text-sm">Anda telah memilih status akademik dan tidak dapat diubah lagi untuk semester ini.</p>
-                    @endif
+                        @if ($mahasiswaStatus === 'Aktif')
+                            <p class="text-sm mt-2">Anda dapat mengisi IRS dan melihat KHS.</p>
+                        @elseif ($mahasiswaStatus === 'Cuti')
+                            <p class="text-sm mt-2">Anda hanya dapat melihat KHS.</p>
+                        @endif
+                        <p class="text-sm mt-2">Status akademik ini tidak dapat diubah lagi untuk semester ini.</p>
+                    </div>
+                @endif
                 </div>
                 <p class="text-sm mb-6">Status akademik Anda: <span class="font-semibold">{{ $mahasiswaStatus }}</span></p>
                 <p class="text-xs text-gray-600">Informasi lebih lanjut mengenai her-registrasi, atau mekanisme serta pengajuan perpanjangan

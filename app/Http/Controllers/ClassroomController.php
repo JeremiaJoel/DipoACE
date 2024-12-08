@@ -77,14 +77,13 @@ public function destroy($id)
     {
         $validatedData = $request->validate([
             'gedung' => 'required|string|max:255',
-            'kode_ruang' => 'required|array', // Checkbox untuk kode ruang
+            'kode_ruang' => 'required|array',
             'kode_ruang.*' => 'string',
             'kapasitas' => 'required|integer',
             'status' => 'required|string|max:50',
             'jurusan' => 'required|string|max:100',
         ]);
     
-        // Gabungkan array kode_ruang menjadi string
         $validatedData['kode_ruang'] = implode(', ', $request->kode_ruang);
     
         $classroom = Classroom::findOrFail($id);

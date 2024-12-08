@@ -14,9 +14,9 @@ class DummyUsersSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
-            'email' => 'adiwibowo@lecturer.dipoace.ac.id',
+            'email' => 'arispujiwidodp@lecturer.dipoace.ac.id',
             'password' => Hash::make('123456'), // Ganti dengan password yang aman
-            'dekan' => '1',
+            'dekan' => '0',
             'mahasiswa' => '0', // Menandakan user adalah mahasiswa
             'pembimbing_akademik' => '1',
             'kaprodi' => '0',
@@ -26,4 +26,6 @@ class DummyUsersSeeder extends Seeder
             'updated_at' => now(),
         ]);
     }
+ }
 }
+
