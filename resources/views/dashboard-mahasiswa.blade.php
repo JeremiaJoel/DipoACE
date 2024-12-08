@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="h-full">
@@ -125,7 +126,11 @@
                 
                 <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="bg-white shadow rounded-lg p-4 h-20">
-                        <a href= "{{ url('/mahasiswa-buatirs') }}" class="text-xl font-semibold">Buat IRS</a>
+                        <a href="{{ url('/mahasiswa-buatirs') }}" 
+                            onclick="return statusAlert(event, '{{ auth()->user()->status }}')" 
+                            class="text-xl font-semibold">
+                            Buat IRS
+                        </a>
                     </div>
                     <div class="bg-white shadow rounded-lg p-4">
                         <a href= "{{ url('/mahasiswa-irs') }}" class="text-xl font-semibold">IRS</a>
@@ -138,4 +143,37 @@
                     </div>
                 </div>
             </div>
+
+            <script>
+                function statusAlert(event, status) {
+    console.log("Status:", status); // Menampilkan status
+    console.log("Event:", event); // Menampilkan event yang diterima
+
+    // Cek apakah event adalah instance dari MouseEvent (atau event yang valid)
+    if (event instanceof MouseEvent) {
+        console.log("Klik pada elemen terdeteksi");
+
+        // Jika status mahasiswa 'Cuti', tampilkan alert SweetAlert
+        if (status === 'Cuti') {
+            event.preventDefault(); // Cegah navigasi jika status Cuti
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Status Cuti Tidak Dapat Mengisi IRS', // Pesan error
+            });
+            return false; // Cegah tautan untuk diarahkan
+        } else {
+            return true; // Biarkan navigasi dilanjutkan jika status bukan Cuti
+        }
+    } else {
+        console.log("Event bukan MouseEvent");
+        return true; // Tetap biarkan jika event bukan MouseEvent
+    }
+}
+
+
+            </script>
+    
         </main>
+
+        

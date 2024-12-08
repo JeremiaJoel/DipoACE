@@ -7,7 +7,7 @@ use App\Models\mahasiswa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Dosen extends Model
+class dosen extends Model
 {
     use HasFactory;
 
@@ -34,5 +34,10 @@ class Dosen extends Model
     public function jadwal()
     {
         return $this->belongsToMany(Jadwal::class, 'dosen_jadwal', 'dosen_id', 'jadwal_id');
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'nip', 'dosen_id');
     }
 }

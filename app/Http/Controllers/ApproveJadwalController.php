@@ -2,55 +2,49 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ApproveClassroom;
-use App\Models\Classroom;
+use App\Models\approvejadwal;
+use App\Models\jadwal;
 use Illuminate\Http\Request;
 
-class ApproveClassroomController extends Controller
+class ApproveJadwalController extends Controller
 {
 
     public function index()
     {
         // Ambil data pengajuan yang berstatus "Menunggu"
-        $approvals = ApproveClassroom::where('status', 'Menunggu')->with('classroom')->get();
+        $approvals = ApproveJadwal::where('status', 'Menunggu')->with('jadwal')->get();
 
         // Kirim data ke view
         return view('academic-classpage-dekan', compact('approvals'));
     }
 
     public function submit($id)
-{
-    $classroom = Classroom::findOrFail($id);
+    {
+            $jadwal = jadwal::findOrFail($id);
 
-    // Cek apakah sudah diajukan sebelumnya
-    $existingApproval = ApproveClassroom::where('classroom_id', $id)->first();
-    if ($existingApproval) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Pengajuan sudah dibuat sebelumnya.'
+        // Cek apakah sudah diajukan sebelumnya
+        $existingApproval = ApproveJadwal::where('jadwal_id', $id)->first();
+        if ($existingApproval) {
+            return redirect()->back()->with('error', 'Pengajuan sudah dibuat sebelumnya.');
+        }
+
+        // Simpan pengajuan
+        ApproveJadwal::create([
+            'jadwal_id' => $id,
+            'status' => 'Menunggu',
         ]);
+
+        return redirect()->back()->with('success', 'Pengajuan berhasil dikirim.');
     }
-
-    // Simpan pengajuan
-    ApproveClassroom::create([
-        'classroom_id' => $id,
-        'status' => 'Menunggu',
-    ]);
-
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Pengajuan berhasil dikirim.'
-    ]);
-}
 
     public function approve($id)
     {
         try {
-            $approval = ApproveClassroom::findOrFail($id);
+            $approval = ApproveJadwal::findOrFail($id);
             $approval->update(['status' => 'Disetujui']);
 
-            $classroom = Classroom::findOrFail($approval->classroom_id);
-            $classroom->update(['status' => 'Sudah Disetujui']);
+            $jadwal = jadwal::findOrFail($approval->jadwal_id);
+            $jadwal->update(['status' => 'Sudah Disetujui']);
 
             // Kembalikan respons JSON yang sesuai
             return response()->json(['message' => 'Persetujuan berhasil disetujui.'], 200);
@@ -62,7 +56,7 @@ class ApproveClassroomController extends Controller
 
     public function reject($id)
     {
-        $approval = ApproveClassroom::findOrFail($id);
+        $approval = ApproveJadwal::findOrFail($id);
         $approval->update(['status' => 'Ditolak']);
 
         return redirect()->back()->with('success', 'Pengajuan berhasil ditolak.');
@@ -70,15 +64,16 @@ class ApproveClassroomController extends Controller
 
     public function filter(Request $request)
     {
-        $jurusan = $request->get('jurusan');
+        $jurusan = $request->get('jurusan'); // Ambil filter jurusan dari request
 
-        $approvals = ApproveClassroom::whereHas('classroom', function ($query) use ($jurusan) {
+        // Ambil data pengajuan dengan filter jurusan dan status "Menunggu"
+        $approvals = ApproveJadwal::whereHas('jadwal', function ($query) use ($jurusan) {
             if ($jurusan) {
                 $query->where('jurusan', $jurusan);
             }
         })
         ->where('status', 'Menunggu')
-        ->with('classroom')
+        ->with('jadwal')
         ->get();
 
         // Kirim data ke view

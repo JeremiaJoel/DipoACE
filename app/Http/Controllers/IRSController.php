@@ -2,21 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Jadwal;
-use App\Models\khs;
 use App\Models\irs;
+use App\Models\khs;
+use App\Models\User;
+use App\Models\Jadwal;
 use App\Models\mahasiswa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\PembatalanIrsEvent;
+use App\Models\users;
 
 class IRSController extends Controller
 {
+
+    // public function __construct()
+    // {
+    //         $this->middleware('StatusMahasiswa')->only([
+    //         'index', 'ambil', 'submitIRS', 'showIrs'
+    //     ]);
+    // }
+
     public function index()
     {
         // Ambil data jadwal dari database
         $jadwals = Jadwal::paginate(10);
 
         $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
+
+        if ($mahasiswa && $mahasiswa->status === 'Cuti') {
+            // Kirim pesan error ke view jika status mahasiswa adalah Cuti
+            return view('mahasiswa-buatirs', ['error' => 'Status Cuti Tidak Dapat Mengisi IRS']);
+        }
+
         $nim = $mahasiswa ? $mahasiswa->nim : null;
         $sksLoad = $this->calculateSKSLoad($nim);
 
@@ -154,17 +172,13 @@ class IRSController extends Controller
         ]);
 
         try {
-            // Simpan data IRS untuk setiap mata kuliah
             $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
             $nim = $mahasiswa ? $mahasiswa->nim : null;
 
-
             foreach ($request->courses as $course) {
-                // Pisahkan jam_mulai dan jam_selesai dari string 'waktu' yang digabung
                 list($jam_mulai, $jam_selesai) = explode('-', $course['waktu']);
                 $jadwal = Jadwal::where('kodemk', $course['kodemk'])->first();
 
-                // Jika jadwal ditemukan, ambil jurusan dan pengampu_1
                 $jurusan = $jadwal ? $jadwal->jurusan : 'Tidak Diketahui';
                 $pengampu_1 = $jadwal ? $jadwal->pengampu_1 : 'Tidak Diketahui';
                 $pengampu_2 = $jadwal ? $jadwal->pengampu_2 : 'Tidak Diketahui';
@@ -175,20 +189,23 @@ class IRSController extends Controller
                     'kodemk' => $course['kodemk'],
                     'sks' => $course['sks'],
                     'ruang' => $course['ruang'],
-                    'hari' => $course['hari'], // Sesuaikan jika perlu
-                    'jam_mulai' => $jam_mulai, // Sesuaikan data jam mulai dan selesai
-                    'jam_selesai' => $jam_selesai, // Sesuaikan data jam selesai
+                    'hari' => $course['hari'],
+                    'jam_mulai' => $jam_mulai,
+                    'jam_selesai' => $jam_selesai,
                     'kelas' => $course['kelas'],
                     'semester' => $course['semester'],
-                    'tahun_ajaran' => '2024/2025', // Sesuaikan dengan tahun ajaran aktif
+                    'tahun_ajaran' => '2024/2025',
                     'jurusan' => $jurusan,
                     'pengampu_1' => $pengampu_1,
                     'pengampu_2' => $pengampu_2,
                     'pengampu_3' => $pengampu_3,
-                    'status_irs' =>  $request->status_irs ?? 'Belum Disetujui',
-                    'status_mk' =>  $request->status_mk ?? 'Baru' // Sesuaikan status mata kuliah
+                    'status_irs' => 'Belum Disetujui', // Always set to default
+                    'status_mk' => $request->status_mk ?? 'Baru',
                 ]);
             }
+
+            // Sinkronisasi ke tabel irs_mahasiswa
+            $this->syncIRSDataForStudent($nim);
 
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
@@ -202,19 +219,97 @@ class IRSController extends Controller
             $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
             $nim = $mahasiswa ? $mahasiswa->nim : null;
 
-            // Hapus data IRS yang telah disubmit dari database
-            foreach ($request->courses as $course) {
-                Irs::where('nim', $nim)
-                    ->where('kodemk', $course['kodemk'])
-                    ->where('sks', $course['sks'])
-                    ->where('kelas', $course['kelas'])
-                    ->where('semester', $course['semester'])
-                    ->delete(); // Hapus IRS dari database
+            if (!$nim) {
+                return response()->json(['success' => false, 'message' => 'Mahasiswa tidak ditemukan']);
             }
 
-            return response()->json(['success' => true]);
+            // Hapus data IRS yang telah disubmit dari database
+            Irs::where('nim', $nim)
+                ->whereIn('kodemk', array_column($request->courses, 'kodemk')) // Hapus berdasarkan kode mata kuliah
+                ->whereIn('kelas', array_column($request->courses, 'kelas'))  // Hapus berdasarkan kelas
+                ->where('semester', $request->courses[0]['semester'])         // Pastikan semester sesuai
+                ->delete();
+
+            // Sinkronisasi ke tabel irs_mahasiswa
+            $this->syncIRSDataForStudent($nim);
+
+            return response()->json(['success' => true, 'message' => 'IRS berhasil dibatalkan']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
+
+    private function syncIRSDataForStudent($nim)
+    {
+        // Ambil data IRS teragregasi untuk mahasiswa tertentu
+        $aggregatedData = DB::table('irs')
+            ->selectRaw('
+            nim AS mahasiswa_id,
+            CONCAT(tahun_ajaran, " ", REGEXP_REPLACE(semester, "[0-9]", "")) AS periode,
+            MAX(status_irs) AS status,
+            MAX(created_at) AS tanggal_submit
+        ')
+            ->where('nim', $nim)
+            ->groupBy('nim', 'tahun_ajaran', 'semester')
+            ->first();
+
+        if ($aggregatedData) {
+            // Jika ada data IRS, sinkronisasi ke tabel irs_mahasiswa
+            DB::table('irs_mahasiswa')->updateOrInsert(
+                [
+                    'mahasiswa_id' => $aggregatedData->mahasiswa_id,
+                    'periode' => $aggregatedData->periode,
+                ],
+                [
+                    'status' => 'Belum Disetujui', // Pastikan status default
+                    'tanggal_submit' => $aggregatedData->tanggal_submit,
+                    'updated_at' => now(),
+                ]
+            );
+        } else {
+            // Jika tidak ada data IRS yang tersisa, hapus dari tabel irs_mahasiswa
+            DB::table('irs_mahasiswa')->where('mahasiswa_id', $nim)->delete();
+        }
+    }
+
+    public function showIrs()
+    {
+        $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
+        $nim = $mahasiswa ? $mahasiswa->nim : null;
+    
+        // Pastikan nim terisi dengan benar
+        if (!$nim) {
+            dd('NIM tidak ditemukan untuk user yang sedang login');
+        }
+    
+        // Ambil data IRS berdasarkan NIM
+        $irsData = \App\Models\Irs::where('nim', $nim)->get();
+    
+        // Pastikan irsData ada
+        if ($irsData->isEmpty()) {
+            dd('Data IRS tidak ditemukan');
+        }
+    
+        return view('mahasiswa-irs', compact('irsData'));
+    }
+
+    public function create()
+    {
+        // Ambil data mahasiswa berdasarkan email pengguna yang login
+        $mahasiswa = Mahasiswa::where('email', Auth::user()->email)->first();
+
+        // Pastikan data mahasiswa ditemukan
+        if (!$mahasiswa) {
+            return redirect()->route('login')->with('error', 'Data mahasiswa tidak ditemukan.');
+        }
+
+        // Cek status akademik mahasiswa, hanya mahasiswa aktif yang dapat mengakses halaman ini
+        if ($mahasiswa->status !== 'Aktif') {
+            return redirect()->route('dashboard-mahasiswa')->with('error', 'Hanya mahasiswa aktif yang dapat membuat IRS.');
+        }
+
+        // Tampilkan view untuk membuat IRS jika status aktif
+        return view('mahasiswa-irs');
+    }
+
 }
