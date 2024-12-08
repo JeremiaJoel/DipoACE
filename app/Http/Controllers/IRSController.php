@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\PembatalanIrsEvent;
+use App\Models\users;
 
 class IRSController extends Controller
 {
@@ -270,4 +271,45 @@ class IRSController extends Controller
             DB::table('irs_mahasiswa')->where('mahasiswa_id', $nim)->delete();
         }
     }
+
+    public function showIrs()
+    {
+        $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
+        $nim = $mahasiswa ? $mahasiswa->nim : null;
+    
+        // Pastikan nim terisi dengan benar
+        if (!$nim) {
+            dd('NIM tidak ditemukan untuk user yang sedang login');
+        }
+    
+        // Ambil data IRS berdasarkan NIM
+        $irsData = \App\Models\Irs::where('nim', $nim)->get();
+    
+        // Pastikan irsData ada
+        if ($irsData->isEmpty()) {
+            dd('Data IRS tidak ditemukan');
+        }
+    
+        return view('mahasiswa-irs', compact('irsData'));
+    }
+
+    public function create()
+    {
+        // Ambil data mahasiswa berdasarkan email pengguna yang login
+        $mahasiswa = Mahasiswa::where('email', Auth::user()->email)->first();
+
+        // Pastikan data mahasiswa ditemukan
+        if (!$mahasiswa) {
+            return redirect()->route('login')->with('error', 'Data mahasiswa tidak ditemukan.');
+        }
+
+        // Cek status akademik mahasiswa, hanya mahasiswa aktif yang dapat mengakses halaman ini
+        if ($mahasiswa->status !== 'Aktif') {
+            return redirect()->route('dashboard-mahasiswa')->with('error', 'Hanya mahasiswa aktif yang dapat membuat IRS.');
+        }
+
+        // Tampilkan view untuk membuat IRS jika status aktif
+        return view('mahasiswa-irs');
+    }
+
 }
