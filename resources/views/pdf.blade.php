@@ -30,18 +30,17 @@
             text-align: center;
         }
 
-        #pengampu{
+        #pengampu {
             text-align: left;
         }
 
         th,
-        td {
-            
-        }
+        td {}
 
-        .time{ margin-bottom: -20px;
-        font-size: 10px;
-        color: gray;
+        .time {
+            margin-bottom: -20px;
+            font-size: 10px;
+            color: gray;
         }
     </style>
 </head>
@@ -64,7 +63,7 @@
             <p><strong>NIM:</strong> {{ $mahasiswa->nim }}</p>
             <p><strong>Nama Mahasiswa:</strong> {{ $mahasiswa->nama }}</p>
             <p><strong>Program Studi:</strong> {{ $mahasiswa->jurusan }}</p>
-            <p><strong>Dosen Wali:</strong> {{ $mahasiswa->pembimbing_akademik}}</p>
+            <p><strong>Dosen Wali:</strong> {{ $mahasiswa->pembimbing_akademik }}</p>
         </div>
 
         <div style=" 20px; text-align: right; display: flex; justify-content: flex-end;">
@@ -113,7 +112,7 @@
         </tbody>
     </table>
 
-    
+
     </div>
 
 </body>
