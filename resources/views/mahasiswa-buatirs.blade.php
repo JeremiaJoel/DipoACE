@@ -36,7 +36,7 @@
                 <div class="hidden md:block">
                     <div class="ml-4 flex items-center md:ml-6">
                         <span
-                            class="rounded-md px-1 py-2 text-xl font-medium text-white">{{\App\Models\mahasiswa::where('email', Auth::user()->email)->first()->nama }}</span>
+                            class="rounded-md px-1 py-2 text-xl font-medium text-white">{{ \App\Models\mahasiswa::where('email', Auth::user()->email)->first()->nama }}</span>
 
                         <!-- Profile dropdown -->
                         <div class="relative ml-3">
@@ -75,7 +75,7 @@
 
     <header class="bg-white shadow">
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <a href="dashboard-mahasiswa" class="text-3xl font-bold tracking-tight text-gray-900">Dashboard</a>
+            <a href="dashboard-mahasiswa" class="text-3xl font-bold tracking-tight text-gray-900">Buat IRS</a>
         </div>
     </header>
 
@@ -179,13 +179,13 @@
         document.addEventListener("DOMContentLoaded", () => {
             console.log("JavaScript is running!");
         });
-    
+
         $(document).ready(function() {
             let currentSKS = 0;
             let jadwalDipilih = [];
             let selectedCourses = new Set();
             let isSubmitted = false; // Flag untuk memeriksa apakah IRS sudah disubmit
-    
+
             // Fungsi untuk memuat data IRS dari localStorage
             function loadIRSfromStorage() {
                 const storedIRS = localStorage.getItem('irsData');
@@ -199,13 +199,13 @@
                     });
                 }
             }
-    
+
             // Fungsi untuk menyimpan data IRS ke localStorage
             function saveIRStoStorage() {
                 const irsData = $('#irs-dipilih').html();
                 localStorage.setItem('irsData', irsData);
             }
-    
+
             // Fungsi untuk memperbarui total SKS
             function updateCurrentSKS() {
                 let totalSKS = 0;
@@ -216,10 +216,10 @@
                 currentSKS = totalSKS;
                 $('#total-sks').text(`Total SKS: ${currentSKS}`);
             }
-    
+
             // Load data IRS saat halaman dimuat
             loadIRSfromStorage();
-    
+
             // Memuat status isSubmitted dari localStorage
             const storedIsSubmitted = localStorage.getItem('isSubmitted');
             if (storedIsSubmitted === 'true') {
@@ -234,7 +234,7 @@
                     .removeClass('btn-danger')
                     .addClass('btn-primary'); // Tombol submit normal
             }
-    
+
             // Pencarian jadwal berdasarkan query
             $('#search-bar').on('keyup', function() {
                 const query = $(this).val();
@@ -283,31 +283,32 @@
                     location.reload();
                 }
             });
-    
+
             let sksLoad = {{ $sksLoad ?? 0 }}; // Pastikan $sksLoad didefinisikan di controller atau view
-    
+
             // Mengambil mata kuliah yang dipilih
             $(document).on('click', '.ambil-btn', function() {
                 const btn = $(this);
                 const courseSKS = parseInt(btn.data('sks'), 10);
                 const kode = btn.data('kode');
                 const waktu = btn.data('waktu');
-    
+                const hari = btn.data('hari');
+
                 if (selectedCourses.has(kode)) {
                     Swal.fire('Error', 'You have already selected this course.', 'error');
                     return;
                 }
-    
-                if (isWaktuBentrok(waktu)) {
+
+                if (isWaktuBentrok(waktu, hari)) {
                     Swal.fire('Error', 'Schedule conflict detected!', 'error');
                     return;
                 }
-    
+
                 if (currentSKS + courseSKS > sksLoad) {
                     Swal.fire('Error', 'Total SKS would exceed your limit', 'error');
                     return;
                 }
-    
+
                 Swal.fire({
                     title: 'Are you sure?',
                     text: 'Do you want to take this course?',
@@ -344,7 +345,7 @@
                     }
                 });
             });
-    
+
             // Menghapus mata kuliah dari IRS yang sudah dipilih
             $(document).on('click', '.delete-btn', function() {
                 const row = $(this).closest('tr');
@@ -355,11 +356,37 @@
                 saveIRStoStorage();
                 Swal.fire('Removed!', 'The course has been removed.', 'success');
             });
-    
-            function isWaktuBentrok(waktuBaru) {
-                return jadwalDipilih.includes(waktuBaru);
+
+            function isWaktuBentrok(waktuBaru, hariBaru) {
+                console.log('Mengecek bentrokan untuk:', hariBaru, waktuBaru); // Tambahkan untuk debugging
+                const waktuMulaiBaru = moment(waktuBaru.split('-')[0], 'HH:mm');
+                const waktuSelesaiBaru = moment(waktuBaru.split('-')[1], 'HH:mm');
+
+                for (let i = 0; i < jadwalDipilih.length; i++) {
+                    const [hariTersimpan, waktuMulaiTersimpanStr, waktuSelesaiTersimpanStr] = jadwalDipilih[i]
+                        .split('-');
+                    console.log('Jadwal Tersimpan:', hariTersimpan, waktuMulaiTersimpanStr,
+                        waktuSelesaiTersimpanStr); // Debug
+                    const waktuMulaiTersimpan = moment(waktuMulaiTersimpanStr, 'HH:mm');
+                    const waktuSelesaiTersimpan = moment(waktuSelesaiTersimpanStr, 'HH:mm');
+
+                    if (hariBaru === hariTersimpan) {
+                        console.log('Membandingkan dengan:', hariTersimpan, waktuMulaiTersimpan.format('HH:mm'),
+                            waktuSelesaiTersimpan.format('HH:mm')); // Debug
+                        if (!waktuSelesaiBaru.isBefore(waktuMulaiTersimpan) && !waktuMulaiBaru.isAfter(
+                                waktuSelesaiTersimpan)) {
+                            console.log('Bentrokan ditemukan');
+                            return true; // Ada bentrokan
+                        }
+                    }
+                }
+                console.log('Tidak ada bentrokan ditemukan');
+                return false; // Tidak ada bentrokan
             }
-    
+
+
+
+
             // Fungsi untuk mengumpulkan data IRS yang dipilih
             function collectSelectedIRS() {
                 let courses = [];
@@ -379,7 +406,7 @@
                 });
                 return courses;
             }
-    
+
             // Menangani klik pada tombol submit
             $('#submit-irs-btn').on('click', function() {
                 if (isSubmitted) {
@@ -409,12 +436,18 @@
                                             'Your IRS submission has been cancelled.',
                                             'success');
                                         $('#submit-irs-btn').text(
-                                            'Submit') // Ubah tombol kembali ke 'Submit'
+                                                'Submit'
+                                            ) // Ubah tombol kembali ke 'Submit'
                                             .removeClass('btn-danger')
-                                            .addClass('btn-primary'); // Ubah warna tombol Cancel menjadi normal
-                                        isSubmitted = false; // Update status isSubmitted
-                                        localStorage.setItem('isSubmitted', 'false'); // Simpan status di localStorage
-                                        $('.delete-btn').show(); // Sembunyikan tombol delete
+                                            .addClass(
+                                                'btn-primary'
+                                            ); // Ubah warna tombol Cancel menjadi normal
+                                        isSubmitted =
+                                            false; // Update status isSubmitted
+                                        localStorage.setItem('isSubmitted',
+                                            'false'); // Simpan status di localStorage
+                                        $('.delete-btn')
+                                            .show(); // Sembunyikan tombol delete
                                     } else {
                                         Swal.fire('Error', response.message, 'error');
                                     }
@@ -433,7 +466,7 @@
                         Swal.fire('Error', 'Tidak ada mata kuliah yang dipilih', 'error');
                         return;
                     }
-    
+
                     // Kirim data melalui AJAX
                     $.ajax({
                         url: "{{ route('mahasiswa.submitIRS') }}",
@@ -448,12 +481,13 @@
                             if (response.success) {
                                 isSubmitted = true;
                                 $('#submit-irs-btn').text(
-                                    'Cancel') // Ubah tombol menjadi 'Cancel'
+                                        'Cancel') // Ubah tombol menjadi 'Cancel'
                                     .removeClass('btn-primary')
                                     .addClass('btn-danger'); // Tombol cancel menjadi merah
                                 Swal.fire('Success', 'IRS berhasil disubmit!', 'success');
                                 $('.delete-btn').hide(); // Tombol delete disembunyikan
-                                localStorage.setItem('isSubmitted', 'true'); // Simpan status di localStorage
+                                localStorage.setItem('isSubmitted',
+                                    'true'); // Simpan status di localStorage
                             } else {
                                 Swal.fire('Error', response.message, 'error');
                             }
@@ -464,7 +498,7 @@
                     });
                 }
             });
-    
+
             // Menghapus mata kuliah dari IRS yang sudah dipilih
             $(document).on('click', '.delete-btn', function() {
                 const row = $(this).closest('tr');
@@ -473,7 +507,7 @@
             });
         });
     </script>
-    
+
 </body>
 
 </html>

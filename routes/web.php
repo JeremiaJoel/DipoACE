@@ -138,6 +138,7 @@ Route::middleware([\App\Http\Middleware\StatusMahasiswa::class . ':Aktif'])->gro
 });
 
 
+
 // Rute untuk mahasiswa cuti (tidak memerlukan middleware khusus)
 Route::middleware(['auth'])->group(function () {
     Route::get('/khs', [KHSController::class, 'showKhs'])->name('khsData.showKhs');

@@ -72,21 +72,10 @@ html {
     border-radius: 5px;
 }
 
-.forgot-password {
-    text-align: right;
-    margin-bottom: 20px;
-}
-
-.forgot-password a {
-    font-size: 12px;
-    /* color: #007bff; */
-    text-decoration: none;
-}
-
 .login-btn {
     width: 100%;
     padding: 10px;
-    background-color: #8b5e34;
+    background-color: gray;
     color: white;
     border: none;
     border-radius: 5px;

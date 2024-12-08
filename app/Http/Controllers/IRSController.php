@@ -88,27 +88,40 @@ class IRSController extends Controller
         return view('mahasiswa.buatirs', compact('jadwals'));
     }
 
-
     public function calculateSKSLoad($nim)
     {
-
-        $currentSemester = Mahasiswa::where('nim', $nim)->first()->semester ?? null;
-
-        if (!$currentSemester) {
-            return null;
+        // Ambil data mahasiswa
+        $mahasiswa = Mahasiswa::where('nim', $nim)->first();
+        
+        // Cek apakah data mahasiswa ada dan memiliki semester
+        if (!$mahasiswa || $mahasiswa->semester === null) {
+            return null; // Tidak ada data mahasiswa atau semester tidak ditetapkan
         }
-
-        $khsRecords = KHS::where('nim', $nim)->where('semester', $currentSemester)->get();
-
+    
+        // Menghitung semester sebelumnya
+        $previousSemester = $mahasiswa->semester - 1;
+    
+        // Mengambil data KHS untuk semester sebelumnya
+        $khsRecords = KHS::where('nim', $nim)->where('semester', $previousSemester)->get();
+    
+        // Jika tidak ada catatan KHS untuk semester tersebut, kembalikan null atau load SKS default
+        if ($khsRecords->isEmpty()) {
+            return 18; // Misalnya mengembalikan beban SKS minimum jika tidak ada data KHS
+        }
+    
+        // Menghitung total SKS dan total poin
         $totalSKS = $khsRecords->sum('sks');
         $totalPoints = $khsRecords->reduce(function ($carry, $item) {
             return $carry + ($item->sks * $this->getGradePoints($item->nilai_huruf));
         }, 0);
-
+    
+        // Menghitung IP Semester
         $ipSemester = $totalSKS > 0 ? round($totalPoints / $totalSKS, 2) : 0;
-
+    
+        // Menentukan beban SKS berdasarkan IP
         return $this->determineSKSLoadBasedOnIP($ipSemester);
     }
+    
 
     protected function getGradePoints($grade)
     {
