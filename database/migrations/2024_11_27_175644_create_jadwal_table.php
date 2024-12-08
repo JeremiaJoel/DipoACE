@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('ruang');
             $table->integer('sks')->default(0);
-            $table->string('waktu');
+            $table->time('jam_mulai');
+            $table->time('jam_selesai');
+            $table->string('hari');
             $table->string('kelas');
             $table->string('semester_aktif');
             $table->string('jurusan');

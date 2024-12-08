@@ -46,8 +46,20 @@ class irs extends Model
         return $this->belongsTo(matakuliah::class, 'kodemk', 'kodemk');
     }
 
+
     public function irsMahasiswa()
     {
         return $this->belongsTo(IrsMahasiswa::class, 'nim', 'nim');
     }
+
+    public function jadwal()
+    {
+        return $this->hasOne(jadwal::class, 'kodemk', 'kodemk');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

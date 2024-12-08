@@ -31,6 +31,12 @@ return new class extends Migration
             $table->enum('status_irs', ['Belum Disetujui', 'Sudah Disetujui'])->default('Belum Disetujui');
             $table->enum('status_mk', ['Baru', 'Perbaikan'])->default('Baru');
             $table->timestamps();
+
+            $table->foreign('kodemk')
+              ->references('kodemk')
+              ->on('matakuliah')
+              ->onDelete('cascade')
+              ->onUpdate('cascade');
         });
     }
 

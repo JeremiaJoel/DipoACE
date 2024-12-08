@@ -11,7 +11,6 @@ class MahasiswaController extends Controller
     {
         $mahasiswa = Mahasiswa::find($nim);
 
-        // Jika mahasiswa tidak ditemukan, kembalikan pesan error atau redirect
         if (!$mahasiswa) {
             return redirect()->back()->withErrors('Mahasiswa tidak ditemukan');
         }

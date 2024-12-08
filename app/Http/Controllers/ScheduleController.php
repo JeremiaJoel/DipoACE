@@ -18,23 +18,23 @@ class ScheduleController extends Controller
     public function filter(Request $request)
     {
 
-        $semester = $request->input('semester_aktif');
+        // $semester = $request->input('semester_aktif');
         $jurusan = $request->input('jurusan');
-        $kelas = $request->input('kelas');
+        // $kelas = $request->input('kelas');
 
         $jadwal = jadwal::query();
 
-        if ($semester) {
-            $jadwal->where('semester_aktif', $semester);
-        }
+        // if ($semester) {
+        //     $jadwal->where('semester_aktif', $semester);
+        // }
 
         if ($jurusan) {
             $jadwal->where('jurusan', $jurusan);
         }
 
-        if ($kelas) {
-            $jadwal->where('kelas', $kelas);
-        }
+        // if ($kelas) {
+        //     $jadwal->where('kelas', $kelas);
+        // }
 
         $jadwal = $jadwal->get();
 
@@ -58,4 +58,26 @@ class ScheduleController extends Controller
         // return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil disetujui.');
     }
 
+    public function approveAll(Request $request)
+    {
+        // $semester = $request->input('semester');
+        $jurusan = $request->input('jurusan');
+        // $kelas = $request->input('kelas');
+
+        $jadwal = jadwal::query();
+
+        // if ($semester) {
+        //     $jadwal->where('semester_aktif', $semester);
+        // }
+        if ($jurusan) {
+            $jadwal->where('jurusan', $jurusan);
+        }
+        // if ($kelas) {
+        //     $jadwal->where('kelas', $kelas);
+        // }
+
+        $updatedCount = $jadwal->update(['status' => 'Sudah Disetujui']);
+
+        return response()->json(['message' => 'Approved ' .' schedules successfully']);
+    }
 }

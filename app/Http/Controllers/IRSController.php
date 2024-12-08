@@ -11,15 +11,30 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\PembatalanIrsEvent;
+use App\Models\users;
 
 class IRSController extends Controller
 {
+
+    // public function __construct()
+    // {
+    //         $this->middleware('StatusMahasiswa')->only([
+    //         'index', 'ambil', 'submitIRS', 'showIrs'
+    //     ]);
+    // }
+
     public function index()
     {
         // Ambil data jadwal dari database
         $jadwals = Jadwal::paginate(10);
 
         $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
+
+        if ($mahasiswa && $mahasiswa->status === 'Cuti') {
+            // Kirim pesan error ke view jika status mahasiswa adalah Cuti
+            return view('mahasiswa-buatirs', ['error' => 'Status Cuti Tidak Dapat Mengisi IRS']);
+        }
+
         $nim = $mahasiswa ? $mahasiswa->nim : null;
         $sksLoad = $this->calculateSKSLoad($nim);
 
@@ -73,27 +88,40 @@ class IRSController extends Controller
         return view('mahasiswa.buatirs', compact('jadwals'));
     }
 
-
     public function calculateSKSLoad($nim)
     {
-
-        $currentSemester = Mahasiswa::where('nim', $nim)->first()->semester ?? null;
-
-        if (!$currentSemester) {
-            return null;
+        // Ambil data mahasiswa
+        $mahasiswa = Mahasiswa::where('nim', $nim)->first();
+        
+        // Cek apakah data mahasiswa ada dan memiliki semester
+        if (!$mahasiswa || $mahasiswa->semester === null) {
+            return null; // Tidak ada data mahasiswa atau semester tidak ditetapkan
         }
-
-        $khsRecords = KHS::where('nim', $nim)->where('semester', $currentSemester)->get();
-
+    
+        // Menghitung semester sebelumnya
+        $previousSemester = $mahasiswa->semester - 1;
+    
+        // Mengambil data KHS untuk semester sebelumnya
+        $khsRecords = KHS::where('nim', $nim)->where('semester', $previousSemester)->get();
+    
+        // Jika tidak ada catatan KHS untuk semester tersebut, kembalikan null atau load SKS default
+        if ($khsRecords->isEmpty()) {
+            return 18; // Misalnya mengembalikan beban SKS minimum jika tidak ada data KHS
+        }
+    
+        // Menghitung total SKS dan total poin
         $totalSKS = $khsRecords->sum('sks');
         $totalPoints = $khsRecords->reduce(function ($carry, $item) {
             return $carry + ($item->sks * $this->getGradePoints($item->nilai_huruf));
         }, 0);
-
+    
+        // Menghitung IP Semester
         $ipSemester = $totalSKS > 0 ? round($totalPoints / $totalSKS, 2) : 0;
-
+    
+        // Menentukan beban SKS berdasarkan IP
         return $this->determineSKSLoadBasedOnIP($ipSemester);
     }
+    
 
     protected function getGradePoints($grade)
     {
@@ -250,7 +278,6 @@ class IRSController extends Controller
 
     
 
-
     private function syncIRSDataForStudent($nim)
     {
         // Ambil data IRS teragregasi untuk mahasiswa tertentu
@@ -283,11 +310,46 @@ class IRSController extends Controller
             DB::table('irs_mahasiswa')->where('mahasiswa_id', $nim)->delete();
         }
     }
-    public function getIRS(Request $request)
-{
-    $studentId = Auth::user()->id; // ID mahasiswa yang login
-    $irs = IRS::where('student_id', $studentId)->get(); // Ambil IRS mahasiswa login
-    return response()->json($irs);
-}
+
+
+    public function showIrs()
+    {
+        $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
+        $nim = $mahasiswa ? $mahasiswa->nim : null;
+    
+        // Pastikan nim terisi dengan benar
+        if (!$nim) {
+            dd('NIM tidak ditemukan untuk user yang sedang login');
+        }
+    
+        // Ambil data IRS berdasarkan NIM
+        $irsData = \App\Models\Irs::where('nim', $nim)->get();
+    
+        // Pastikan irsData ada
+        if ($irsData->isEmpty()) {
+            dd('Data IRS tidak ditemukan');
+        }
+    
+        return view('mahasiswa-irs', compact('irsData'));
+    }
+
+    public function create()
+    {
+        // Ambil data mahasiswa berdasarkan email pengguna yang login
+        $mahasiswa = Mahasiswa::where('email', Auth::user()->email)->first();
+
+        // Pastikan data mahasiswa ditemukan
+        if (!$mahasiswa) {
+            return redirect()->route('login')->with('error', 'Data mahasiswa tidak ditemukan.');
+        }
+
+        // Cek status akademik mahasiswa, hanya mahasiswa aktif yang dapat mengakses halaman ini
+        if ($mahasiswa->status !== 'Aktif') {
+            return redirect()->route('dashboard-mahasiswa')->with('error', 'Hanya mahasiswa aktif yang dapat membuat IRS.');
+        }
+
+        // Tampilkan view untuk membuat IRS jika status aktif
+        return view('mahasiswa-irs');
+    }
 
 }
