@@ -78,7 +78,6 @@
             <a href="dashboard-mahasiswa" class="text-3xl font-bold tracking-tight text-gray-900">Buat IRS</a>
         </div>
     </header>
-
     <div class="flex border-b p-8">
         <button class="flex-1 py-4 px-6 text-center text-gray-500 hover border-gray-500 border-b-2"
             onclick="window.location.href='/mahasiswa-buatirs'">Buat IRS</button>

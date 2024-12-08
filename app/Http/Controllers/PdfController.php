@@ -14,31 +14,32 @@ use Carbon\Carbon;
 
 class PdfController extends Controller
 {
-    public function generatePDF($mahasiswaId)
-    {
-        // $user = Auth::user()->profile_photo;
-        
+    public function generatePDF($mahasiswaId, $semester)
+{
+    // Mengambil data mahasiswa
+    $mahasiswa = Mahasiswa::with('dosen')->findOrFail($mahasiswaId);
 
-        // Mengambil data mahasiswa 
-        $mahasiswa = Mahasiswa::with('dosen')->findOrFail($mahasiswaId);
+    // Mengambil IRS data untuk mahasiswa yang dipilih dan semester yang sesuai
+    $irsData = Irs::where('nim', $mahasiswaId)
+        ->where('semester', $semester)  // Menggunakan semester yang dipilih
+        ->with(['mataKuliah', 'jadwal'])
+        ->get();
 
-        // Mengambil IRS data untuk mahasiswa yang dipilih
-        $irsData = Irs::where('nim', $mahasiswaId)->where('semester', $mahasiswa->semester)
-            ->with(['mataKuliah', 'jadwal'])
-            ->get();
+    // Mengorganisir data untuk ke view
+    $data = [
+        'title' => 'Print IRS',
+        'date' => date('m/d/Y'),
+        'mahasiswa' => $mahasiswa,
+        'irsData' => $irsData,
+        'image' => Auth::user()->profile_photo, // Mengirimkan data user
+        'semester' => $semester, // Menambahkan semester untuk ditampilkan di PDF
+    ];
 
-        // Mengorganisir data untuk ke view
-        $data = [
-            'title' => 'Print IRS',
-            'date' => date('m/d/Y'),
-            'mahasiswa' => $mahasiswa,
-            'irsData' => $irsData,
-            'image' => Auth::user()->profile_photo, // Mengirimkan data user
-        ];
+    // Memuat view PDF dengan data yang sudah disiapkan
+    $pdf = Pdf::loadView('pdf', $data);
 
-        $pdf = Pdf::loadView('pdf', $data);
+    return $pdf->download('Print IRS Semester ' . $semester . '.pdf');
+}
 
-        return $pdf->download('Print IRS.pdf');
-    }
 
 }
