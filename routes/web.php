@@ -15,6 +15,8 @@ use App\Http\Controllers\IRSController;
 use App\Http\Controllers\KHSController;
 use App\Http\Controllers\ApproveJadwalController;
 use App\Http\Controllers\KaprodiController;
+use App\Http\Controllers\PdfController;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 // Route::get('/', function () {
 //     return view('dashboard-mahasiswa');
