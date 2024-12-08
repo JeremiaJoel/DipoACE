@@ -13,9 +13,8 @@ use App\Http\Controllers\menuPembimbingController;
 use App\Http\Controllers\ApproveClassroomController;
 use App\Http\Controllers\IRSController;
 use App\Http\Controllers\KHSController;
-use App\Http\Controllers\PdfController;
+use App\Http\Controllers\ApproveJadwalController;
 use App\Http\Controllers\KaprodiController;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 // Route::get('/', function () {
 //     return view('dashboard-mahasiswa');
@@ -57,14 +56,27 @@ Route::middleware(['auth'])->group(function () {
 
     //Route menampilkan detail irs mahasiswa
     // Route untuk melihat IRS mahasiswa yang statusnya 'Belum Disetujui'
-    Route::get('/irs/{nim}/belum-disetujui', [IrsController::class, 'showBelumDisetujui'])->name('irs.belumDisetujui');
+    Route::get('/irs/{nim}/belum-disetujui', [menuPembimbingController::class, 'showBelumDisetujui'])->name('irs.belumDisetujui');
+    
+    Route::get('/irs', [IRSController::class, 'index'])->name('irs.index');
 
     // Route untuk melihat IRS mahasiswa yang statusnya 'Sudah Disetujui'
-    Route::get('/irs/{nim}/sudah-disetujui', [IrsController::class, 'showSudahDisetujui'])->name('irs.sudahDisetujui');
+    Route::get('/irs/{nim}/sudah-disetujui', [menuPembimbingController::class, 'showSudahDisetujui'])->name('irs.sudahDisetujui');
 
     // Route untuk menyetujui IRS mahasiswa
-    Route::post('/irs/{nim}/approve', [IrsController::class, 'approveIrs'])->name('approveIrs');
+    Route::post('/approve-irs/{mahasiswaId}', [menuPembimbingController::class, 'approveIRS']);
+    Route::post('/irs/{nim}/cancelApprove', [menuPembimbingController::class, 'cancelApproveIrs'])->name('cancelApproveIrs');
 
+    //Sinkronisasi tabel irs mahasiswa
+    Route::get('/sync-irs', [IRSController::class, 'syncIRSData']);
+    Route::get('/mata-kuliah/{mahasiswaId}', [IRSController::class, 'getMataKuliah']);
+
+    //mahasiswa
+    Route::get('/irs', [IRSController::class, 'showIRSForm'])->name('irs.form');
+    Route::post('/irs', [IRSController::class, 'storeIRS'])->middleware('auth')->name('irs.store');
+    Route::get('/download-pdf', 'PDFController@downloadPDF');
+    // Route::get('/search-mata-kuliah', [MataKuliahController::class, 'search'])->name('search.mata-kuliah');
+    Route::get('/classrooms/{id}/edit', [ClassroomController::class, 'edit'])->name('classrooms.edit');
     Route::get('/academic-schedulepage-dekan', [ScheduleController::class, 'index'])->name('jadwal.index');
 
     Route::get('/academic-schedulepage-dekan/filter', [ScheduleController::class, 'filter'])->name('jadwal.filter');
@@ -79,8 +91,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/khs', [KHSController::class, 'showKhs'])->name('khsData.showKhs');
     // Route::get('/mahasiswa-buatirs', [IRSController::class, 'buatIRS'])->middleware('auth')->name('mahasiswa.buatirs');\
     
-
-
+    Route::post('/irs/store', [IRSController::class, 'store'])->name('irs.store');
+    Route::post('/mahasiswa/submit-irs', [IrsController::class, 'submitIRS'])->name('mahasiswa.submitIRS');
+    Route::post('/mahasiswa/cancel-irs', [IRSController::class, 'cancelIRS'])->name('mahasiswa.cancelIRS');
+    Route::post('/mahasiswa/ajukan-pembatalan', [IRSController::class, 'ajukanPembatalan'])->name('mahasiswa.ajukanPembatalan');
 
     //kaprodi
     Route::get('/tabelVerifikasiIRS', [KaprodiController::class, 'menuVerifikasi'])->name('tabelVerifikasiIRS');
@@ -127,13 +141,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::get('/nyusunruangkelas', function () {
-    return view('nyusunruangkelas');
-});
-
-Route::get('/nyusunkuotakelas', function () {
-    return view('nyusunkuotakelas');
-});
+// Route::get('/nyusunruangkelas', function () {
+//     return view('nyusunruangkelas');
+// });
 
 Route::get('/status-mahasiswa', function () {
     return view('status-mahasiswa');
@@ -151,9 +161,34 @@ Route::get('/nyusunJadwalKaprodi', function () {
 
 Route::get('/classrooms', [ClassroomController::class, 'index'])->name('classrooms.index');
 Route::get('/nyusunruangkelas', [ClassroomController::class, 'index'])->name('nyusunruangkelas'); // Route tambahan
-Route::get('/classrooms/{id}/edit', [ClassroomController::class, 'edit'])->name('classrooms.edit');
 
 
 // Route punya Kaprodi
 
+//menampilkan data irs mahasiswa tertentu
+
+// Route punya Kaprodi
+
+Route::get('/tabelVerifikasiIRS', [KaprodiController::class, 'menuVerifikasi'])->name('tabelVerifikasiIRS');
+Route::get('/pembimbing-irs-mahasiswa', [KaprodiController::class, 'irsMahasiswa'])->name('pembimbing-irs-mahasiswa');
+Route::get('/nyusunJadwalKaprodi', [KaprodiController::class, 'menuNyusunJadwal'])->name('nyusunJadwalKaprodi');
+
+Route::delete('/kaprodi/jadwal/{id}', [KaprodiController::class, 'hapusJadwal'])->name('kaprodi.hapusJadwal');
+Route::patch('/kaprodi/jadwal/{id}', [KaprodiController::class, 'updateJadwal'])->name('kaprodi.updateJadwal');
+Route::post('/simpan-jadwal', [KaprodiController::class, 'simpanJadwal'])->name('simpan.jadwal');
+
+Route::get('/kaprodi/jadwal/{id}/edit', [KaprodiController::class, 'edit'])->name('kaprodi.edit');
+
+
+// Halaman Dekan: Approve Classrooms
+//Route::get('/academic-classpage-dekan', [ApproveJadwalController::class, 'index'])->name('academic-classpage-dekan');
+//Route::get('/academic-classpage-dekan/filter', [ApproveJadwalController::class, 'filter'])->name('jadwal.filter');
+
+// Role Akademik: Mengirim pengajuan
+// Route::post('/jadwal/{id}/submit-approval', [ApproveJadwalController::class, 'submit'])->name('approvejadwal.submit');
+    
+// // Approve dan Reject Pengajuan
+// Route::post('/approvejadwal/{id}/approve', [ApproveJadwalController::class, 'approve'])->name('jadwal.approve');
+// Route::post('/approvejadwal/{id}/reject', [ApproveJadwalController::class, 'reject'])->name('jadwal.reject');
+//Route::get('/dashboard-kaprodi', [ApproveJadwalController::class, 'dashboard'])->name('dashboard-kaprodi');
 

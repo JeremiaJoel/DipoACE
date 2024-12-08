@@ -6,7 +6,7 @@ use App\Models\Jadwal;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Matakuliah extends Model
+class matakuliah extends Model
 {
     use HasFactory;
 

@@ -21,4 +21,3 @@ class approvejadwal extends Model
         return $this->belongsTo(jadwal::class, 'jadwal_id');
     }
 
-}

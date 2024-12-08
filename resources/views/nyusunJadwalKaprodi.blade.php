@@ -31,7 +31,7 @@
                 <div class="hidden md:block">
                     <div class="ml-4 flex items-center md:ml-6">
                         <span
-                            class="rounded-md px-1 py-2 text-xl font-medium text-white">nama</span>
+                            class="rounded-md px-1 py-2 text-xl font-medium text-white">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</span>
 
                         <!-- Profile dropdown -->
                         <div class="relative ml-3">
@@ -132,7 +132,9 @@
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700" for="jurusan">Jurusan</label>
                         <input type="text" id="jurusan" name="jurusan" class="mt-1 block w-full border-gray-300 shadow-sm" 
-                        value="{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->jurusan }}" readonly>
+
+                            value="{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->jurusan }}" readonly>
+
                     </div>
 
                     <!-- Kode MK -->
@@ -141,11 +143,12 @@
                         <select name="kodemk" id="kodemk" class="mt-1 block w-full border-gray-300 shadow-sm" required onchange="setSKSFromKodeMK('kodemk', 'sks')">
                             <option value="">-</option>
                             @foreach ($matakuliahList as $matakuliah)
-                                
+
+                                @if ($matakuliah->jurusan === \App\Models\Dosen::where('email', auth()->user()->email)->value('jurusan'))  <!-- Filter berdasarkan jurusan user -->
                                     <option value="{{ $matakuliah->kodemk }}" data-sks="{{ $matakuliah->sks }}">
                                         {{ $matakuliah->kodemk }} - {{ $matakuliah->nama }}
                                     </option>
-                                
+                                @endif
                             @endforeach
                         </select>
                     </div>
@@ -277,7 +280,8 @@
                                             type="button"
                                             onclick="openEditModal({{ json_encode($submission) }})"
                                             class="font-bold rounded bg-blue-500 text-white hover:bg-blue-600 w-20 py-2 px-4">
-                                            Edit    
+
+                                            Edit
                                         </button>
         
                                         <!-- Tombol Hapus -->
@@ -305,159 +309,150 @@
         </div>
     </div>    
 
-   <!-- Modal untuk Edit -->
-<div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden overflow-y-auto">
-    <div class="flex items-center justify-center min-h-screen">
-        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-            <h2 class="text-lg font-medium text-gray-800 mb-4">Edit Jadwal Kuliah</h2>
+    <!-- Modal untuk Edit -->
+    <div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                <h2 class="text-lg font-medium text-gray-800 mb-4">Edit Jadwal Kuliah</h2>
 
-            <form id="editForm" action="{{ route('jadwal.update', $jadwal->id) }}" method="POST">
-                @csrf
-                @method('PATCH')
+                <form id="editForm" method="POST">
+                    @csrf
+                    @method('PATCH')
 
-                <!-- Ruang -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700" for="editRuang">Ruang</label>
-                    <select name="ruang" id="editRuang" class="mt-1 block w-full border-gray-300 shadow-sm" required>
-                        <option value="">- Pilih Ruang -</option>
-                        @foreach ($ruangDisetujui as $ruang)
-                            <option value="{{ $ruang->kode_ruang }}" 
-                                    {{ $ruang->kode_ruang == $jadwal->ruang ? 'selected' : '' }}>
-                                {{ $ruang->kode_ruang }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <!-- Ruang -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700" for="editRuang">Ruang</label>
+                        <select name="ruang" id="editRuang" class="mt-1 block w-full border-gray-300 shadow-sm" required>
+                            <option value="">- Pilih Ruang -</option>
+                            @foreach ($ruangDisetujui as $ruang)
+                                <option value="{{ $ruang->kode_ruang }}">{{ $ruang->kode_ruang }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <!-- Kelas -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700" for="editKelas">Kelas</label>
-                    <select name="kelas" id="editKelas" class="mt-1 block w-full border-gray-300 shadow-sm" required>
-                        <option value="">- Pilih Kelas -</option>
-                        @foreach (range('A', 'D') as $kelas)
-                            <option value="{{ $kelas }}" {{ $kelas == $jadwal->kelas ? 'selected' : '' }}>
-                                {{ $kelas }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <!-- Kelas -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700" for="editKelas">Kelas</label>
+                        <select name="kelas" id="editKelas" class="mt-1 block w-full border-gray-300 shadow-sm" required>
+                            <option value="">- Pilih Kelas -</option>
+                            @foreach (range('A', 'D') as $kelas)
+                                <option value="{{ $kelas }}">{{ $kelas }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <!-- Semester Aktif -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700" for="editSemesterAktif">Semester Aktif</label>
-                    <select name="semester_aktif" id="editSemesterAktif" class="mt-1 block w-full border-gray-300 shadow-sm" required>
-                        <option value="">- Pilih Semester -</option>
-                        @foreach (range(1, 14) as $semester)
-                            <option value="{{ $semester }}" {{ $semester == $jadwal->semester_aktif ? 'selected' : '' }}>
-                                {{ $semester }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <!-- Semester Aktif -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700" for="editSemesterAktif">Semester Aktif</label>
+                        <select name="semester_aktif" id="editSemesterAktif" class="mt-1 block w-full border-gray-300 shadow-sm" required>
+                            <option value="">- Pilih Semester -</option>
+                            @foreach (range(1, 14) as $semester)
+                                <option value="{{ $semester }}">{{ $semester }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <!-- Jurusan -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700" for="editJurusan">Jurusan</label>
-                    <input type="text" id="editJurusan" name="jurusan"
-                        value="{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->jurusan }}"
-                        class="mt-1 block w-full border-gray-300 shadow-sm" readonly>
-                </div>
+                    <!-- Jurusan -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700" for="editJurusan">Jurusan</label>
+                        <input type="text" id="editJurusan" name="jurusan"
+                            value="{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->jurusan }}" 
+                            class="mt-1 block w-full border-gray-300 shadow-sm" readonly>
+                    </div>
 
-                <!-- Kode MK -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700" for="editKodeMK">Kode MK</label>
-                    <select name="kodemk" id="editKodeMK" class="mt-1 block w-full border-gray-300 shadow-sm" required>
-                        <option value="">- Pilih Mata Kuliah -</option>
-                        @foreach ($matakuliahList as $matakuliah)
-                            <option value="{{ $matakuliah->kodemk }}" 
-                                    {{ $matakuliah->kodemk == $jadwal->kodemk ? 'selected' : '' }} 
-                                    data-sks="{{ $matakuliah->sks }}">
-                                {{ $matakuliah->kodemk }} - {{ $matakuliah->nama }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <!-- Kode MK -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700" for="editKodeMK">Kode MK</label>
+                        <select name="kode_mk" id="editKodeMK" class="mt-1 block w-full border-gray-300 shadow-sm" required onchange="setSKSFromKodeMK('editKodeMK', 'editSKS')">
+                            <option value="">- Pilih Mata Kuliah -</option>
+                            @foreach ($matakuliahList as $matakuliah)
+                                @if ($matakuliah->jurusan === \App\Models\Dosen::where('email', auth()->user()->email)->value('jurusan'))  <!-- Filter berdasarkan jurusan user -->
+                                    <option value="{{ $matakuliah->kodemk }}" data-sks="{{ $matakuliah->sks }}">
+                                        {{ $matakuliah->kodemk }} - {{ $matakuliah->nama }}
+                                    </option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    
 
-                <!-- SKS -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700" for="editSKS">SKS</label>
-                    <input type="number" id="editSKS" name="sks" value="{{ $jadwal->sks }}" class="mt-1 block w-full border-gray-300 shadow-sm" readonly>
-                </div>
+                    <!-- SKS -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700" for="editSKS">SKS</label>
+                        <input type="number" id="editSKS" name="sks" class="mt-1 block w-full border-gray-300 shadow-sm" readonly>
+                    </div>
 
-                <!-- Hari -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700" for="editHari">Hari</label>
-                    <select name="hari" id="editHari" class="mt-1 block w-full border-gray-300 shadow-sm" required>
-                        <option value="">- Pilih Hari -</option>
-                        @foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'] as $hari)
-                            <option value="{{ $hari }}" {{ $hari == $jadwal->hari ? 'selected' : '' }}>
-                                {{ $hari }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <!-- Hari -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700" for="editHari">Hari</label>
+                        <select name="hari" id="editHari" class="mt-1 block w-full border-gray-300 shadow-sm" required>
+                            <option value="">- Pilih Hari -</option>
+                            @foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'] as $hari)
+                                <option value="{{ $hari }}">{{ $hari }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <!-- Pengampu 1 -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700" for="editPengampu1">Pengampu 1</label>
-                    <select name="pengampu_1" id="editPengampu1" class="mt-1 block w-full border-gray-300 shadow-sm" required>
-                        <option value="">- Pilih Pengampu 1 -</option>
-                        @foreach (\App\Models\dosen::all() as $dosen)
-                            <option value="{{ $dosen->nama }}" {{ $dosen->nama == $jadwal->pengampu_1 ? 'selected' : '' }}>
-                                {{ $dosen->nama }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <!-- Pengampu 1 -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700" for="editPengampu1">Pengampu 1</label>
+                        <select name="pengampu_1" id="editPengampu1" class="mt-1 block w-full border-gray-300 shadow-sm" required>
+                            <option value="">- Pilih Pengampu 1 -</option>
+                            @foreach (\App\Models\dosen::all() as $dosen)
+                                <option value="{{ $dosen->nama }}">{{ $dosen->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <!-- Pengampu 2 -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700" for="editPengampu2">Pengampu 2</label>
-                    <select name="pengampu_2" id="editPengampu2" class="mt-1 block w-full border-gray-300 shadow-sm" required>
-                        <option value="">- Pilih Pengampu 2 -</option>
-                        @foreach (\App\Models\dosen::all() as $dosen)
-                            <option value="{{ $dosen->nama }}" {{ $dosen->nama == $jadwal->pengampu_2 ? 'selected' : '' }}>
-                                {{ $dosen->nama }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <!-- Pengampu 2 -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700" for="editPengampu2">Pengampu 2</label>
+                        <select name="pengampu_2" id="editPengampu2" class="mt-1 block w-full border-gray-300 shadow-sm" required>
+                            <option value="">- Pilih Pengampu 2 -</option>
+                            @foreach (\App\Models\dosen::all() as $dosen)
+                                <option value="{{ $dosen->nama }}">{{ $dosen->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <!-- Pengampu 3 -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700" for="editPengampu3">Pengampu 3</label>
-                    <select name="pengampu_3" id="editPengampu3" class="mt-1 block w-full border-gray-300 shadow-sm">
-                        <option value="">- Pilih Pengampu 3 -</option>
-                        @foreach (\App\Models\dosen::all() as $dosen)
-                            <option value="{{ $dosen->nama }}" {{ $dosen->nama == $jadwal->pengampu_3 ? 'selected' : '' }}>
-                                {{ $dosen->nama }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <!-- Pengampu 3 -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700" for="editPengampu3">Pengampu 3</label>
+                        <select name="pengampu_3" id="editPengampu3" class="mt-1 block w-full border-gray-300 shadow-sm">
+                            <option value="">- Pilih Pengampu 3 -</option>
+                            @foreach (\App\Models\dosen::all() as $dosen)
+                                <option value="{{ $dosen->nama }}">{{ $dosen->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <!-- Jam Mulai -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700" for="editJamMulai">Jam Mulai</label>
-                    <input type="text" id="editJamMulai" name="jam_mulai" value="{{ $jadwal->jam_mulai }}" class="mt-1 block w-full border-gray-300 shadow-sm" required>
-                </div>
+                    
 
-                <!-- Jam Selesai -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700" for="editJamSelesai">Jam Selesai</label>
-                    <input type="text" id="editJamSelesai" name="jam_selesai" value="{{ $jadwal->jam_selesai }}" class="mt-1 block w-full border-gray-300 shadow-sm" required>
-                </div>
+                    <!-- Jam Mulai -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700" for="editJamMulai">Jam Mulai</label>
+                        <input type="text" id="editJamMulai" name="jam_mulai" class="mt-1 block w-full border-gray-300 shadow-sm" required>
+                    </div>
 
-                <!-- Tombol Submit dan Cancel -->
-                <div class="flex justify-end">
-                    <button type="button" onclick="closeEditModal()" class="mr-2 px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Submit</button>
-                </div>
-            </form>
+                    <!-- Jam Selesai -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700" for="editJamSelesai">Jam Selesai</label>
+                        <input type="text" id="editJamSelesai" name="jam_selesai" class="mt-1 block w-full border-gray-300 shadow-sm" required>
+                    </div>
+
+
+                    <!-- Tombol Submit dan Cancel -->
+                    <div class="flex justify-end">
+                        <button type="button" onclick="closeEditModal()"
+                            class="mr-2 px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Submit</button>
+                    </div>
+
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
 
     <script>
         // Fungsi untuk mengisi SKS berdasarkan kode MK yang dipilih
@@ -497,12 +492,12 @@
             document.getElementById('editKelas').value = submission.kelas;
             document.getElementById('editSemesterAktif').value = submission.semester_aktif;
             document.getElementById('editJurusan').value = submission.jurusan;
-            document.getElementById('editKodeMK').value = submission.kodemk;
             document.getElementById('editSKS').value = submission.sks;
             document.getElementById('editHari').value = submission.hari;
             document.getElementById('editPengampu1').value = submission.pengampu_1;
             document.getElementById('editPengampu2').value = submission.pengampu_2;
             document.getElementById('editPengampu3').value = submission.pengampu_3;
+            document.getElementById('editKodeMK').value = submission.kodemk;
             document.getElementById('editJamMulai').value = submission.jam_mulai;
             document.getElementById('editJamSelesai').value = submission.jam_selesai;
     

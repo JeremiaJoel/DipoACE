@@ -27,7 +27,9 @@
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
-                            <span class="rounded-md px-1 py-2 text-xl font-medium text-white">nama</span>
+
+                            <span class="rounded-md px-1 py-2 text-xl font-medium text-white">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</span>
+
 
                             <!-- Profile dropdown -->
                             <div class="relative ml-3">
@@ -81,12 +83,13 @@
                         <img class="w-24 h-24 rounded-full border-4 border-white w-100 h-100"
                                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                                 alt="">
-                        <div class="ml-4 text-white">
-                            <h1 class="text-2xl font-bold">nama kaprodi</h1>
+                                
+                            <h1 class="text-2xl font-bold">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</h1>
                             <p class="mt-1">
-                                NIP: nip | 
-                                email |
-                                jurusan
+                                NIP: {{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nip }} | 
+                                {{ Auth::user()->email }} |
+                                {{ \App\Models\dosen::where('email', Auth::user()->email)->first()->jurusan }}
+
                                 </p>
                         </div>
                     </div>
@@ -145,3 +148,4 @@
                     </div>
                 </div>
         </main>
+

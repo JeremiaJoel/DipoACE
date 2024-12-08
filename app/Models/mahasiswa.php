@@ -39,4 +39,9 @@ class mahasiswa extends Model
     {
         return $this->hasMany(irs::class, 'nim', 'nim');
     }
+
+    public function irsMahasiswa()
+    {
+        return $this->hasMany(IrsMahasiswa::class, 'nim', 'nim');
+    }
 }

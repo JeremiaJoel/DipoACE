@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Models\Classrooms;
+
+use App\Models\classrooms;
 use App\Models\jadwal;
 
 class KaprodiController extends Controller
@@ -39,7 +40,7 @@ class KaprodiController extends Controller
         $matakuliahList = DB::table('matakuliah')->select('kodemk', 'nama', 'jurusan', 'sks')->get();
 
         // Ambil data ruang dengan status "Sudah Disetujui" dari tabel classrooms
-        $ruangDisetujui = Classrooms::where('status', 'Sudah Disetujui')->get();
+        $ruangDisetujui = classrooms::where('status', 'Sudah Disetujui')->get();
 
         // Kirim data ke view
         return view('nyusunJadwalKaprodi', compact('submissions', 'dosenList', 'matakuliahList', 'ruangDisetujui'));
@@ -110,31 +111,6 @@ class KaprodiController extends Controller
         return view('nyusunJadwalKaprodi', compact('jadwal'));
     }
 
-    public function updateJadwal(Request $request, $id)
-{
-    // Validasi data dari form
-    $data = $request->validate([
-        'ruang' => 'required|string|max:255',
-        'kelas' => 'required|string|max:255',
-        'semester_aktif' => 'required|integer|min:1|max:14',
-        'jurusan' => 'required|string|max:255',
-        'pengampu_1' => 'required|string|max:255',
-        'pengampu_2' => 'required|string|max:255',
-        'pengampu_3' => 'nullable|string|max:255',
-        'kodemk' => 'required|string|max:255',
-        'hari' => 'required|string|max:10',
-        'jam_mulai' => 'required|date_format:H:i',
-        'jam_selesai' => 'required|date_format:H:i|after:jam_mulai'
-    ]);
-
-    // Temukan data jadwal yang ingin diubah
-    $jadwal = jadwal::findOrFail($id);
-
-    // Perbarui data jadwal
-    $jadwal->update($data);
-
-    return redirect()->route('nyusunJadwalKaprodi')->with('success', 'Jadwal berhasil diperbarui.');
-}
 
     // Fungsi untuk menghapus jadwal
     public function hapusJadwal($id)
@@ -145,3 +121,4 @@ class KaprodiController extends Controller
         return redirect()->route('nyusunJadwalKaprodi')->with('success', 'Jadwal berhasil dihapus.');
     }
 }
+
