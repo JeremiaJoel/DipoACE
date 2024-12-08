@@ -6,6 +6,7 @@ use App\Models\approvejadwal;
 use App\Models\jadwal;
 use Illuminate\Http\Request;
 
+
 class ApproveJadwalController extends Controller
 {
 
@@ -18,24 +19,32 @@ class ApproveJadwalController extends Controller
         return view('academic-classpage-dekan', compact('approvals'));
     }
 
-    public function submit($id)
+    
+    public function submit(Request $id)
     {
-            $jadwal = jadwal::findOrFail($id);
+        // Ambil semua jadwal yang statusnya "Belum Disetujui"
+        $jadwals = Jadwal::where('status', 'Belum Disetujui')->get();
 
-        // Cek apakah sudah diajukan sebelumnya
-        $existingApproval = ApproveJadwal::where('jadwal_id', $id)->first();
-        if ($existingApproval) {
-            return redirect()->back()->with('error', 'Pengajuan sudah dibuat sebelumnya.');
+        // Periksa jika ada jadwal yang perlu diajukan
+        if ($jadwals->isEmpty()) {
+            return redirect()->back()->with('error', 'Tidak ada jadwal yang perlu diajukan.');
         }
 
-        // Simpan pengajuan
-        ApproveJadwal::create([
-            'jadwal_id' => $id,
-            'status' => 'Menunggu',
-        ]);
+        // Kirim semua jadwal ke tabel approvejadwal
+        foreach ($jadwals as $jadwal) {
+            // Cek apakah sudah ada pengajuan untuk jadwal ini
+            $existingApproval = ApproveJadwal::where('jadwal_id', $jadwal->id)->first();
+            if (!$existingApproval) {
+                ApproveJadwal::create([
+                    'jadwal_id' => $jadwal->id,
+                    'status' => 'Menunggu', // Status awal
+                ]);
+            }
+        }
 
-        return redirect()->back()->with('success', 'Pengajuan berhasil dikirim.');
+        return redirect()->back()->with('success', 'Semua jadwal berhasil diajukan.');
     }
+
 
     public function approve($id)
     {
