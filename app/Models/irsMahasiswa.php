@@ -22,7 +22,10 @@ class IrsMahasiswa extends Model
         return $this->hasMany(Irs::class, 'nim', 'nim');
     }
 
-    public function irs(){
-        return $this->hasMany(Irs::class, 'nim', 'mahasiswa_id');
-    }
+
+    public function irs()
+{
+    return $this->hasMany(Irs::class, 'nim', 'mahasiswa_id');
+}
+
 }

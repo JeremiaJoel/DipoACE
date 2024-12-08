@@ -102,7 +102,7 @@
     </nav>
 
     <header class="bg-white shadow">
-        <a href="{{ route('tabelMahasiswa') }}">
+        <a href="{{ route('tabelMahasiswa', ['periode' => '2024-2025']) }}">
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                 <button type="button"
                     class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700
@@ -141,7 +141,9 @@
                         @foreach ($irs as $item)
                         @foreach ($item->irs as $matkul) <!-- Mengakses data IRS dari relasi -->
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $loop->iteration}}.</td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $loop->iteration }}.</td>
+
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $matkul->kodemk }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $matkul->matakuliah->nama }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $matkul->sks }}</td>
