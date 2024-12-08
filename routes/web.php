@@ -53,9 +53,9 @@ Route::middleware(['auth'])->group(function () {
     // Route untuk menampilkan daftar matkul mahasiswa dengan status IRS 
     Route::get('/tabelMahasiswa/irs/{periode}', [MenuPembimbingController::class, 'index'])->name('tabelMahasiswa');
 
-    Route::get('/pembimbing-irs-mahasiswa', [menuPembimbingController::class, 'listMahasiswaBelumDisetujui'])->name('pembimbing-irs-mahasiswa');;
-    Route::get('/pembimbing-irs-sudah-disetujui', [menuPembimbingController::class, 'listMahasiswaSudahDisetujui'])->name('pembimbing-irs-sudah-disetujui');;
-
+    Route::middleware('auth')->get('/tabel-mahasiswa', [MenuPembimbingController::class, 'getDetailIrs'])->name('tabel-mahasiswa'); 
+    Route::get('/pembimbing-irs-mahasiswa', [menuPembimbingController::class, 'listMahasiswaBelumDisetujui'])->name('pembimbing-irs-mahasiswa');
+    Route::get('/pembimbing-irs-sudah-disetujui', [menuPembimbingController::class, 'listMahasiswaSudahDisetujui'])->name('pembimbing-irs-sudah-disetujui');
 
     //Route menampilkan detail irs mahasiswa
     // Route untuk melihat IRS mahasiswa yang statusnya 'Belum Disetujui'
