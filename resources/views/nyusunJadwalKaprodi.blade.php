@@ -132,7 +132,9 @@
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700" for="jurusan">Jurusan</label>
                         <input type="text" id="jurusan" name="jurusan" class="mt-1 block w-full border-gray-300 shadow-sm" 
+
                             value="{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->jurusan }}" readonly>
+
                     </div>
 
                     <!-- Kode MK -->
@@ -141,6 +143,7 @@
                         <select name="kodemk" id="kodemk" class="mt-1 block w-full border-gray-300 shadow-sm" required onchange="setSKSFromKodeMK('kodemk', 'sks')">
                             <option value="">-</option>
                             @foreach ($matakuliahList as $matakuliah)
+
                                 @if ($matakuliah->jurusan === \App\Models\Dosen::where('email', auth()->user()->email)->value('jurusan'))  <!-- Filter berdasarkan jurusan user -->
                                     <option value="{{ $matakuliah->kodemk }}" data-sks="{{ $matakuliah->sks }}">
                                         {{ $matakuliah->kodemk }} - {{ $matakuliah->nama }}
@@ -199,8 +202,6 @@
                             @endforeach
                         </select>
                     </div>
-
-                    
 
                     <!-- Jam Mulai -->
                     <div class="mb-4">
@@ -279,6 +280,7 @@
                                             type="button"
                                             onclick="openEditModal({{ json_encode($submission) }})"
                                             class="font-bold rounded bg-blue-500 text-white hover:bg-blue-600 w-20 py-2 px-4">
+
                                             Edit
                                         </button>
         
@@ -451,7 +453,6 @@
             </div>
         </div>
     </div>
-
 
     <script>
         // Fungsi untuk mengisi SKS berdasarkan kode MK yang dipilih

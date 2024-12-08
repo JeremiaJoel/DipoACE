@@ -53,4 +53,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(dosen::class, 'dosen_id', 'nip');
     }
+
+    public function irs()
+    {
+        return $this->hasMany(IRS::class);
+    }
 }

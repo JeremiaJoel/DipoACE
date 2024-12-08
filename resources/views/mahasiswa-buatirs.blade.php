@@ -104,8 +104,8 @@
                     <th class="border-b p-2">Hari</th>
                     <th class="border-b p-2">Waktu</th>
                     <th class="border-b p-2">Kelas</th>
-                    <th class="border-b p-2">SKS</th>
                     <th class="border-b p-2">Semester</th>
+                    <th class="border-b p-2">Sifat</th>
                 </tr>
             </thead>
             <tbody>
@@ -116,10 +116,8 @@
                         <td class="border-b p-2">{{ $jadwal->ruang }}</td>
                         <td class="border-b p-2">{{ $jadwal->sks }}</td>
                         <td class="border-b p-2">{{ $jadwal->hari }}</td>
-                        <td class="border-b p-2">{{ substr($jadwal->jam_mulai, 0, 5) }} -
-                            {{ substr($jadwal->jam_selesai, 0, 5) }}</td>
+                        <td class="border-b p-2">{{ substr($jadwal->jam_mulai, 0, 5) }} - {{ substr($jadwal->jam_selesai, 0, 5) }}</td>
                         <td class="border-b p-2">{{ $jadwal->kelas }}</td>
-                        <td class="border-b p-2">{{ $jadwal->sks }}</td>
                         <td class="border-b p-2">{{ $jadwal->semester_aktif }}</td>
                         <td class="border-b p-2">{{ $jadwal->matakuliah->jenis_matkul ?? 'Tidak ada Status' }}</td>
                         <td class="border-b p-2 text-right">
@@ -157,8 +155,6 @@
                     <th class="border-b p-2">Waktu</th>
                     <th class="border-b p-2">Kelas</th>
                     <th class="border-b p-2">Semester</th>
-                    <th class="border-b p-2">Status</th>
-                    <th class="border-b p-2">Aksi</th>
                 </tr>
             </thead>
             <tbody id="irs-dipilih">
@@ -262,6 +258,7 @@
                                         <td>${jadwal.jam_mulai}-${jadwal.jam_selesai}</td>
                                         <td>${jadwal.kelas}</td>
                                         <td>${jadwal.semester_aktif}</td>
+                                        <td>${jadwal.matakuliah.jenis_matkul}</td>
                                         <td class="text-right">
                                             <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 ambil-btn"
                                                 data-id="${jadwal.id}"
@@ -272,8 +269,8 @@
                                                 data-hari="${jadwal.hari}"
                                                 data-waktu="${jadwal.jam_mulai}-${jadwal.jam_selesai}"
                                                 data-kelas="${jadwal.kelas}"
-                                                data-status="${jadwal.matakuliah.jenis_matkul}"
-                                                data-semester="${jadwal.semester_aktif}">
+                                                data-semester="${jadwal.semester_aktif}"
+                                                data-sifat="${jadwal.matakuliah.jenis_matkul}">
                                                 Ambil
                                             </button>
                                         </td>
@@ -332,7 +329,7 @@
                                 <td>${btn.data('waktu')}</td>
                                 <td>${btn.data('kelas')}</td>
                                 <td>${btn.data('semester')}</td>
-                                <td>New</td>
+                                
                                 <td>
                                     <button class="bg-red-500 text-white px-4 py-2 rounded-md delete-btn">Delete</button>
                                 </td>

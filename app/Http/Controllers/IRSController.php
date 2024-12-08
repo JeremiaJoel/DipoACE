@@ -14,12 +14,26 @@ use App\Notifications\PembatalanIrsEvent;
 
 class IRSController extends Controller
 {
+
+    // public function __construct()
+    // {
+    //         $this->middleware('StatusMahasiswa')->only([
+    //         'index', 'ambil', 'submitIRS', 'showIrs'
+    //     ]);
+    // }
+
     public function index()
     {
         // Ambil data jadwal dari database
         $jadwals = Jadwal::paginate(10);
 
         $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
+
+        if ($mahasiswa && $mahasiswa->status === 'Cuti') {
+            // Kirim pesan error ke view jika status mahasiswa adalah Cuti
+            return view('mahasiswa-buatirs', ['error' => 'Status Cuti Tidak Dapat Mengisi IRS']);
+        }
+
         $nim = $mahasiswa ? $mahasiswa->nim : null;
         $sksLoad = $this->calculateSKSLoad($nim);
 
@@ -223,7 +237,6 @@ class IRSController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
-
 
     private function syncIRSDataForStudent($nim)
     {
