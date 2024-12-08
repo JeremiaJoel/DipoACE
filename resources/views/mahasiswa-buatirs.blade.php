@@ -36,7 +36,7 @@
                 <div class="hidden md:block">
                     <div class="ml-4 flex items-center md:ml-6">
                         <span
-                            class="rounded-md px-1 py-2 text-xl font-medium text-white">{{ \App\Models\mahasiswa::where('email', Auth::user()->email)->first()->nama }}</span>
+                            class="rounded-md px-1 py-2 text-xl font-medium text-white">{{ Auth::user()->email }}</span>
 
                         <!-- Profile dropdown -->
                         <div class="relative ml-3">
@@ -75,7 +75,7 @@
 
     <header class="bg-white shadow">
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <a href="dashboard-mahasiswa" class="text-3xl font-bold tracking-tight text-gray-900">Buat IRS</a>
+            <a href="dashboard-mahasiswa" class="text-3xl font-bold tracking-tight text-gray-900">Dashboard</a>
         </div>
     </header>
 
@@ -104,8 +104,8 @@
                     <th class="border-b p-2">Hari</th>
                     <th class="border-b p-2">Waktu</th>
                     <th class="border-b p-2">Kelas</th>
+                    <th class="border-b p-2">SKS</th>
                     <th class="border-b p-2">Semester</th>
-                    <th class="border-b p-2">Sifat</th>
                 </tr>
             </thead>
             <tbody>
@@ -116,8 +116,10 @@
                         <td class="border-b p-2">{{ $jadwal->ruang }}</td>
                         <td class="border-b p-2">{{ $jadwal->sks }}</td>
                         <td class="border-b p-2">{{ $jadwal->hari }}</td>
-                        <td class="border-b p-2">{{ substr($jadwal->jam_mulai, 0, 5) }} - {{ substr($jadwal->jam_selesai, 0, 5) }}</td>
+                        <td class="border-b p-2">{{ substr($jadwal->jam_mulai, 0, 5) }} -
+                            {{ substr($jadwal->jam_selesai, 0, 5) }}</td>
                         <td class="border-b p-2">{{ $jadwal->kelas }}</td>
+                        <td class="border-b p-2">{{ $jadwal->sks }}</td>
                         <td class="border-b p-2">{{ $jadwal->semester_aktif }}</td>
                         <td class="border-b p-2">{{ $jadwal->matakuliah->jenis_matkul ?? 'Tidak ada Status' }}</td>
                         <td class="border-b p-2 text-right">
@@ -155,6 +157,8 @@
                     <th class="border-b p-2">Waktu</th>
                     <th class="border-b p-2">Kelas</th>
                     <th class="border-b p-2">Semester</th>
+                    <th class="border-b p-2">Status</th>
+                    <th class="border-b p-2">Aksi</th>
                 </tr>
             </thead>
             <tbody id="irs-dipilih">
@@ -176,7 +180,6 @@
     </div>
 
     <script>
-
         $(document).ready(function () {
             let currentSKS = 0;
             let jadwalDipilih = [];
@@ -186,20 +189,7 @@
             const userId = '{{ Auth::user()->id }}'; // Ambil ID pengguna yang sedang login
             const localStorageKey = `irsData_${userId}`; // Kunci unik untuk menyimpan IRS per pengguna
             const localStorageStatusKey = `isSubmitted_${userId}`; // Kunci unik untuk status submit IRS
-
-
-            Fungsi untuk memuat status `isSubmitted` dari localStorage
-            function loadSubmissionStatus() {
-                const storedIsSubmitted = localStorage.getItem(localStorageStatusKey);
-                if (storedIsSubmitted === 'true') {
-                    isSubmitted = true;
-                    $('#submit-irs-btn')
-                        .text('Cancel')
-                        .removeClass('btn-primary')
-                        .addClass('btn-danger');
-                    $('.delete-btn').hide(); // Sembunyikan tombol delete
-                }
-            }
+    
             // Fungsi untuk memuat data IRS dari localStorage
             function loadIRSfromStorage() {
                 const storedIRS = localStorage.getItem(localStorageKey);
@@ -213,13 +203,13 @@
                     });
                 }
             }
-
+    
             // Fungsi untuk menyimpan data IRS ke localStorage
             function saveIRStoStorage() {
                 const irsData = $('#irs-dipilih').html();
                 localStorage.setItem(localStorageKey, irsData);
             }
-
+    
             // Fungsi untuk memperbarui total SKS
             function updateCurrentSKS() {
                 let totalSKS = 0;
@@ -230,69 +220,17 @@
                 currentSKS = totalSKS;
                 $('#total-sks').text(`Total SKS: ${currentSKS}`);
             }
-
-            // Load data IRS saat halaman dimuat
-            loadIRSfromStorage();
-
-            // Memuat status isSubmitted dari localStorage
-            const storedIsSubmitted = localStorage.getItem('isSubmitted');
-            if (storedIsSubmitted === 'true') {
-                isSubmitted = true;
-                $('#submit-irs-btn').text('Cancel') // Ubah tombol menjadi 'Cancel'
-                    .removeClass('btn-primary')
-                    .addClass('btn-danger'); // Tombol cancel menjadi merah
-                $('.delete-btn').hide(); // Sembunyikan tombol delete
-            } else {
-                isSubmitted = false;
-                $('#submit-irs-btn').text('Submit') // Tombol default
-                    .removeClass('btn-danger')
-                    .addClass('btn-primary'); // Tombol submit normal
-            }
-
-            // Pencarian jadwal berdasarkan query
-            $('#search-bar').on('keyup', function() {
-                const query = $(this).val();
-                if (query.length > 0) {
-                    $.ajax({
-                        url: "{{ route('jadwals.search') }}",
-                        type: "GET",
-                        data: {
-                            query: query
-                        },
-                        success: function(data) {
-                            $('#jadwal-table tbody').empty();
-                            $.each(data, function(key, jadwal) {
-                                $('#jadwal-table tbody').append(`
-                                    <tr>
-                                        <td>${jadwal.kodemk}</td>
-                                        <td>${jadwal.matakuliah.nama}</td>
-                                        <td>${jadwal.ruang}</td>
-                                        <td>${jadwal.sks}</td>
-                                        <td>${jadwal.hari}</td>
-                                        <td>${jadwal.jam_mulai}-${jadwal.jam_selesai}</td>
-                                        <td>${jadwal.kelas}</td>
-                                        <td>${jadwal.semester_aktif}</td>
-                                        <td>${jadwal.matakuliah.jenis_matkul}</td>
-                                        <td class="text-right">
-                                            <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 ambil-btn"
-                                                data-id="${jadwal.id}"
-                                                data-kode="${jadwal.kodemk}"
-                                                data-matakuliah="${jadwal.matakuliah.nama}"
-                                                data-ruang="${jadwal.ruang}"
-                                                data-sks="${jadwal.sks}"
-                                                data-hari="${jadwal.hari}"
-                                                data-waktu="${jadwal.jam_mulai}-${jadwal.jam_selesai}"
-                                                data-kelas="${jadwal.kelas}"
-                                                data-semester="${jadwal.semester_aktif}"
-                                                data-sifat="${jadwal.matakuliah.jenis_matkul}">
-                                                Ambil
-                                            </button>
-                                        </td>
-                                    </tr>
-                                `);
-                            });
-                        }
-                    });
+    
+            // Fungsi untuk memuat status `isSubmitted` dari localStorage
+            function loadSubmissionStatus() {
+                const storedIsSubmitted = localStorage.getItem(localStorageStatusKey);
+                if (storedIsSubmitted === 'true') {
+                    isSubmitted = true;
+                    $('#submit-irs-btn')
+                        .text('Cancel')
+                        .removeClass('btn-primary')
+                        .addClass('btn-danger');
+                    $('.delete-btn').hide(); // Sembunyikan tombol delete
                 } else {
                     isSubmitted = false;
                     $('#submit-irs-btn')
@@ -301,13 +239,14 @@
                         .addClass('btn-primary');
                     $('.delete-btn').show(); // Tampilkan tombol delete
                 }
-            });
-
+            }
+    
+            // Load data IRS dan status submit saat halaman dimuat
             loadIRSfromStorage();
             loadSubmissionStatus();
-
+    
             let sksLoad = {{ $sksLoad ?? 0 }}; // Pastikan $sksLoad didefinisikan di controller atau view
-
+    
             // Mengambil mata kuliah yang dipilih
             $(document).on('click', '.ambil-btn', function () {
                 if (isSubmitted) {
@@ -319,23 +258,22 @@
                 const courseSKS = parseInt(btn.data('sks'), 10);
                 const kode = btn.data('kode');
                 const waktu = btn.data('waktu');
-                const hari = btn.data('hari');
-
+    
                 if (selectedCourses.has(kode)) {
                     Swal.fire('Error', 'You have already selected this course.', 'error');
                     return;
                 }
-
-                if (isWaktuBentrok(waktu, hari)) {
+    
+                if (isWaktuBentrok(waktu)) {
                     Swal.fire('Error', 'Schedule conflict detected!', 'error');
                     return;
                 }
-
+    
                 if (currentSKS + courseSKS > sksLoad) {
                     Swal.fire('Error', 'Total SKS would exceed your limit.', 'error');
                     return;
                 }
-
+    
                 Swal.fire({
                     title: 'Are you sure?',
                     text: 'Do you want to take this course?',
@@ -357,7 +295,7 @@
                                 <td>${btn.data('waktu')}</td>
                                 <td>${btn.data('kelas')}</td>
                                 <td>${btn.data('semester')}</td>
-                                
+                                <td>New</td>
                                 <td>
                                     <button class="bg-red-500 text-white px-4 py-2 rounded-md delete-btn">Delete</button>
                                 </td>
@@ -371,7 +309,7 @@
                     }
                 });
             });
-
+    
             // Menghapus mata kuliah dari IRS yang sudah dipilih
             $(document).on('click', '.delete-btn', function () {
                 if (isSubmitted) {
@@ -387,34 +325,11 @@
                 saveIRStoStorage();
                 Swal.fire('Removed!', 'The course has been removed.', 'success');
             });
-
-            function isWaktuBentrok(waktuBaru, hariBaru) {
-                console.log('Mengecek bentrokan untuk:', hariBaru, waktuBaru); // Tambahkan untuk debugging
-                const waktuMulaiBaru = moment(waktuBaru.split('-')[0], 'HH:mm');
-                const waktuSelesaiBaru = moment(waktuBaru.split('-')[1], 'HH:mm');
-
-                for (let i = 0; i < jadwalDipilih.length; i++) {
-                    const [hariTersimpan, waktuMulaiTersimpanStr, waktuSelesaiTersimpanStr] = jadwalDipilih[i]
-                        .split('-');
-                    console.log('Jadwal Tersimpan:', hariTersimpan, waktuMulaiTersimpanStr,
-                        waktuSelesaiTersimpanStr); // Debug
-                    const waktuMulaiTersimpan = moment(waktuMulaiTersimpanStr, 'HH:mm');
-                    const waktuSelesaiTersimpan = moment(waktuSelesaiTersimpanStr, 'HH:mm');
-
-                    if (hariBaru === hariTersimpan) {
-                        console.log('Membandingkan dengan:', hariTersimpan, waktuMulaiTersimpan.format('HH:mm'),
-                            waktuSelesaiTersimpan.format('HH:mm')); // Debug
-                        if (!waktuSelesaiBaru.isBefore(waktuMulaiTersimpan) && !waktuMulaiBaru.isAfter(
-                                waktuSelesaiTersimpan)) {
-                            console.log('Bentrokan ditemukan');
-                            return true; // Ada bentrokan
-                        }
-                    }
-                }
-                console.log('Tidak ada bentrokan ditemukan');
-                return false; // Tidak ada bentrokan
+    
+            function isWaktuBentrok(waktuBaru) {
+                return jadwalDipilih.includes(waktuBaru);
             }
-
+    
             // Menangani klik pada tombol submit
 $('#submit-irs-btn').on('click', function () {
     if (isSubmitted) {
@@ -495,9 +410,6 @@ $('#submit-irs-btn').on('click', function () {
 });
 
 
-
-
-            // Fungsi untuk mengumpulkan data IRS yang dipilih
             function collectSelectedIRS() {
                 let courses = [];
                 $('#irs-dipilih tr').each(function () {
@@ -516,16 +428,10 @@ $('#submit-irs-btn').on('click', function () {
                 });
                 return courses;
             }
-
-            // Menghapus mata kuliah dari IRS yang sudah dipilih
-            $(document).on('click', '.delete-btn', function() {
-                const row = $(this).closest('tr');
-                row.remove(); // Hapus baris di tampilan
-                updateCurrentSKS(); // Update total SKS
-            });
         });
     </script>
-
+    
+    
 </body>
 
 </html>
