@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -19,8 +20,7 @@
                 <div class="flex h-16 items-center justify-between">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            <img class="h-8 w-8" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                                alt="Your Company">
+                            <img class="h-8 w-8" src="../img/logoundip.png" alt="Logo Undip">
                         </div>
                         <a class="ml-2 text-2xl font-bold text-white" href="{{ url('/dashboard-dekan') }}">DipoACE</a>
                         <div class="hidden md:block">
@@ -31,7 +31,8 @@
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
                             <!-- Profile dropdown -->
-                            <span class="mr-2 text-white">nama dekan</span>
+                            <span
+                                class="mr-2 text-white">{{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</span>
                             <div class="relative ml-3">
                                 <div>
                                     <button type="button" @click="isOpen = !isOpen"
@@ -95,7 +96,8 @@
                                 alt="">
                         </div>
                         <div class="ml-3">
-                            <div class="text-sm font-medium leading-none text-gray-400">nama dekan</div>
+                            <div class="text-sm font-medium leading-none text-gray-400">
+                                {{ \App\Models\dosen::where('email', Auth::user()->email)->first()->nama }}</div>
                         </div>
                     </div>
                     <div class="mt-3 space-y-1 px-2">
@@ -109,7 +111,8 @@
 
         <header class="bg-white shadow">
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <a href="{{ url('/dashboard-dekan') }}" class="text-3xl font-bold tracking-tight text-gray-900">Academic</a>
+                <a href="{{ url('/dashboard-dekan') }}"
+                    class="text-3xl font-bold tracking-tight text-gray-900">Academic</a>
             </div>
         </header>
         <main>
@@ -130,7 +133,7 @@
                                 <div class="card-body p-4">
                                     <h4 class="card-title mb-3 text-lg font-bold">Persetujuan Ruang Kelas</h4>
                                     {{-- Form filter --}}
-                                    <form action="{{ route('kelas.filter') }}" method="get"
+                                    <form action="{{ route('kelas.filter') }}" method="get" id="filterForm"
                                         class="flex flex-wrap justify-center">
                                         @csrf
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-2 ml-0">
@@ -147,12 +150,17 @@
                                                 <option value="Matematika">Matematika</option>
                                             </select>
                                         </div>
-                                        <div class="w-full p-2 mt-4">
+                                        <div class="flex flex-wrap justify-between w-full p-2 mt-4">
                                             <button type="submit"
                                                 class="btn btn-primary w-60 p-2 text-sm text-white rounded-lg bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">Search</button>
                                         </div>
                                     </form>
-
+                                    <div class="w-full p-2 flex justify-end">
+                                    <button type="submit" id="approveAllBtn" style="display: none"
+                                        class="btn btn-primary w-60 p-2 text-sm text-white rounded-lg bg-green-500 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent">
+                                        Setujui Semua
+                                    </button>
+                                </div>
                                     {{-- Tampilan Kelas --}}
                                     @if ($approvals->isEmpty())
                                         <p class="text-center text-gray-500">Tidak ada pengajuan untuk disetujui.</p>
@@ -161,7 +169,8 @@
                                             <div class="bg-white rounded-lg shadow-md p-4 mb-4">
                                                 <div class="flex items-center justify-between">
                                                     <div>
-                                                        <h2 class="text-lg font-semibold">{{ $approval->classroom->nama ?? 'Tidak ada nama' }}</h2>
+                                                        <h2 class="text-lg font-semibold">
+                                                            {{ $approval->classroom->nama ?? 'Tidak ada nama' }}</h2>
                                                         <p class="text-gray-600">
                                                             Gedung: {{ $approval->classroom->gedung ?? '-' }} |
                                                             Kapasitas: {{ $approval->classroom->kapasitas ?? '-' }} |
@@ -170,15 +179,10 @@
                                                     </div>
                                                     <div>
                                                         <!-- Tombol Setuju -->
-                                                        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
+                                                        <button
+                                                            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
                                                             onclick="confirmApprove('{{ route('kelas.approve', $approval->id) }}')">
                                                             Setuju
-                                                        </button>
-
-                                                        <!-- Tombol Tolak -->
-                                                        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                                            onclick="confirmReject('{{ route('kelas.reject', $approval->id) }}')">
-                                                            Tolak
                                                         </button>
                                                     </div>
                                                 </div>
@@ -199,88 +203,112 @@
                                             }).then((result) => {
                                                 if (result.isConfirmed) {
                                                     fetch(url, {
-                                                        method: 'POST',
-                                                        headers: {
-                                                            'Content-Type': 'application/json',
-                                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                                        }
-                                                    })
-                                                    .then(response => {
-                                                        console.log(response); // Debugging: Cek respons dari server
-                                                        if (response.ok) {
-                                                            return response.json(); // Parsing respons ke JSON
-                                                        } else {
-                                                            throw new Error('Terjadi masalah saat menyetujui.');
-                                                        }
-                                                    })
-                                                    .then(data => {
-                                                        console.log(data); // Debugging: Cek data JSON yang diterima
-                                                        Swal.fire({
-                                                            title: 'Disetujui!',
-                                                            text: data.message || 'Pengajuan berhasil disetujui.',
-                                                            icon: 'success',
-                                                            timer: 3000,
-                                                            willClose: () => {
-                                                                location.reload();
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/json',
+                                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
                                                             }
-                                                        });
-                                                    })
-                                                    .catch(error => {
-                                                        console.error('Error:', error); // Debugging: Log error ke console
-                                                        Swal.fire('Error!', error.message || 'Terjadi masalah pada permintaan Anda.', 'error');
-                                                    });
-                                                }
-                                            });
-                                        }
-                                
-                                        function confirmReject(url) {
-                                            Swal.fire({
-                                                title: "Apakah Anda yakin?",
-                                                text: "Penolakan ini tidak dapat dibatalkan!",
-                                                icon: "warning",
-                                                showCancelButton: true,
-                                                confirmButtonColor: "#d33",
-                                                cancelButtonColor: "#3085d6",
-                                                confirmButtonText: "Ya, Tolak!"
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    fetch(url, {
-                                                        method: 'POST',
-                                                        headers: {
-                                                            'Content-Type': 'application/json',
-                                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                                        }
-                                                    }).then(response => {
-                                                        if (response.ok) {
+                                                        })
+                                                        .then(response => {
+                                                            console.log(response); // Debugging: Cek respons dari server
+                                                            if (response.ok) {
+                                                                return response.json(); // Parsing respons ke JSON
+                                                            } else {
+                                                                throw new Error('Terjadi masalah saat menyetujui.');
+                                                            }
+                                                        })
+                                                        .then(data => {
+                                                            console.log(data); // Debugging: Cek data JSON yang diterima
                                                             Swal.fire({
-                                                                title: 'Ditolak!',
-                                                                text: 'Pengajuan berhasil ditolak.',
+                                                                title: 'Disetujui!',
+                                                                text: data.message || 'Pengajuan berhasil disetujui.',
                                                                 icon: 'success',
                                                                 timer: 3000,
                                                                 willClose: () => {
                                                                     location.reload();
                                                                 }
                                                             });
-                                                        } else {
-                                                            Swal.fire('Error!', 'Terjadi masalah saat menolak.', 'error');
-                                                        }
-                                                    }).catch(error => {
-                                                        Swal.fire('Error!', 'Terjadi masalah pada permintaan Anda.', 'error');
-                                                    });
+                                                        })
+                                                        .catch(error => {
+                                                            console.error('Error:', error); // Debugging: Log error ke console
+                                                            Swal.fire('Error!', error.message || 'Terjadi masalah pada permintaan Anda.',
+                                                                'error');
+                                                        });
                                                 }
                                             });
                                         }
                                     </script>
-                                            </div>
-                                        </div>
-                                    </div>                                   
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </main>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const approveAllBtn = document.getElementById('approveAllBtn');
+                const filterForm = document.getElementById('filterForm');
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                console.log(document.querySelector('meta[name="csrf-token"]')); // Check if this returns null
+
+                filterForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    var formData = new FormData(this);
+                    var searchParams = new URLSearchParams(formData);
+                    approveAllBtn.style.display = 'block';
+                });
+
+                approveAllBtn.addEventListener('click', function() {
+                    const jurusan = document.querySelector('[name="jurusan"]').value;
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, approve all!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch('/approve-all-kelas', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': csrfToken
+                                    },
+                                    body: JSON.stringify({
+                                        jurusan: jurusan
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Swal.fire({
+                                        title: 'Approved!',
+                                        text: 'Your approval has been recorded.',
+                                        icon: 'success',
+                                        timer: 3000, // Alert will stay for 3 seconds
+                                        timerProgressBar: true, // Optional: shows a progress bar
+                                        willClose: () => {
+                                            location.reload();
+                                        }
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: 'There was a problem with your request.',
+                                        icon: 'error',
+                                        confirmButtonText: 'Ok'
+                                    });
+                                });
+                        }
+                    });
+                });
+            });
+        </script>
     </div>
 </body>
 

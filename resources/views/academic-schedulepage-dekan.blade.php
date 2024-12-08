@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -20,8 +21,7 @@
                 <div class="flex h-16 items-center justify-between">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            <img class="h-8 w-8" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                                alt="Your Company">
+                            <img class="h-8 w-8" src="../img/logoundip.png" alt="Logo Undip">
                         </div>
                         <a class="ml-2 text-2xl font-bold text-white" href="{{ url('/dashboard-dekan') }}">DipoACE</a>
                         <div class="hidden md:block">
@@ -135,7 +135,7 @@
                                     <h4 class="card-title mb-3 text-lg font-bold">Persetujuan Jadwal</h4>
                                     {{-- Form filter --}}
                                     <form action="{{ route('jadwal.filter') }}" method="get"
-                                        class="flex flex-wrap justify-center">
+                                        class="flex flex-wrap justify-center" id="filterForm">
                                         @csrf
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-2 ml-0">
                                             <label for="jurusan" class="form-label text-sm">Jurusan</label>
@@ -151,18 +151,7 @@
                                                 <option value="Matematika">Matematika</option>
                                             </select>
                                         </div>
-                                        <div class="w-full md:w-1/2 xl:w-1/3 p-2 ml-0">
-                                            <label for="kelas" class="form-label text-sm">Kelas</label>
-                                            <select name="kelas"
-                                                class="form-select block w-full p-2 pl-10 text-sm text-gray-700 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent">
-                                                <option value="">-</option>
-                                                <option value="A">Kelas A</option>
-                                                <option value="B">Kelas B</option>
-                                                <option value="C">Kelas C</option>
-                                                <option value="D">Kelas D</option>
-                                                <option value="E">Kelas E</option>
-                                            </select>
-                                        </div>
+                            
                                         <div class="flex flex-wrap justify-between w-full p-2 mt-4">
                                             <!-- Tombol Search -->
                                             <button type="submit"
@@ -173,7 +162,7 @@
                                     </form>
                                     <div class="w-full p-2 flex justify-end">
                                         <!-- Tombol Setujui Semua -->
-                                        <button type="submit"
+                                        <button type="submit" id="approveAllBtn" style="display: none"
                                             class="btn btn-primary w-60 p-2 text-sm text-white rounded-lg bg-green-500 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent">
                                             Setujui Semua
                                         </button>
@@ -182,7 +171,9 @@
                                         <div class="bg-white rounded-lg shadow-md p-4 mb-4">
                                             <div class="flex items-center justify-between">
                                                 <div>
-                                                    <h2 class="text-lg font-semibold">{{ $item->matakuliah->nama ?? 'Nama Mata Kuliah Tidak Ditemukan' }}</h2>
+                                                    <h2 class="text-lg font-semibold">
+                                                        {{ $item->matakuliah->nama ?? 'Nama Mata Kuliah Tidak Ditemukan' }}
+                                                    </h2>
                                                     <button onclick="openModal('{{ json_encode($item) }}')"
                                                         class="text-blue-500 hover:text-blue-700">
                                                         <i class="fas fa-eye"></i>
@@ -213,7 +204,7 @@
                                                         Ruang: {{ $item->ruang }} |
                                                         Kelas: {{ $item->kelas }} |
                                                         Semester: {{ $item->semester_aktif }} |
-                                                        Waktu: {{ $item->waktu }}
+                                                        Waktu: {{ date('H:i', strtotime($item->jam_mulai)) }}-{{ date('H:i', strtotime($item->jam_selesai)) }}
                                                     </p>
                                                 </div>
 
@@ -303,7 +294,71 @@
             function closeModal() {
                 document.getElementById('modalDetail').classList.add('hidden');
             }
+
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const approveAllBtn = document.getElementById('approveAllBtn');
+                const filterForm = document.getElementById('filterForm');
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                console.log(document.querySelector('meta[name="csrf-token"]')); // Check if this returns null
+
+                filterForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    var formData = new FormData(this);
+                    var searchParams = new URLSearchParams(formData);
+                    approveAllBtn.style.display = 'block';
+                });
+
+                approveAllBtn.addEventListener('click', function() {
+                    const jurusan = document.querySelector('[name="jurusan"]').value;
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, approve all!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch('/approve-all-jadwal', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': csrfToken
+                                    },
+                                    body: JSON.stringify({
+                                        jurusan: jurusan
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Swal.fire({
+                                        title: 'Approved!',
+                                        text: 'Your approval has been recorded.',
+                                        icon: 'success',
+                                        timer: 3000, // Alert will stay for 3 seconds
+                                        timerProgressBar: true, // Optional: shows a progress bar
+                                        willClose: () => {
+                                            location.reload();
+                                        }
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: 'There was a problem with your request.',
+                                        icon: 'error',
+                                        confirmButtonText: 'Ok'
+                                    });
+                                });
+                        }
+                    });
+                });
+            });
         </script>
+
     </div>
 </body>
 

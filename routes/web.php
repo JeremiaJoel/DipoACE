@@ -49,6 +49,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/download-pdf', 'PDFController@downloadPDF');
     // Route::get('/search-mata-kuliah', [MataKuliahController::class, 'search'])->name('search.mata-kuliah');
 
+    Route::post('/approve-all-jadwal', [ScheduleController::class, 'approveAll']);
+    Route::post('/approve-all-kelas', [ApproveClassroomController::class, 'approveAll']);
 
 
     Route::get('/academic-schedulepage-dekan', [ScheduleController::class, 'index'])->name('jadwal.index');
