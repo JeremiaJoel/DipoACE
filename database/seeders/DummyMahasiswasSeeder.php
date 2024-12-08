@@ -16,14 +16,14 @@ class DummyMahasiswasSeeder extends Seeder
     {
         $mahasiswa =[
             [
-                'nim' => '24060122140103',
-                'nama' => 'Juliana Winata',
+                'nim' => '24060122140160',
+                'nama' => 'Ateng Baplang',
                 'jurusan' => 'Informatika',
-                'email' => 'juliana.winata@students.dipoace.ac.id',
+                'email' => 'ateng.baplang@students.dipoace.ac.id',
                 'tanggal_lahir' => '2004-11-15',
                 'no_hp' => '081297243391',
                 'status' => 'Aktif',
-                'pembimbing_akademik' => 'Dr. Aris Puji Widodo, S.Si., M.T.'
+                'pembimbing_akademik' => 'Dr. Jeremia Joel Richard, S.Si., M.T.'
             ],
             // [   
             //     'nim' => '24040122140160',

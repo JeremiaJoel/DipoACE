@@ -96,16 +96,36 @@
                             <p class="text-gray-600 font-semibold">Dosen Wali :
                                 {{ \App\Models\mahasiswa::where('email', Auth::user()->email)->first()->pembimbing_akademik }}
                             </p>
-                            <p class="text-gray-600 font-semibold">(NIP: {{ 199603032024061003 }})</p>
+                            @php
+                                // Ambil data mahasiswa berdasarkan email pengguna yang login
+                                $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
+
+                                // Cari dosen berdasarkan nama pembimbing akademik
+                                $dosen = \App\Models\Dosen::where('nama', $mahasiswa->pembimbing_akademik)->first();
+
+                                // Ambil NIP dari dosen pembimbing
+                                $nip = $dosen ? $dosen->nip : 'NIP tidak ditemukan';
+                            @endphp
+                            <p class="text-gray-600 font-semibold">(NIP:
+                                {{ $nip }})
+                            </p>
                         </div>
                         <div class="mt-4 grid grid-cols-3 gap-4 text-center">
+                            @php
+                                $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
+                                $nim = $mahasiswa ? $mahasiswa->nim : null;
+                                $semesterMahasiswa = $mahasiswa ? $mahasiswa->semester : null;
+                                $semesters = range(1, $semesterMahasiswa);
+                            @endphp
                             <div>
                                 <p class="text-gray-600">Semester Akademik</p>
-                                <p class="text-2xl">2024/2025 Ganjil</p>
+                                <p class="text-2xl">
+                                    {{ $semesterMahasiswa <= 2 ? '2021/2022' : ($semesterMahasiswa <= 4 ? '2022/2023' : '2023/2024') }}
+                                    {{ $semesterMahasiswa % 2 == 0 ? 'Genap' : 'Ganjil' }}</p>
                             </div>
                             <div>
                                 <p class="text-gray-600">Semester Studi</p>
-                                <p class="text-2xl">5</p>
+                                <p class="text-2xl">{{ $semesterMahasiswa }}</p>
                             </div>
                             <div>
                                 <p class="text-gray-600">Status Akademik</p>
@@ -148,8 +168,8 @@
 
                 <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="bg-white shadow rounded-lg p-4 h-20">
-                        <a href="{{ url('/mahasiswa-buatirs') }}" 
-                            onclick="return statusAlert(event, '{{ auth()->user()->status }}')" 
+                        <a href="{{ url('/mahasiswa-buatirs') }}"
+                            onclick="return statusAlert(event, '{{ auth()->user()->status }}')"
                             class="text-xl font-semibold">
                             Buat IRS
                         </a>
@@ -169,35 +189,32 @@
         </main>
 
 
-            <script>
-                function statusAlert(event, status) {
-    console.log("Status:", status); // Menampilkan status
-    console.log("Event:", event); // Menampilkan event yang diterima
+        <script>
+            function statusAlert(event, status) {
+                console.log("Status:", status); // Menampilkan status
+                console.log("Event:", event); // Menampilkan event yang diterima
 
-    // Cek apakah event adalah instance dari MouseEvent (atau event yang valid)
-    if (event instanceof MouseEvent) {
-        console.log("Klik pada elemen terdeteksi");
+                // Cek apakah event adalah instance dari MouseEvent (atau event yang valid)
+                if (event instanceof MouseEvent) {
+                    console.log("Klik pada elemen terdeteksi");
 
-        // Jika status mahasiswa 'Cuti', tampilkan alert SweetAlert
-        if (status === 'Cuti') {
-            event.preventDefault(); // Cegah navigasi jika status Cuti
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Status Cuti Tidak Dapat Mengisi IRS', // Pesan error
-            });
-            return false; // Cegah tautan untuk diarahkan
-        } else {
-            return true; // Biarkan navigasi dilanjutkan jika status bukan Cuti
-        }
-    } else {
-        console.log("Event bukan MouseEvent");
-        return true; // Tetap biarkan jika event bukan MouseEvent
-    }
-}
+                    // Jika status mahasiswa 'Cuti', tampilkan alert SweetAlert
+                    if (status === 'Cuti') {
+                        event.preventDefault(); // Cegah navigasi jika status Cuti
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Status Cuti Tidak Dapat Mengisi IRS', // Pesan error
+                        });
+                        return false; // Cegah tautan untuk diarahkan
+                    } else {
+                        return true; // Biarkan navigasi dilanjutkan jika status bukan Cuti
+                    }
+                } else {
+                    console.log("Event bukan MouseEvent");
+                    return true; // Tetap biarkan jika event bukan MouseEvent
+                }
+            }
+        </script>
 
-
-            </script>
-    
         </main>
-
