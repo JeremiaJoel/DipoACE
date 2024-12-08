@@ -68,7 +68,7 @@
 
         <header class="bg-white shadow">
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <h1 class="text-3xl font-bold tracking-tight text-gray-900">KHS</h1>
+                <a href="dashboard-mahasiswa" class="text-3xl font-bold tracking-tight text-gray-900">Dashboard</a>
             </div>
         </header>
 
@@ -81,9 +81,10 @@
                             <div class="card bg-white rounded-lg shadow-md">
                                 <div class="flex border-b">
                                     <button class="flex-1 py-4 px-6 text-center text-gray-500 hover"
-                                        onclick="window.location.href=''">Buat IRS</button>
+                                        onclick="window.location.href='/mahasiswa-buatirs'">Buat IRS</button>
                                     <button
-                                        class="flex-1 py-4 px-6 text-center text-gray-500 border-b-2 hover">IRS</button>
+                                        class="flex-1 py-4 px-6 text-center text-gray-500 border-b-2 hover"
+                                        onclick="window.location.href='/mahasiswa-irs'">IRS</button>
                                     <button
                                         class="flex-1 py-4 px-6 text-center text-gray-500 border-b-2 border-gray-500">KHS</button>
                                 </div>

@@ -5,18 +5,33 @@ namespace App\Http\Controllers;
 use App\Models\Jadwal;
 use App\Models\khs;
 use App\Models\irs;
+use App\Models\users;
 use App\Models\mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class IRSController extends Controller
 {
+
+    // public function __construct()
+    // {
+    //         $this->middleware('StatusMahasiswa')->only([
+    //         'index', 'ambil', 'submitIRS', 'showIrs'
+    //     ]);
+    // }
+
     public function index()
     {
         // Ambil data jadwal dari database
         $jadwals = Jadwal::paginate(10);
 
         $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
+
+        if ($mahasiswa && $mahasiswa->status === 'Cuti') {
+            // Kirim pesan error ke view jika status mahasiswa adalah Cuti
+            return view('mahasiswa-buatirs', ['error' => 'Status Cuti Tidak Dapat Mengisi IRS']);
+        }
+
         $nim = $mahasiswa ? $mahasiswa->nim : null;
         $sksLoad = $this->calculateSKSLoad($nim);
 
@@ -217,4 +232,46 @@ class IRSController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
+
+    public function showIrs()
+    {
+        $mahasiswa = \App\Models\Mahasiswa::where('email', Auth::user()->email)->first();
+        $nim = $mahasiswa ? $mahasiswa->nim : null;
+    
+        // Pastikan nim terisi dengan benar
+        if (!$nim) {
+            dd('NIM tidak ditemukan untuk user yang sedang login');
+        }
+    
+        // Ambil data IRS berdasarkan NIM
+        $irsData = \App\Models\Irs::where('nim', $nim)->get();
+    
+        // Pastikan irsData ada
+        if ($irsData->isEmpty()) {
+            dd('Data IRS tidak ditemukan');
+        }
+    
+        return view('mahasiswa-irs', compact('irsData'));
+    }
+
+    public function create()
+    {
+        // Ambil data mahasiswa berdasarkan email pengguna yang login
+        $mahasiswa = Mahasiswa::where('email', Auth::user()->email)->first();
+
+        // Pastikan data mahasiswa ditemukan
+        if (!$mahasiswa) {
+            return redirect()->route('login')->with('error', 'Data mahasiswa tidak ditemukan.');
+        }
+
+        // Cek status akademik mahasiswa, hanya mahasiswa aktif yang dapat mengakses halaman ini
+        if ($mahasiswa->status !== 'Aktif') {
+            return redirect()->route('dashboard-mahasiswa')->with('error', 'Hanya mahasiswa aktif yang dapat membuat IRS.');
+        }
+
+        // Tampilkan view untuk membuat IRS jika status aktif
+        return view('mahasiswa-irs');
+    }
+
+
 }

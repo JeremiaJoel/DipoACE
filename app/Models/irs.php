@@ -45,4 +45,15 @@ class irs extends Model
     {
         return $this->belongsTo(matakuliah::class, 'kodemk', 'kodemk');
     }
+
+    public function jadwal()
+    {
+        return $this->hasOne(jadwal::class, 'kodemk', 'kodemk');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }
