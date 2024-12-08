@@ -311,6 +311,12 @@ class IRSController extends Controller
         }
     }
 
+    public function getIRS(Request $request)
+{
+    $studentId = Auth::user()->id; // ID mahasiswa yang login
+    $irs = IRS::where('student_id', $studentId)->get(); // Ambil IRS mahasiswa login
+    return response()->json($irs);
+}
 
     public function showIrs()
     {
