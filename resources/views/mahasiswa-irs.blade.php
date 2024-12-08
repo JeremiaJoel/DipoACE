@@ -37,7 +37,7 @@
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
                             <span
-                                class="rounded-md px-1 py-2 text-xl font-medium text-white">{{ Auth::user()->email }}</span>
+                                class="rounded-md px-1 py-2 text-xl font-medium text-white">{{ \App\Models\mahasiswa::where('email', Auth::user()->email)->first()->nama }}</span>
 
                             <!-- Profile dropdown -->
                             <div class="relative ml-3">
@@ -77,7 +77,7 @@
 
         <header class="bg-white shadow">
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <a href="dashboard-mahasiswa" class="text-3xl font-bold tracking-tight text-gray-900">Dashboard</a>
+                <a href="dashboard-mahasiswa" class="text-3xl font-bold tracking-tight text-gray-900">IRS</a>
             </div>
         </header>
 
@@ -106,7 +106,8 @@
                                                 Auth::user()->email,
                                             )->first();
                                             $nim = $mahasiswa ? $mahasiswa->nim : null;
-                                            $semesters = [1, 2, 3, 4, 5]; // Array of semesters to display
+                                            $semesterMahasiswa = $mahasiswa ? $mahasiswa->semester : null;
+                                            $semesters = range(1, $semesterMahasiswa); // Array of semesters to display
                                         @endphp
 
                                         @foreach ($semesters as $semester)
@@ -189,7 +190,7 @@
                                                     </table>
                                                     <a href="{{ route('irs.print', ['mahasiswaId' => $mahasiswa->nim, 'semester' => $semester]) }}"
                                                         class="bg-red-500 text-white px-4 py-2 rounded-md">Download</a>
-                                                     
+
                                                 </div>
                                             </div>
                                         @endforeach

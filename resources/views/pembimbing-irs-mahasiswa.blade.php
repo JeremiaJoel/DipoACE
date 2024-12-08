@@ -141,7 +141,9 @@
                         @foreach ($irs as $item)
                         @foreach ($item->irs as $matkul) <!-- Mengakses data IRS dari relasi -->
                             <tr>
+
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $loop->iteration }}.</td>
+
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $matkul->kodemk }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $matkul->matakuliah->nama }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $matkul->sks }}</td>
