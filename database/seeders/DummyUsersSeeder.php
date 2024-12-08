@@ -27,5 +27,5 @@ class DummyUsersSeeder extends Seeder
         ]);
     }
  }
-}
+
 

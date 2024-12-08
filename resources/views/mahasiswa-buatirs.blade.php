@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -88,11 +89,18 @@
 
     <div class="bg-white shadow-md rounded-lg p-8 mx-8">
         <h2 class="text 2-xl font-semibold text-center mb-5">Mengambil IRS</h2>
-        <div class="mb-4 max-w-2xl">
+        <div class="mb-4 max-w-2xl inline-block">
             <input type="text" placeholder="Search Bar" id="search-bar"
                 class="w-72 p-2 border border-gray-300 rounded-md bg-gray-200">
+            </input>
+            <div></div>
         </div>
         <div class="mb-4">Total SKS yang Dapat Diambil: <strong>{{ $sksLoad }} SKS</strong></div>
+        @if ($tanggalSekarang->day >= 1 && $tanggalSekarang->day <= 14)
+            <p class="text-gray-500 mb-4">Saat ini hanya menampilkan jadwal sesuai dengan semester anda selama 2 minggu pertama</p>
+        @elseif ($tanggalSekarang->day >= 15 && $tanggalSekarang->day <= 31)
+            <p class="text-gray-500 mb-4">Saat ini menampilkan semua matakuliah wajib karena sudah melebihi batas waktu yang ditentukan</p>
+        @endif
         <table id="jadwal-table" class="w-full text-left border-collapse">
             <thead>
                 <tr>
@@ -233,6 +241,33 @@
             // Load data IRS saat halaman dimuat
             loadIRSfromStorage();
 
+            function isWaktuBentrok(waktuBaru, hariBaru) {
+                console.log('Mengecek bentrokan untuk:', hariBaru, waktuBaru); // Tambahkan untuk debugging
+                const waktuMulaiBaru = moment(waktuBaru.split('-')[0], 'HH:mm');
+                const waktuSelesaiBaru = moment(waktuBaru.split('-')[1], 'HH:mm');
+
+                for (let i = 0; i < jadwalDipilih.length; i++) {
+                    const [hariTersimpan, waktuMulaiTersimpanStr, waktuSelesaiTersimpanStr] = jadwalDipilih[i]
+                        .split('-');
+                    console.log('Jadwal Tersimpan:', hariTersimpan, waktuMulaiTersimpanStr,
+                        waktuSelesaiTersimpanStr); // Debug
+                    const waktuMulaiTersimpan = moment(waktuMulaiTersimpanStr, 'HH:mm');
+                    const waktuSelesaiTersimpan = moment(waktuSelesaiTersimpanStr, 'HH:mm');
+
+                    if (hariBaru === hariTersimpan) {
+                        console.log('Membandingkan dengan:', hariTersimpan, waktuMulaiTersimpan.format('HH:mm'),
+                            waktuSelesaiTersimpan.format('HH:mm')); // Debug
+                        if (!waktuSelesaiBaru.isBefore(waktuMulaiTersimpan) && !waktuMulaiBaru.isAfter(
+                                waktuSelesaiTersimpan)) {
+                            console.log('Bentrokan ditemukan');
+                            return true; // Ada bentrokan
+                        }
+                    }
+                }
+                console.log('Tidak ada bentrokan ditemukan');
+                return false; // Tidak ada bentrokan
+            }
+
             // Memuat status isSubmitted dari localStorage
             const storedIsSubmitted = localStorage.getItem('isSubmitted');
             if (storedIsSubmitted === 'true') {
@@ -251,6 +286,7 @@
             // Pencarian jadwal berdasarkan query
             $('#search-bar').on('keyup', function() {
                 const query = $(this).val();
+                var semester = $('#semester').val(); 
                 if (query.length > 0) {
                     $.ajax({
                         url: "{{ route('jadwals.search') }}",
@@ -307,6 +343,8 @@
 
             let sksLoad = {{ $sksLoad ?? 0 }}; // Pastikan $sksLoad didefinisikan di controller atau view
 
+            
+            
             // Mengambil mata kuliah yang dipilih
             $(document).on('click', '.ambil-btn', function () {
                 if (isSubmitted) {
@@ -492,7 +530,6 @@ $('#submit-irs-btn').on('click', function () {
         });
     }
 });
-
 
 
 
