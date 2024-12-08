@@ -138,7 +138,7 @@ Route::middleware([\App\Http\Middleware\StatusMahasiswa::class . ':Aktif'])->gro
     Route::post('/mahasiswa/submit-irs', [IrsController::class, 'submitIRS'])->name('mahasiswa.submitIRS');
     Route::post('/mahasiswa/cancel-irs', [IRSController::class, 'cancelIRS'])->name('mahasiswa.cancelIRS');
     Route::post('/jadwal/{id}/ambil', [IRSController::class, 'ambil'])->name('jadwal.ambil');
-    Route::get('/print-irs/{mahasiswaId}', [PdfController::class, 'generatePDF'])->name('irs.print');
+    Route::get('/generate-pdf/{mahasiswaId}/{semester}', [PdfController::class, 'generatePDF'])->name('irs.print');
     Route::get('/khs', [KHSController::class, 'showKhs'])->name('khsData.showKhs');
 });
 

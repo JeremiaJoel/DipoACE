@@ -82,7 +82,7 @@
         </header>
 
         <main>
-            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            <div class="flex border-b p-8">
                 <!-- Your content -->
                 <div class="container mx-auto mt-5">
                     <div class="row justify-center">
@@ -100,53 +100,34 @@
                                 <div class="card-body p-4">
                                     <h1 class="card-title mb-3 text-lg font-bold">Isian Rencana Studi (IRS)</h1>
                                     <div class="space-y-2">
-                                        <div class="bg-blue-50 p-4 rounded-lg border border-gray-200">
-                                            <div class="flex justify-between items-center">
-                                                <span class="font-semibold text-blue-600">Semester-1 | Tahun Ajaran
-                                                    2022/2023 Ganjil</span>
-                                                <span class="text-gray-500">+</span>
-                                            </div>
-                                            <div class="text-gray-500">Jumlah SKS 21</div>
-                                        </div>
-                                        <div class="bg-blue-50 p-4 rounded-lg border border-gray-200">
-                                            <div class="flex justify-between items-center">
-                                                <span class="font-semibold text-blue-600">Semester-2 | Tahun Ajaran
-                                                    2022/2023 Genap</span>
-                                                <span class="text-gray-500">+</span>
-                                            </div>
-                                            <div class="text-gray-500">Jumlah SKS 0</div>
-                                        </div>
-                                        <div class="bg-blue-50 p-4 rounded-lg border border-gray-200">
-                                            <div class="flex justify-between items-center">
-                                                <span class="font-semibold text-blue-600">Semester-3 | Tahun Ajaran
-                                                    2023/2024 Ganjil</span>
-                                                <span class="text-gray-500">+</span>
-                                            </div>
-                                            <div class="text-gray-500">Jumlah SKS 0</div>
-                                        </div>
-                                        <div x-data="{ isOpen: false }"
-                                            class="bg-blue-50 p-4 rounded-lg border border-gray-200">
-                                            <div class="flex justify-between items-center">
-                                                <span class="font-semibold text-blue-600">Semester-4 | Tahun Ajaran
-                                                    2023/2024 Genap</span>
-                                                <!-- Tombol "+" untuk toggle -->
-                                                <span class="text-gray-500 cursor-pointer"
-                                                    @click="isOpen = !isOpen">+</span>
-                                            </div>
-                                            @php
-                                                $mahasiswa = \App\Models\Mahasiswa::where(
-                                                    'email',
-                                                    Auth::user()->email,
-                                                )->first();
-                                                $nim = $mahasiswa ? $mahasiswa->nim : null;
-                                                $irsData = \App\Models\irs::where('nim', $nim)
-                                                    ->where('semester', '4')
-                                                    ->get();
-                                            @endphp
-                                            <div class="text-gray-500">Jumlah SKS
-                                                {{ \App\Models\irs::where('nim', $nim)->where('semester', 4)->sum('sks') }}
+                                        @php
+                                            $mahasiswa = \App\Models\Mahasiswa::where(
+                                                'email',
+                                                Auth::user()->email,
+                                            )->first();
+                                            $nim = $mahasiswa ? $mahasiswa->nim : null;
+                                            $semesters = [1, 2, 3, 4, 5]; // Array of semesters to display
+                                        @endphp
 
-                                                <!-- Tabel KHS yang akan muncul atau menghilang berdasarkan nilai isOpen -->
+                                        @foreach ($semesters as $semester)
+                                            <div x-data="{ isOpen: false }"
+                                                class="bg-blue-50 p-4 rounded-lg border border-gray-200">
+                                                <div class="flex justify-between items-center">
+                                                    <span
+                                                        class="font-semibold text-blue-600">Semester-{{ $semester }}
+                                                        | Tahun Ajaran
+                                                        {{ $semester <= 2 ? '2022/2023' : '2023/2024' }}
+                                                        {{ $semester % 2 == 0 ? 'Genap' : 'Ganjil' }}</span>
+                                                    <span class="text-gray-500 cursor-pointer"
+                                                        @click="isOpen = !isOpen">+</span>
+                                                </div>
+                                                @php
+                                                    $irsData = \App\Models\irs::where('nim', $nim)
+                                                        ->where('semester', $semester)
+                                                        ->get();
+                                                @endphp
+                                                <div class="text-gray-500">Jumlah SKS {{ $irsData->sum('sks') }}</div>
+
                                                 <div x-show="isOpen"
                                                     x-transition:enter="transition ease-out duration-100 transform"
                                                     x-transition:enter-start="opacity-0 scale-95"
@@ -171,36 +152,33 @@
                                                         </thead>
                                                         <tbody>
                                                             @if ($irsData->isEmpty())
-                                                                <p class="text-gray-500">Tidak ada data IRS untuk
-                                                                    ditampilkan.</p>
+                                                                <tr>
+                                                                    <td colspan="9"
+                                                                        class="text-gray-500 text-center">Tidak ada data
+                                                                        IRS untuk semester ini.</td>
+                                                                </tr>
                                                             @else
                                                                 @foreach ($irsData as $index => $irs)
                                                                     <tr>
-                                                                        <td class="border px-4 py-2">
-                                                                            {{ $index + 1 }}
+                                                                        <td class="border px-4 py-2">{{ $index + 1 }}
                                                                         </td>
                                                                         <td class="border px-4 py-2">
-                                                                            {{ $irs->kodemk }}
-                                                                        </td>
+                                                                            {{ $irs->kodemk }}</td>
                                                                         <td class="border px-4 py-2">
                                                                             {{ $irs->matakuliah->nama ?? 'Matakuliah tidak ditemukan' }}
                                                                         </td>
                                                                         <td class="border px-4 py-2">
-                                                                            {{ $irs->kelas }}
-                                                                        </td>
+                                                                            {{ $irs->kelas }}</td>
                                                                         <td class="border px-4 py-2">
                                                                             {{ $irs->jam_mulai }}-{{ $irs->jam_selesai }}
                                                                         </td>
                                                                         <td class="border px-4 py-2">
-                                                                            {{ $irs->sks }}
-                                                                        </td>
+                                                                            {{ $irs->sks }}</td>
                                                                         <td class="border px-4 py-2">
-                                                                            {{ $irs->ruang }}
-                                                                        </td>
+                                                                            {{ $irs->ruang }}</td>
                                                                         <td class="border px-4 py-2">
-                                                                            {{ $irs->status_mk }}
-                                                                        </td>
-                                                                        <td class="border px-4 py-2 w-96">
+                                                                            {{ $irs->status_mk }}</td>
+                                                                        <td class="border px-4 py-2">
                                                                             {{ $irs->pengampu_1 }} /
                                                                             {{ $irs->pengampu_2 }} /
                                                                             {{ $irs->pengampu_3 }}</td>
@@ -209,107 +187,19 @@
                                                             @endif
                                                         </tbody>
                                                     </table>
-                                                    <a href="{{ route('irs.print', ['mahasiswaId' => $mahasiswa->nim]) }}"
-                                                        class="bg-red-500 text-white px-4 py-2 rounded-md">Download
-                                                    </a>
+                                                    <a href="{{ route('irs.print', ['mahasiswaId' => $mahasiswa->nim, 'semester' => $semester]) }}"
+                                                        class="bg-red-500 text-white px-4 py-2 rounded-md">Download</a>
+                                                     
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div x-data="{ isOpen: false }"
-                                            class="bg-blue-50 p-4 rounded-lg border border-gray-200">
-                                            <div class="flex justify-between items-center">
-                                                <span class="font-semibold text-blue-600">Semester-5 | Tahun Ajaran
-                                                    2024/2025 Ganjil</span>
-                                                <!-- Tombol "+" untuk toggle -->
-                                                <span class="text-gray-500 cursor-pointer"
-                                                    @click="isOpen = !isOpen">+</span>
-                                            </div>
-                                            @php
-                                                $mahasiswa = \App\Models\Mahasiswa::where(
-                                                    'email',
-                                                    Auth::user()->email,
-                                                )->first();
-                                                $nim = $mahasiswa ? $mahasiswa->nim : null;
-                                                $irsData = \App\Models\irs::where('nim', $nim)
-                                                    ->where('semester', '5')
-                                                    ->get();
-                                            @endphp
-                                            <div class="text-gray-500">Jumlah SKS
-                                                {{ \App\Models\irs::where('nim', $nim)->where('semester', 5)->sum('sks') }}
-
-                                                <!-- Tabel KHS yang akan muncul atau menghilang berdasarkan nilai isOpen -->
-                                                <div x-show="isOpen"
-                                                    x-transition:enter="transition ease-out duration-100 transform"
-                                                    x-transition:enter-start="opacity-0 scale-95"
-                                                    x-transition:enter-end="opacity-100 scale-100"
-                                                    x-transition:leave="transition ease-in duration-75 transform"
-                                                    x-transition:leave-start="opacity-100 scale-100"
-                                                    x-transition:leave-end="opacity-0 scale-95"
-                                                    class="mt-4 bg-white p-4 rounded-lg shadow-md">
-                                                    <table id="irs" class="min-w-full table-auto mb-8">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="px-4 py-2 text-left">No</th>
-                                                                <th class="px-4 py-2 text-left">KodeMK</th>
-                                                                <th class="px-4 py-2 text-left">Mata Kuliah</th>
-                                                                <th class="px-4 py-2 text-left">Kelas</th>
-                                                                <th class="px-4 py-2 text-left">Waktu</th>
-                                                                <th class="px-4 py-2 text-left">SKS</th>
-                                                                <th class="px-4 py-2 text-left">Ruang</th>
-                                                                <th class="px-4 py-2 text-left">Status</th>
-                                                                <th class="px-4 py-2 text-left">Nama Dosen</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @if ($irsData->isEmpty())
-                                                                <p class="text-gray-500">Tidak ada data IRS untuk
-                                                                    ditampilkan.</p>
-                                                            @else
-                                                                @foreach ($irsData as $index => $irs)
-                                                                    <tr>
-                                                                        <td class="border px-4 py-2">
-                                                                            {{ $index + 1 }}
-                                                                        </td>
-                                                                        <td class="border px-4 py-2">
-                                                                            {{ $irs->kodemk }}
-                                                                        </td>
-                                                                        <td class="border px-4 py-2">
-                                                                            {{ $irs->matakuliah->nama ?? 'Matakuliah tidak ditemukan' }}
-                                                                        </td>
-                                                                        <td class="border px-4 py-2">
-                                                                            {{ $irs->kelas }}
-                                                                        </td>
-                                                                        <td class="border px-4 py-2">
-                                                                            {{ $irs->jam_mulai }}-{{ $irs->jam_selesai }}
-                                                                        </td>
-                                                                        <td class="border px-4 py-2">
-                                                                            {{ $irs->sks }}
-                                                                        </td>
-                                                                        <td class="border px-4 py-2">
-                                                                            {{ $irs->ruang }}
-                                                                        </td>
-                                                                        <td class="border px-4 py-2">
-                                                                            {{ $irs->status_mk }}
-                                                                        </td>
-                                                                        <td class="border px-4 py-2 w-96">
-                                                                            {{ $irs->pengampu_1 }} /
-                                                                            {{ $irs->pengampu_2 }} /
-                                                                            {{ $irs->pengampu_3 }}</td>
-                                                                    </tr>
-                                                                @endforeach
-                                                            @endif
-                                                        </tbody>
-                                                    </table>
-                                                    <a href="{{ route('irs.print', ['mahasiswaId' => $mahasiswa->nim]) }}"
-                                                        class="bg-red-500 text-white px-4 py-2 rounded-md">Download
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
 
         </main>
 
@@ -317,4 +207,5 @@
 
 
     </body>
+
     </html>

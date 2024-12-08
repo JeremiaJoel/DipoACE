@@ -68,12 +68,12 @@
 
         <header class="bg-white shadow">
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <a href="dashboard-mahasiswa" class="text-3xl font-bold tracking-tight text-gray-900">Dashboard</a>
+                <a href="dashboard-mahasiswa" class="text-3xl font-bold tracking-tight text-gray-900">KHS</a>
             </div>
         </header>
 
         <main>
-            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            <div class="flex border-b p-8">
                 <!-- Your content -->
                 <div class="container mx-auto mt-5">
                     <div class="row justify-center">
@@ -82,8 +82,7 @@
                                 <div class="flex border-b">
                                     <button class="flex-1 py-4 px-6 text-center text-gray-500 hover"
                                         onclick="window.location.href='/mahasiswa-buatirs'">Buat IRS</button>
-                                    <button
-                                        class="flex-1 py-4 px-6 text-center text-gray-500 border-b-2 hover"
+                                    <button class="flex-1 py-4 px-6 text-center text-gray-500 border-b-2 hover"
                                         onclick="window.location.href='/mahasiswa-irs'">IRS</button>
                                     <button
                                         class="flex-1 py-4 px-6 text-center text-gray-500 border-b-2 border-gray-500">KHS</button>
@@ -92,19 +91,28 @@
                                 <div class="card-body p-4">
                                     <h1 class="card-title mb-3 text-lg font-bold">Kartu Hasil Studi (KHS)</h1>
                                     <div class="space-y-2">
-                                        <div class="bg-blue-50 p-4 rounded-lg border border-gray-200">
-                                            @php
-                                                $mahasiswa = \App\Models\Mahasiswa::where(
-                                                    'email',
-                                                    Auth::user()->email,
-                                                )->first();
-                                                $nim = $mahasiswa->nim ?? null;
+                                        @php
+                                            $mahasiswa = \App\Models\Mahasiswa::where(
+                                                'email',
+                                                Auth::user()->email,
+                                            )->first();
+                                            $nim = $mahasiswa ? $mahasiswa->nim : null;
+                                            $semesterMahasiswa = $mahasiswa ? $mahasiswa->semester : null;
+                                            $semesters = range(1, $semesterMahasiswa); // Array of semesters to display
+                                        @endphp
 
-                                                // Ambil semester aktif dari tabel mahasiswa
-                                                $semesterAktif = $mahasiswa->semester ?? 1; // Default ke semester 1 jika tidak ada data
-                                            @endphp
-
-                                            @for ($semester = 1; $semester <= $semesterAktif; $semester++)
+                                        @foreach ($semesters as $semester)
+                                            <div x-data="{ isOpen: false }"
+                                                class="bg-blue-50 p-4 rounded-lg border border-gray-200">
+                                                <div class="flex justify-between items-center">
+                                                    <span
+                                                        class="font-semibold text-blue-600">Semester-{{ $semester }}
+                                                        | Tahun Ajaran
+                                                        {{ $semester <= 2 ? '2021/2022' : ($semester <= 4 ? '2022/2023' : '2023/2024') }}
+                                                        {{ $semester % 2 == 0 ? 'Genap' : 'Ganjil' }}</span>
+                                                    <span class="text-gray-500 cursor-pointer"
+                                                        @click="isOpen = !isOpen">+</span>
+                                                </div>
                                                 @php
                                                     $khsData = \App\Models\KHS::where('nim', $nim)
                                                         ->where('semester', $semester)
@@ -113,7 +121,7 @@
                                                     $totalBobot = $khsData->sum('bobot');
                                                     $totalSKSxBobot = $khsData->sum('sks_x_bobot');
                                                     $ipSemester = $totalSKS > 0 ? $totalSKSxBobot / $totalSKS : 0;
-                                                    
+
                                                     $allKhsData = \App\Models\KHS::where('nim', $nim)->get();
                                                     $totalSksKumulatif = $allKhsData->sum('sks');
                                                     $totalSksxBobotKumulatif = $allKhsData->sum('sks_x_bobot');
@@ -122,51 +130,48 @@
                                                             ? $totalSksxBobotKumulatif / $totalSksKumulatif
                                                             : 0;
                                                 @endphp
+                                                <div class="text-gray-500">Jumlah SKS {{ $khsData->sum('sks') }}</div>
 
-
-                                                <div x-data="{ isOpen: false }" class="mb-10">
-                                                    <!-- Menambah margin antar-semester -->
-                                                    <div class="flex justify-between items-center">
-                                                        <span
-                                                            class="font-semibold text-blue-600">Semester-{{ $semester }}</span>
-                                                        <span class="text-gray-500 cursor-pointer"
-                                                            @click="isOpen = !isOpen">+</span>
-                                                    </div>
-                                                    <div class="text-gray-500">Jumlah SKS: {{ $totalSKS }}</div>
-
-                                                    <div x-show="isOpen"
-                                                        x-transition:enter="transition ease-out duration-100 transform"
-                                                        x-transition:enter-start="opacity-0 scale-95"
-                                                        x-transition:enter-end="opacity-100 scale-100"
-                                                        x-transition:leave="transition ease-in duration-75 transform"
-                                                        x-transition:leave-start="opacity-100 scale-100"
-                                                        x-transition:leave-end="opacity-0 scale-95"
-                                                        class="mt-4 bg-white p-4 rounded-lg shadow-md">
-                                                        <table class="min-w-full table-auto">
-                                                            <thead>
+                                                <div x-show="isOpen"
+                                                    x-transition:enter="transition ease-out duration-100 transform"
+                                                    x-transition:enter-start="opacity-0 scale-95"
+                                                    x-transition:enter-end="opacity-100 scale-100"
+                                                    x-transition:leave="transition ease-in duration-75 transform"
+                                                    x-transition:leave-start="opacity-100 scale-100"
+                                                    x-transition:leave-end="opacity-0 scale-95"
+                                                    class="mt-4 bg-white p-4 rounded-lg shadow-md">
+                                                    <table id="khs" class="min-w-full table-auto mb-8">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="px-4 py-2 text-left">No</th>
+                                                                <th class="px-4 py-2 text-left">KodeMK</th>
+                                                                <th class="px-4 py-2 text-left">Mata Kuliah</th>
+                                                                <th class="px-4 py-2 text-left">Jenis</th>
+                                                                <th class="px-4 py-2 text-left">Status</th>
+                                                                <th class="px-4 py-2 text-left">SKS</th>
+                                                                <th class="px-4 py-2 text-left">Nilai Huruf</th>
+                                                                <th class="px-4 py-2 text-left">Bobot</th>
+                                                                <th class="px-4 py-2 text-left">SKS x Bobot</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @if ($khsData->isEmpty())
                                                                 <tr>
-                                                                    <th class="px-4 py-2 text-left">No</th>
-                                                                    <th class="px-4 py-2 text-left">KodeMK</th>
-                                                                    <th class="px-4 py-2 text-left">Mata Kuliah</th>
-                                                                    <th class="px-4 py-2 text-left">Jenis</th>
-                                                                    <th class="px-4 py-2 text-left">Status</th>
-                                                                    <th class="px-4 py-2 text-left">SKS</th>
-                                                                    <th class="px-4 py-2 text-left">Nilai Huruf</th>
-                                                                    <th class="px-4 py-2 text-left">Bobot</th>
-                                                                    <th class="px-4 py-2 text-left">SKS x Bobot</th>
+                                                                    <td colspan="9"
+                                                                        class="text-gray-500 text-center">Tidak ada data
+                                                                        KHS untuk semester ini.</td>
                                                                 </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                @forelse ($khsData as $index => $khs)
+                                                            @else
+                                                                @foreach ($khsData as $index => $khs)
                                                                     <tr>
                                                                         <td class="border px-4 py-2">{{ $index + 1 }}
                                                                         </td>
-                                                                        <td class="border px-4 py-2">{{ $khs->kodemk }}
-                                                                        </td>
+                                                                        <td class="border px-4 py-2">
+                                                                            {{ $khs->kodemk }}</td>
                                                                         <td class="border px-4 py-2">
                                                                             {{ $khs->matakuliah }}</td>
-                                                                        <td class="border px-4 py-2">{{ $khs->jenis }}
-                                                                        </td>
+                                                                        <td class="border px-4 py-2">
+                                                                            {{ $khs->jenis }}</td>
                                                                         <td class="border px-4 py-2">
                                                                             {{ $khs->status_mk }}</td>
                                                                         <td class="border px-4 py-2">
@@ -178,52 +183,32 @@
                                                                         <td class="border px-4 py-2">
                                                                             {{ $khs->sks_x_bobot }}</td>
                                                                     </tr>
-                                                                @empty
-                                                                    <tr>
-                                                                        <td colspan="9"
-                                                                            class="border px-4 py-2 text-center text-gray-500">
-                                                                            Tidak ada data KHS untuk semester ini.
-                                                                        </td>
-                                                                    </tr>
-                                                                @endforelse
-                                                                @if ($khsData->isNotEmpty())
-                                                                    <tr>
-                                                                        <td colspan="5"
-                                                                            class="border px-4 py-2 text-left font-semibold">
-                                                                            Total</td>
-                                                                        <td class="border px-4 py-2">
-                                                                            {{ $totalSKS }}</td>
-                                                                        <td class="border px-4 py-2"></td>
-                                                                        <td class="border px-4 py-2">
-                                                                            {{ $totalBobot }}</td>
-                                                                        <td class="border px-4 py-2">
-                                                                            {{ $totalSKSxBobot }}</td>
-                                                                    </tr>
-                                                                @endif
-                                                            </tbody>
-                                                        </table>
-                                                        <div class="mt-4">
-                                                            <p>IP Semester: {{ number_format($ipSemester, 2) }}</p>
-                                                            <p class="text-sm md:text-base">{{ $totalSKSxBobot }} /
-                                                                {{ $totalSKS }}</p>
-                                                            <p>Formula: total(SKS x Bobot) / total SKS</p>
-                                                        </div>
-                                                        <div class="mt-4">
-                                                            <p>Total SKS: {{ $totalSksKumulatif }}</p>
-                                                            <p>Total SKS x Bobot: {{ $totalSksxBobotKumulatif }}</p>
-                                                            <p>IPK: {{ number_format($ipk, 2) }}</p>
-                                                        </div>
+                                                                @endforeach
+                                                            @endif
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="mt-4">
+                                                        <p>IP Semester: {{ number_format($ipSemester, 2) }}</p>
+                                                        <p class="text-sm md:text-base">{{ $totalSKSxBobot }} /
+                                                            {{ $totalSKS }}</p>
+                                                        <p>Formula: total(SKS x Bobot) / total SKS</p>
+                                                    </div>
+                                                    <div class="mt-4">
+                                                        <p>Total SKS: {{ $totalSksKumulatif }}</p>
+                                                        <p>Total SKS x Bobot: {{ $totalSksxBobotKumulatif }}</p>
+                                                        <p>IPK: {{ number_format($ipk, 2) }}</p>
                                                     </div>
                                                 </div>
-                                            @endfor
-                                        </div>
-
+                                            </div>
+                                        @endforeach
                                     </div>
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+    </div>
 
-        </main>
+    </main>
